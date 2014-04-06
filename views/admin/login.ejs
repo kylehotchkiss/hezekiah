@@ -1,0 +1,18 @@
+<% include ../header.ejs %>
+
+<section class="page-welcome row">
+	<div class="large-6 medium-6 large-centered medium-centered columns text-center">
+		<h3>
+			Welcome to Illuminate Nations <br /> Contribution Management <br />
+			Please Log In
+		</h3>
+
+		<form action="/admin/login" method="POST">
+			<input type="text" name="username" placeholder="Username" />
+			<input type="password" name="password" placeholder="Password" />
+			<input type="submit" value="Log In" />
+		</form>
+	</div>
+</section>
+
+<% include ../footer.ejs %>

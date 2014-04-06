@@ -1,0 +1,17 @@
+<% include ../header.ejs %>
+	<section class="page-campaigns row">
+		<div class="columns">
+			<div class="row">
+				<div class="large-10 medium-10 large-centered medium-centered columns">
+					<div class="chart-heading text-center"><%= campaigns[0].get("name") %> Campaign</div>
+
+					<%= JSON.stringify( donations ) %>
+
+					<div class="campaign">
+   						<%= campaigns[0].get("slug") %></a></li>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+<% include ../footer.ejs %>
