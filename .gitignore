@@ -1,3 +1,7 @@
 # Folders
 node_modules/
 .sass-cache/
+
+# Local Config
+.env
+config.json

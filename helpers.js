@@ -4,38 +4,21 @@
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
-var preferences = {
-	organization: {
-		name: "Illuminate Nations"
-	},
-	email: {
-		fromEmail: "hello@illuminatenations.org",
-		fromSubject: "Thank you for your donation!", 
-		template: "official"
-	},
-	keys: {
-		stripeAPI: "sk_live_i8ebrGIdB6Q2C9Td7VB8LHXK",
-		mandrillAPI: "t2znvocdNFzqk5UwE1R8eA",
-		mailchimpAPI: "eaa0a5f4f11557815e47cd18656598af-us7"
-	}, 
-	other: {
-		mailchimpBase: "https://us7.api.mailchimp.com/2.0/",
-		mandrillBase: "https://mandrillapp.com/api/1.0/"
-	}
-};
-
+var mailchimpBase = "https://us7.api.mailchimp.com/2.0/";
+var mandrillBase = "https://mandrillapp.com/api/1.0/";
 
 //
 // Includes
 //
-var Stripe = require('stripe');
-var Mandrill = require('mandrill');
+var stripe = require('stripe');
+var mandrill = require('mandrill');
+var config = require('./config.json');
 
 
 //
 // Inits
 //
-Stripe.initialize( preferences.keys.stripeAPI );
+stripe.initialize( preferences.keys.stripeAPI );
 
 var helpers = {
 	sendEmail: function( donation, cause, callback ) {

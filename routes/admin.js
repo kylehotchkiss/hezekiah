@@ -8,7 +8,7 @@ module.exports = function() {
 	var express = require('express');
   	var app = express();
 
-  	var loggedIn = function(req, res, next) {
+  	/*var loggedIn = function(req, res, next) {
 	    if ( Parse.User.current() ) {
 	        next();
 	    } else {
@@ -20,7 +20,7 @@ module.exports = function() {
 	// Access Policy
 	//
 	app.all('/reports', loggedIn);
-	app.all('/campaigns', loggedIn);
+	app.all('/campaigns', loggedIn);*/
 
   	//
   	// Login / Logout
