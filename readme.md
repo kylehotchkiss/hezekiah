@@ -4,6 +4,8 @@ DonateServ is open source donation processing and campaign management software.
 
 Based on a few conditions, you may want to consider DonateServ for your own organization. You'll need to be using Stripe for card processing, for starters. You'll also need Google Apps for access to the admin panel. And of course, you'll need some technical background to set this all up on Heroku and Postgres and hook it up to your site.
 
+While this software is open-source and free for you to use, hosting it can become pricy. Heroku's cheapest production database is $50 a month, along with any SSL and extra dyno fees that you'll want to pay (You can piggyback off of Heroku's free SSL of course).
+
 ## What DonateServ is
 
 * Stripe-based donation processing for one-time and recurring donations
@@ -13,6 +15,7 @@ Based on a few conditions, you may want to consider DonateServ for your own orga
 ## What DonateServ isn't
 
 * Proper accounting software (there is no way to withdrawal from a campaign account to see current balance, for example)
+* A CRM for donors. While we connect to Mailchimp and Mandrill for emailing purposes, we don't have the details you may want for your donors. I'm perfectly okay with Mailchimp's segmenting, because Mailchimp is good software.
 
 ## TODO:
 

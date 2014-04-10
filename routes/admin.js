@@ -5,67 +5,65 @@
 //
 
 module.exports = function() {
+	var config = require('../config.json');
 	var express = require('express');
+	var passport = require('passport');
+	var google = require('passport-google').Strategy;
+
   	var app = express();
 
-  	/*var loggedIn = function(req, res, next) {
-	    if ( Parse.User.current() ) {
-	        next();
-	    } else {
-	        res.redirect("/admin/");
-	    }
-	}
 
-	// 
-	// Access Policy
-	//
-	app.all('/reports', loggedIn);
-	app.all('/campaigns', loggedIn);*/
+	//////////////////////////////
+	// Passport Setup and Paths //
+	//////////////////////////////
+	passport.serializeUser(function(user, callback) {
+	    callback(null, user);
+	});
 
-  	//
-  	// Login / Logout
-  	//
+	passport.deserializeUser(function(obj, callback) {
+	    callback(null, obj);
+	});
+
+	passport.use(new google({
+    	returnURL: 'http://localhost:5000/admin/login/callback', // Figure out how to set this properly (doh)
+    	realm: 'http://localhost:5000/'
+  	}, function( identifier, profile, done ) {
+    	var email = profile.emails[0].value;
+    	var domain = email.substring( email.search("@") + 1 );
+
+    	// Check against email domain set in config
+    	if ( domain === config.access.email ) {
+    		done(null, profile);
+    	} else {
+    		done(null, false, { message: "You must be a member of " + config.organization.name + " to access DonateServ."});
+    	}
+  	}));
+
+
+  	////////////////////
+  	// Login / Logout //
+  	////////////////////
   	app.get('/', function( req, res ) {
-	    if ( Parse.User.current() ) {
-	        // template admin.ejs
-
-			var donationsQuery = new Parse.Query("donations");
-
-			donationsQuery.find({
-  				success: function( donations ) {
-    				res.render("admin/index", { donationsString: JSON.stringify( donations ), user: Parse.User, path: '/' });
-  				},
-  				error: function( error ) {
-    				res.send( error );
-  				}
-			});
-	    } else {
-	        // template login.ejs / welcome.ejs
-	        res.render("admin/login");
-	    }
+  		if ( req.user ) {
+  			res.send("Welcome!")
+		} else {
+  			res.render("admin/login", { flash: req.flash('message'), user: req.user })
+		}
 	});
 
-	app.post('/login', function(req, res) {
-	    var username = req.body.username;
-	    var password = req.body.password;
+	app.get('/login', passport.authenticate('google'));
 
-	    Parse.User.logIn(username, password).then(function( user ) {
-	        res.redirect('/admin/');  
-	    }, function( error ) {
-	        res.render("error", { error: error });
-	    });
-	});
-	 
-	app.get('/logout', function(req, res) {
-	    Parse.User.logOut();
+	app.get('/login/callback', passport.authenticate('google', { successRedirect: '/admin', failureRedirect: '/admin' }));
 
-	    res.redirect('/admin');
+	app.get('/logout', function( req, res ) {
+    	req.logout();
+    	res.redirect('/admin');
 	});
 
 
-	// 
-	// Campaign Reporting and Management
-	//
+	///////////////////////////////////////
+	// Campaign Reporting and Management //
+	///////////////////////////////////////
 	app.get('/campaigns', function(req, res) {
 		// Campaigns Index + aggreate report
 

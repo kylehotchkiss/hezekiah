@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Illuminate Nations DonateServ</title>
+		<title>{{ config.organization.name }} DonateServ</title>
 
 		<script type="text/javascript" src="//use.typekit.net/mwu8mlw.js"></script>
 		<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
@@ -19,16 +19,30 @@
 	                        <a href="http://www.illuminatenations.org/">Home</a>
 	                    </li>
 
-	                    <% if ( typeof user !== "undefined" ) { %>
+	                    {% if user %}
 	                   	 	<li><a href="/admin/">Home</a></li>	                    	
 	                    	<li><a href="/admin/campaigns">Campaigns</a></li>	                    	
 	                    	<li><a href="/admin/reports">Reports</a></li>
 	                    	<li><a href="https://www.google.com/analytics/web/?hl=en#report/conversions-ecommerce-overview/a39937936w75894693p78448211/">Analytics</a></li>
 	                    	<li><a href="/admin/logout">Log out</a>
-	                    <% } %>
+	                    {% endif %}
 	                </ul>
 	            </div>
 	        </div>
 	    </header>
 
-	
+		{% block content %}{% endblock %}
+
+		<footer>
+            <div class="row">
+                <div class="columns text-center">
+                    <p>
+                        <span>DonateServ v0.0.1</span> <span>&copy; 2013-2014 Illuminate Nations. All rights reserved.</span> <span>Proprietary and Confidential.</span>
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+		<script>jQuery(document).foundation();</script>
+	</body>
+</html>
