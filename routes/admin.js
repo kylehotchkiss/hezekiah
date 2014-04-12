@@ -1,6 +1,6 @@
 //
-// Illuminate Nations - DonateServ v.1
-// Copyright 2013 Illuminate Nations
+// Illuminate Nations - DonateServ v.0.2.0
+// Copyright 2013-2014 Illuminate Nations
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
@@ -68,7 +68,7 @@ module.exports = function() {
 		// Campaigns Index + aggreate report
 
 		var campaignsQuery = new Parse.Query("campaigns");
-		
+
 		campaignsQuery.find({
   			success: function( campaigns ) {
     			res.render("admin/index_campaigns", { user: Parse.User, campaigns: campaigns });
@@ -115,7 +115,7 @@ module.exports = function() {
 			},
  			error: function( error ) {
     			res.render("error", { error: error });
-  			}			
+  			}
 		})
 	});
 
@@ -133,7 +133,7 @@ module.exports = function() {
 			},
  			error: function( error ) {
     			res.render("error", { error: error });
-  			}			
+  			}
 		})
 	});
 
@@ -141,7 +141,7 @@ module.exports = function() {
 		// Edit Campaign ACTION
 
 		var campaign = req.param("campaign");
-	});	
+	});
 
 	app.get('/campaigns/:campaign/archive', function(req, res) {
 		// Archive campaign ACTION

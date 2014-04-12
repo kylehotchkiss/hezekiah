@@ -1,14 +1,25 @@
 //
-// Illuminate Nations - DonateServ v.1
-// Copyright 2013 Illuminate Nations
+// Illuminate Nations - DonateServ v.0.2.0
+// Copyright 2013-2014 Illuminate Nations
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
+var express = require('express');
+var stripe = require('../library/stripe');
+
 module.exports = function() {
-	var express = require('express');
   	var app = express();
 
-  	app.post('/one', function(req, res) {
+    // Todo
+    // 1) break actual stripe processing code into new function
+    // 2) proper error forwarding
+    // 3) return feedback (async)
+    // 4) sendemail function (async)
+    // 5) recordDonation (async)
+    // 6) subscribeemail (async)
+
+
+  	app.post('/one', function( req, res ) {
 	    var donation = {
 	        ip: req.body.donationIP,
 	        name: req.body.donorName,
@@ -25,7 +36,9 @@ module.exports = function() {
 	        title: req.body.causeTitle
 	    };
 
-	    helpers.processDonation( donation, cause, function( error, response ) {
+        stripe.process( )
+
+	    /*helpers.processDonation( donation, cause, function( error, response ) {
 	        if ( !error ) {
 	            helpers.sendEmail( donation, cause, function() {
 	                helpers.subscribeEmail( donation, function() {
@@ -36,7 +49,7 @@ module.exports = function() {
 	                            server: programName + " " + programVersion
 	                        })
 	                    });
-	                });    
+	                });
 	            });
 	        } else {
 	            var errorReason, errorMessage;
@@ -59,13 +72,19 @@ module.exports = function() {
 	                }
 	            })
 	        }
-	    })
+	    })*/
 	});
 
+    app.post('/record', function(req, res) {
+        // used by stripe webhooks to tell us when to log recurring
+    });
+
 	app.post('/subscribe', function(req, res) {
+
 	});
 
 	app.post('/unsubscribe', function(req, res) {
+
 	});
 
 	return app;

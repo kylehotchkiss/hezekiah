@@ -1,12 +1,13 @@
 module.exports = function( sequelize, type ) {
-    return sequelize.define("Donation", {
+  return sequelize.define("Subscriber", {
         id: {
             type: type.INTEGER,
             primaryKey: true,
             autoIncrement: true,
             unique: true
         },
-        amount: {
+
+        /*amount: {
             type: type.FLOAT,
             validate: {
                 min: 0
@@ -46,6 +47,6 @@ module.exports = function( sequelize, type ) {
         source: {
             type: type.STRING,
             comment: "Where donor came from, if available"
-        }
-    });
+        }*/
+  })
 }

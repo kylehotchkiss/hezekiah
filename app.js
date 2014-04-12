@@ -1,52 +1,50 @@
 //
-// Illuminate Nations - DonateServ v.1
-// Copyright 2013 Illuminate Nations
+// Illuminate Nations - DonateServ v.0.2.0
+// Copyright 2013-2014 Illuminate Nations
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
-//
-
 
 var swig = require('swig');
-var express = require('express');
 var flash = require('connect-flash');
 var google = require('passport-google').Strategy;
+var express = require('express');
 var passport = require('passport');
 
+var session = require('express-session');
+var compress = require('compression');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+
+var meta = require('./package.json');
 var config = require('./config.json');
-//var helpers = require('./helpers.js');
 var database = require('./models');
-
-
+var environment = process.env.NODE_ENV || 'development';
 
 //
 // Express Setup
 //
 var app = express();
+app.locals.meta = meta;
+app.locals.config = config;
 
-app.configure(function() {
-	app.locals({ config: config });
+app.engine('html', swig.renderFile);
+app.set('view engine', 'html');
+app.set('views', __dirname + '/views');
 
-    app.engine('html', swig.renderFile);
+app.use(compress());
+app.use(bodyParser());
+app.use(cookieParser());
+app.use(session({ secret: process.env.DS_COOKIE_SECRET, cookie: { maxAge: 60 * 60 * 1000 }}));
+app.use('/assets', express.static('assets'));
 
-    app.set('view engine', 'html');
-    app.set('views', __dirname + '/views');
+app.use(flash());
 
-    app.use(express.compress());
-    app.use(express.json());
-	app.use(express.urlencoded());
-    app.use(express.cookieParser());
-    app.use(express.cookieSession({ secret: process.env.DS_COOKIE_SECRET, cookie: { maxAge: 60 * 60 * 1000 }}));
-    app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 
-    app.use(passport.initialize());
-    app.use(passport.session());
+swig.setDefaults({ autoescape: false });
 
-    swig.setDefaults({ autoescape: false });
-
-    app.use('/assets', express.static('assets'));
-});
-
-if ( app.get("env") === "development" ) {
+if ( environment === "development" ) {
     app.set('view cache', false);
     swig.setDefaults({ cache: false });
 }
@@ -67,7 +65,7 @@ app.all('/*', function(req, res, next) {
 // Redirect slash to org URL
 //
 app.get('/', function(req, res) {
-    res.redirect(config.organization.url);
+    res.redirect( config.organization.url );
 });
 
 
@@ -76,8 +74,9 @@ app.get('/', function(req, res) {
 //
 app.get("/status", function(req, res) {
     res.json({
-        time: new Date().getTime(),
-        status: "online"
+        status: "online",
+        timestamp: new Date().getTime(),
+        server: meta.name + " v" + meta.version,
     });
 })
 
@@ -85,9 +84,10 @@ app.get("/status", function(req, res) {
 //
 // App Routing
 //
-//app.use('/book')
-app.use('/donate', require('./routes/donate'));
-app.use('/admin', require('./routes/admin'));
+app.use('/api', require('./routes/api'));
+//app.use('/admin', require('./routes/admin'));
+//app.use('/donate', require('./routes/donate'));
+
 
 
 //
@@ -95,7 +95,7 @@ app.use('/admin', require('./routes/admin'));
 //
 database.sequelize.sync().complete(function( error ) {
     if ( error ) {
-        console.log
+        console.log( error )
     } else {
         app.listen(process.env.PORT || 5000);
     }

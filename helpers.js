@@ -1,8 +1,9 @@
 //
-// Illuminate Nations - DonateServ v.1
-// Copyright 2013 Illuminate Nations
+// Illuminate Nations - DonateServ v.0.2.0
+// Copyright 2013-2014 Illuminate Nations
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
+
 
 var mailchimpBase = "https://us7.api.mailchimp.com/2.0/";
 var mandrillBase = "https://mandrillapp.com/api/1.0/";
@@ -26,7 +27,7 @@ var helpers = {
   		message += "<p>Hello " + donation.name + ",</p>";
   		message += "<p>Thank you for your generous donation of $" + donation.amount + " to Illuminate Nations for " + cause.title + ". We appreciate your support and encouragement.</p>";
   		message += "<p>Please keep this email reciept as proof of your donation.</p>";
-  		message += "<p>Have a great day, <br /> - The Illuminate Nations team.</p>"; 
+  		message += "<p>Have a great day, <br /> - The Illuminate Nations team.</p>";
 
 		Parse.Cloud.httpRequest({
     		method: 'POST',
@@ -39,7 +40,7 @@ var helpers = {
 	  			template_name: preferences.email.template,
 	  			template_content: [{
 	  				"name": "std_content00",
-	  				"content": message	
+	  				"content": message
 	  			}],
     			message: {
 	    			subject: preferences.email.fromSubject,
@@ -70,7 +71,7 @@ var helpers = {
 	  			},
 	  			body: {
 			 		id: donation.mailchimpID,
-			 		apikey: preferences.keys.mailchimpAPI, 
+			 		apikey: preferences.keys.mailchimpAPI,
 			 		double_optin: false,
 			 		email: {
 			 			email: donation.email
@@ -89,7 +90,7 @@ var helpers = {
 		}
 	},
 
-	processDonation: function( donation, cause, callback ) { 
+	processDonation: function( donation, cause, callback ) {
 		//
 		// Parse is really awful sometimes. The most we can find out about
 		// a rejection is "Card Error" - really?? Stripe provides the exact
@@ -98,21 +99,21 @@ var helpers = {
 		Stripe.Charges.create({
 			currency: "usd",
 			card: donation.token,
-  			amount: donation.amount * 100, // cents  			
+  			amount: donation.amount * 100, // cents
   			statement_description: (cause.slug ? (" - " + cause.slug) : ""),
   			description: "Donation" + (cause.title ? (" for " + cause.title) : ""),
-  			metadata: { 
+  			metadata: {
   				ip: donation.ip,
-  				cause:  "(" + cause.slug + ") " + cause.title, 
+  				cause:  "(" + cause.slug + ") " + cause.title,
   				email: donation.email
-  			},  			
+  			},
 		},{
   			success: function( response ) {
 				callback( false, response );
   			},
   			error: function( response ) {
     			callback( true, response );
-  			}	
+  			}
 		});
 	},
 
