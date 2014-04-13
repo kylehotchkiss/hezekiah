@@ -42,7 +42,7 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-swig.setDefaults({ autoescape: false });
+//swig.setDefaults({ autoescape: false }); // ??
 
 if ( environment === "development" ) {
     app.set('view cache', false);
@@ -84,9 +84,9 @@ app.get("/status", function(req, res) {
 //
 // App Routing
 //
-app.use('/api', require('./routes/api'));
+//app.use('/api', require('./routes/api'));
 //app.use('/admin', require('./routes/admin'));
-//app.use('/donate', require('./routes/donate'));
+app.use('/donate', require('./routes/donate'));
 
 
 
@@ -98,5 +98,7 @@ database.sequelize.sync().complete(function( error ) {
         console.log( error )
     } else {
         app.listen(process.env.PORT || 5000);
+
+        console.log(meta.name + " v" + meta.version);
     }
 });

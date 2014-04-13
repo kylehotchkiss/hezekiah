@@ -4,8 +4,11 @@
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
-var express = require('express');
-var stripe = require('../library/stripe');
+var express = require("express");
+var meta = require("../package.json");
+var stripe = require("../library/stripe");
+var mandrill = require("../library/mandrill");
+var mailchimp = require("../library/mailchimp");
 
 module.exports = function() {
   	var app = express();
@@ -21,14 +24,15 @@ module.exports = function() {
 
   	app.post('/one', function( req, res ) {
 	    var donation = {
-	        ip: req.body.donationIP,
-	        name: req.body.donorName,
-	        email: req.body.donorEmail,
-	        token: req.body.donationToken,
-	        thanks: req.body.donationThanks,
-	        amount: req.body.donationAmount,
+	        ip: req.body.donationIP, // req/valid
+	        name: req.body.donorName, // req
+	        email: req.body.donorEmail, // req/valid
+	        token: req.body.donationToken, // req/valid
+            //source:
+	        thanks: req.body.donationThanks, // req
+	        amount: req.body.donationAmount, // req
 	        emailSignup: req.body.emailSignup,
-	        mailchimpID: req.body.mailchimpID
+	        mailchimpID: req.body.mailchimpID // depricated
 	    };
 
 	    var cause = {
@@ -36,43 +40,44 @@ module.exports = function() {
 	        title: req.body.causeTitle
 	    };
 
-        stripe.process( )
+        // get cause from DB given slug
 
-	    /*helpers.processDonation( donation, cause, function( error, response ) {
-	        if ( !error ) {
-	            helpers.sendEmail( donation, cause, function() {
-	                helpers.subscribeEmail( donation, function() {
-	                    helpers.recordDonation( donation, cause, function( error, response ) {
-	                        res.json({
-	                            status: "success",
-	                            timestamp: new Date().getTime(),
-	                            server: programName + " " + programVersion
-	                        })
-	                    });
-	                });
-	            });
-	        } else {
-	            var errorReason, errorMessage;
+        stripe.process(donation, cause, function( error, charge ) {
+            if ( error ) {
+                res.json({
+                    status: "failure",
+                    timestamp: new Date().getTime(),
+                    server: programName + " " + programVersion,
+                    error: {
+                        code: error.code,
+                        reason: error.type,
+                        message: error.message
+                    }
+                })
+            } else {
+                //mandrill.sendEmail(donation, cause);
+                //mailchimp.subscribeEmail(donation, cause);
 
-	            if ( response.name === "card_error" ) {
-	                errorReason = "rejection";
-	                errorMessage = "Your card was declined. <br /> Please call your bank for more details."
-	            } else if ( response.name === "api_error" ) {
-	                errorReason = "outage";
-	                errorMessage = "Your donation could not be processed at this time. <br /> Please try again later."
-	            }
+                database.Donation.create({
+                    stripeID: charge.id,
+                    amount: donation.amount,
+                    campaign: donation.campaign,
+                    subcampaign: donation.subcampaign || null,
+                    donorName: donation.name,
+                    donorEmail: donation.email,
+                    donorIP: donation.ip,
+                    method: "website",
+                    recurring: false,
+                    source: donation.source
+                });
 
-	            res.json({
-	                status: "failure",
-	                timestamp: new Date().getTime(),
-	                server: programName + " " + programVersion,
-	                error: {
-	                    reason: errorReason,
-	                    message: errorMessage
-	                }
-	            })
-	        }
-	    })*/
+                res.json({
+                    status: "success",
+                    timestamp: new Date().getTime(),
+                    server: programName + " " + programVersion
+                })
+            }
+        });
 	});
 
     app.post('/record', function(req, res) {

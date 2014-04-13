@@ -1,9 +1,19 @@
+//
+// Illuminate Nations - DonateServ v.0.2.0
+// Copyright 2013-2014 Illuminate Nations
+// Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
+//
+
 module.exports = function( sequelize, type ) {
     return sequelize.define("Donation", {
         id: {
             type: type.INTEGER,
             primaryKey: true,
             autoIncrement: true,
+            unique: true
+        },
+        stripeID: {
+            type: type.STRING,
             unique: true
         },
         amount: {
@@ -14,7 +24,8 @@ module.exports = function( sequelize, type ) {
         },
         campaign: {
             type: type.STRING,
-            comment: "Campaign Slug"
+            references: "Campaigns",
+            referencesKey: "slug"
         },
         subcampaign: {
             type: type.STRING,

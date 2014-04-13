@@ -3,6 +3,9 @@
 // Copyright 2013-2014 Illuminate Nations
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
+// TODO: Use config.json variables
+// Check if user wants to subscribe
+//
 
 var request = require("request");
 

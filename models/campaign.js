@@ -1,10 +1,42 @@
-module.exports = function( sequelize, type ) {
-  return sequelize.define("Campaign", {
-    	slug: type.STRING,
-    	name: type.STRING,
-        plan: type.STRING,
-    	goal: type.FLOAT
+//
+// Illuminate Nations - DonateServ v.0.2.0
+// Copyright 2013-2014 Illuminate Nations
+// Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
+//
 
-        // image (s3), emailtitle, emailcontent
-  })
-}
+module.exports = function( sequelize, type ) {
+    return sequelize.define("Campaign", {
+        id: {
+            type: type.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+            unique: true
+        },
+        slug: {
+            type: type.STRING,
+            unique: true,
+            comment: "Campaign slug for DonateServ, Mailchimp, and website"
+        },
+        name: {
+            type: type.STRING,
+            comment: "Human-friendly campaign name"
+        },
+        goal: {
+            type: type.FLOAT
+        },
+        plan: {
+            type: type.STRING,
+            comment: "Matches corresponding Stripe plan name, if applicable"
+        },
+        image: {
+            type: type.STRING,
+            comment: "Image URL"
+        },
+        emailTitle: {
+            type: type.STRING
+        },
+        emailTemplate: {
+            type: type.STRING
+        }
+    })
+};
