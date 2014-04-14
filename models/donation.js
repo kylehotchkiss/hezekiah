@@ -41,10 +41,7 @@ module.exports = function( sequelize, type ) {
             }
         },
         donorIP: {
-            type: type.STRING,
-            validate: {
-                isIP: true
-            }
+            type: type.STRING
         },
         method: {
             type: type.STRING,

@@ -15,6 +15,9 @@ module.exports = function( sequelize, type ) {
         slug: {
             type: type.STRING,
             unique: true,
+            validate: {
+                isAlphanumeric: true
+            },
             comment: "Campaign slug for DonateServ, Mailchimp, and website"
         },
         name: {

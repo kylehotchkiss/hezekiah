@@ -7,6 +7,7 @@
 var express = require("express");
 var meta = require("../package.json");
 var stripe = require("../library/stripe");
+var database = require('../models');
 var mandrill = require("../library/mandrill");
 var mailchimp = require("../library/mailchimp");
 
@@ -24,15 +25,14 @@ module.exports = function() {
 
   	app.post('/one', function( req, res ) {
 	    var donation = {
-	        ip: req.body.donationIP, // req/valid
+	        ip: req.connection.remoteAddress, // req/valid
 	        name: req.body.donorName, // req
 	        email: req.body.donorEmail, // req/valid
 	        token: req.body.donationToken, // req/valid
             //source:
 	        thanks: req.body.donationThanks, // req
 	        amount: req.body.donationAmount, // req
-	        emailSignup: req.body.emailSignup,
-	        mailchimpID: req.body.mailchimpID // depricated
+	        emailSignup: req.body.emailSignup
 	    };
 
 	    var cause = {
@@ -47,7 +47,7 @@ module.exports = function() {
                 res.json({
                     status: "failure",
                     timestamp: new Date().getTime(),
-                    server: programName + " " + programVersion,
+                    server: meta.name + " v" + meta.version,
                     error: {
                         code: error.code,
                         reason: error.type,
@@ -61,7 +61,7 @@ module.exports = function() {
                 database.Donation.create({
                     stripeID: charge.id,
                     amount: donation.amount,
-                    campaign: donation.campaign,
+                    campaign: cause.slug,
                     subcampaign: donation.subcampaign || null,
                     donorName: donation.name,
                     donorEmail: donation.email,
@@ -74,7 +74,7 @@ module.exports = function() {
                 res.json({
                     status: "success",
                     timestamp: new Date().getTime(),
-                    server: programName + " " + programVersion
+                    server: meta.name + " v" + meta.version,
                 })
             }
         });

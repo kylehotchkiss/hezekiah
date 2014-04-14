@@ -22,7 +22,7 @@ exports.process = function( donation, cause, callback ) {
             email: donation.email
         }
     }, function( error, charge ) {
-        if ( error && error.type === "StripeCardError" ) {
+        if ( error ) {
             callback( error, false );
         } else {
             callback( false, charge );

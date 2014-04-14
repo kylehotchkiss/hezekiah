@@ -11,15 +11,19 @@ While this software is open-source and free for you to use, hosting it can becom
 * Stripe-based donation processing for one-time and recurring donations
 * Campaign creation and reporting software 
 * Freedom to build donation pages from scratch on your website, while retaining PCI compliance (via Stripe) keeping donation processing costs down.
+* Campaign-oriented connections with Mailchimp
 
 ## What DonateServ isn't
 
-* Proper accounting software (there is no way to withdrawal from a campaign account to see current balance, for example)
+* Accounting software (there is no way to withdrawal from a campaign account to see current balance, for example)
+* Multi-origin donation distribution software. All donations will go to one Stripe account, under the assumption that you will take care of distributions from there.
 * A CRM for donors. While we connect to Mailchimp and Mandrill for emailing purposes, we don't have the details you may want for your donors. I'm perfectly okay with Mailchimp's segmenting, because Mailchimp is good software.
 
 ## TODO:
 
 * Reject non-https donations
+* Remove users from recurring campaigns when they unsubscribe
+* Slug max-length 15chars
 
 ## This is neat! How can I thank you?
 

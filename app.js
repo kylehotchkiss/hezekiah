@@ -97,6 +97,13 @@ database.sequelize.sync().complete(function( error ) {
     if ( error ) {
         console.log( error )
     } else {
+        database.Campaign.find({ where: { slug: "tests" } }).error(function( error ) {
+            console.log( "error" );
+        }).success(function( cause ) {
+            if ( cause === null ) { console.log("nullish!") }
+            console.log( cause );
+        });
+
         app.listen(process.env.PORT || 5000);
 
         console.log(meta.name + " v" + meta.version);

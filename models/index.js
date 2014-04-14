@@ -36,9 +36,6 @@ if ( !global.hasOwnProperty('db') ) {
         Donation: sequelize.import(__dirname + '/donation'),
         Subscriber: sequelize.import(__dirname + '/subscriber')
 	}
-
-    /* Associations */
-    global.db.Donation.hasOne(global.db.Campaign);
 }
 
 module.exports = global.db;
