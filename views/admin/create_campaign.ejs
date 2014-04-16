@@ -1,55 +1,55 @@
 <% include ../header.ejs %>
-	<section class="page-campaigns row">
-		<div class="columns">
-			<div class="row">
-				<div class="large-10 medium-10 large-centered medium-centered columns">
-					<% if ( typeof campaign === "object" ) { %>
-						<div class="chart-heading text-center">Edit the &ldquo;<%= typeof campaign === "object" ? campaign[0].get("name") : "" %>&rdquo; Campaign</div>
-					<% } else { %>
-						<div class="chart-heading text-center">Create a Campaign</div>
-					<% } %>
-				</div>
-			</div>
+    <section class="page-campaigns row">
+        <div class="columns">
+            <div class="row">
+                <div class="large-10 medium-10 large-centered medium-centered columns">
+                    <% if ( typeof campaign === "object" ) { %>
+                        <div class="chart-heading text-center">Edit the &ldquo;<%= typeof campaign === "object" ? campaign[0].get("name") : "" %>&rdquo; Campaign</div>
+                    <% } else { %>
+                        <div class="chart-heading text-center">Create a Campaign</div>
+                    <% } %>
+                </div>
+            </div>
 
-			<div class="row">
-				<div class="large-8 medium-8 large-centered medium-centered columns">
- 					<form action="/admin/campaigns/create" method="post">
- 						<div class="row slug">
- 							<div class="columns">
- 								<label for="slug">Campaign Slug</label>
- 								<input type="text" name="slug" value="<%= typeof campaign === "object" ? campaign[0].get("slug") : "" %>" required />
- 							</div>
- 						</div>
+            <div class="row">
+                <div class="large-8 medium-8 large-centered medium-centered columns">
+                    <form action="/admin/campaigns/create" method="post">
+                        <div class="row slug">
+                            <div class="columns">
+                                <label for="slug">Campaign Slug</label>
+                                <input type="text" name="slug" value="<%= typeof campaign === "object" ? campaign[0].get("slug") : "" %>" required />
+                            </div>
+                        </div>
 
- 						<div class="row name">
- 							<div class="columns">
- 								<label for="name">Campaign Name</label>
- 								<input type="text" name="name" value="<%= typeof campaign === "object" ? campaign[0].get("name") : "" %>" required />
- 							</div>
- 						</div>
+                        <div class="row name">
+                            <div class="columns">
+                                <label for="name">Campaign Name</label>
+                                <input type="text" name="name" value="<%= typeof campaign === "object" ? campaign[0].get("name") : "" %>" required />
+                            </div>
+                        </div>
 
- 						<div class="row goal">
- 							<div class="columns">
- 								<label for="amount">Campaign Goal</label>
- 								<input type="text" name="amount" value="<%= typeof campaign === "object" ? campaign[0].get("goal") : "" %>" required />
- 							</div>
- 						</div>
+                        <div class="row goal">
+                            <div class="columns">
+                                <label for="amount">Campaign Goal</label>
+                                <input type="text" name="amount" value="<%= typeof campaign === "object" ? campaign[0].get("goal") : "" %>" required />
+                            </div>
+                        </div>
 
- 						<div class="row template">
- 							<div class="columns">
- 								<label for="template">Email Template</label>
- 								<textarea name="template" required><%= typeof campaign === "object" ? campaign[0].get("template") : "" %></textarea>
- 							</div>
- 						</div>
+                        <div class="row template">
+                            <div class="columns">
+                                <label for="template">Email Template</label>
+                                <textarea name="template" required><%= typeof campaign === "object" ? campaign[0].get("template") : "" %></textarea>
+                            </div>
+                        </div>
 
- 						<div class="row submit">
- 							<div class="columns">
- 								<input type="submit" />
- 							</div>
- 						</div>
- 					</form>
-				</div>
-			</div>
-		</div>
-	</section>
+                        <div class="row submit">
+                            <div class="columns">
+                                <input type="submit" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
 <% include ../footer.ejs %>

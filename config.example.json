@@ -1,13 +1,13 @@
 {
-	"organization": {
-		"name": "Your Organization Name",
-		"url": "http://www.example.org"
-	},
-	"email": {
-		"fromEmail": "hello@example.org",
-		"template": "official"
-	}, 
-	"access": {
-		"domains": ["example.org", "*.example.org"]
-	}
+    "organization": {
+        "name": "Your Organization Name",
+        "url": "http://www.example.org"
+    },
+    "email": {
+        "fromEmail": "hello@example.org",
+        "template": "official"
+    },
+    "access": {
+        "domains": ["example.org", "*.example.org"]
+    }
 }

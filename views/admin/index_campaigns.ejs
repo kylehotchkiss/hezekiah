@@ -1,24 +1,24 @@
 <% include ../header.ejs %>
-	<section class="page-campaigns row">
-		<div class="columns">
-			<div class="row">
-				<div class="large-10 medium-10 large-centered medium-centered columns">
-					<div class="chart-heading text-center">Fundraising Campaigns</div>
+    <section class="page-campaigns row">
+        <div class="columns">
+            <div class="row">
+                <div class="large-10 medium-10 large-centered medium-centered columns">
+                    <div class="chart-heading text-center">Fundraising Campaigns</div>
 
-					<div class="campaigns">
-						<ul class="large-block-grid-3 medium-block-grid-3 small-block-grid-1">
-							<% for ( var i = 0; i < campaigns.length; i++ ) { %>
-   								<li><a href="/admin/campaigns/<%= campaigns[i].get("slug") %>"><%= campaigns[i].get("name") %></a></li>
-							<% } %>
-						</ul>
-					</div>
+                    <div class="campaigns">
+                        <ul class="large-block-grid-3 medium-block-grid-3 small-block-grid-1">
+                            <% for ( var i = 0; i < campaigns.length; i++ ) { %>
+                                <li><a href="/admin/campaigns/<%= campaigns[i].get("slug") %>"><%= campaigns[i].get("name") %></a></li>
+                            <% } %>
+                        </ul>
+                    </div>
 
-					<div class="options">
-						<a class="button" href="/admin/campaigns/create">Create a Campaign</a>
-						<a class="button" href="#">View Archived Campaigns</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
+                    <div class="options">
+                        <a class="button" href="/admin/campaigns/create">Create a Campaign</a>
+                        <a class="button" href="#">View Archived Campaigns</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 <% include ../footer.ejs %>

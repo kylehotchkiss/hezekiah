@@ -13,7 +13,7 @@ var mandrill = require("../library/mandrill");
 var mailchimp = require("../library/mailchimp");
 
 module.exports = function() {
-  	var app = express();
+    var app = express();
 
     // Todo
     // 1) break actual stripe processing code into new function
@@ -24,7 +24,7 @@ module.exports = function() {
     // 6) subscribeemail (async)
 
 
-  	app.post('/one', function( req, res ) {
+    app.post('/one', function( req, res ) {
         var donation = {
             ip: req.connection.remoteAddress, // req/valid
             name: req.body.donorName, // req
@@ -103,19 +103,19 @@ module.exports = function() {
                 });
             }
         });
-	});
+    });
 
     app.post('/record', function(req, res) {
         // used by stripe webhooks to tell us when to log recurring
     });
 
-	app.post('/subscribe', function(req, res) {
+    app.post('/subscribe', function(req, res) {
 
-	});
+    });
 
-	app.post('/unsubscribe', function(req, res) {
+    app.post('/unsubscribe', function(req, res) {
 
-	});
+    });
 
-	return app;
+    return app;
 }();
