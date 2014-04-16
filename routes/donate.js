@@ -1,6 +1,7 @@
 //
 // Illuminate Nations - DonateServ v.0.2.0
 // Copyright 2013-2014 Illuminate Nations
+// Released under the General Public Licence
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
@@ -24,58 +25,82 @@ module.exports = function() {
 
 
   	app.post('/one', function( req, res ) {
-	    var donation = {
-	        ip: req.connection.remoteAddress, // req/valid
-	        name: req.body.donorName, // req
-	        email: req.body.donorEmail, // req/valid
-	        token: req.body.donationToken, // req/valid
+        var donation = {
+            ip: req.connection.remoteAddress, // req/valid
+            name: req.body.donorName, // req
+            email: req.body.donorEmail, // req/valid
+            token: req.body.donationToken, // req/valid
             //source:
-	        thanks: req.body.donationThanks, // req
-	        amount: req.body.donationAmount, // req
-	        emailSignup: req.body.emailSignup
-	    };
+            thanks: req.body.donationThanks, // req
+            amount: req.body.donationAmount, // req
+            emailSignup: req.body.emailSignup
+        };
 
-	    var cause = {
-	        slug: req.body.causeSlug,
-	        title: req.body.causeTitle
-	    };
+        var cause = {
+            slug: req.body.causeSlug
+        };
 
-        // get cause from DB given slug
-
-        stripe.process(donation, cause, function( error, charge ) {
-            if ( error ) {
+        database.Campaign.find({ where: { slug: cause.slug } }).error(function( error ) {
+            res.json({
+                status: "failure",
+                timestamp: new Date().getTime(),
+                server: meta.name + " v" + meta.version,
+                error: {
+                    reason: "dberror",
+                    message: "There was an internal server error. Your card was not charged."
+                }
+            });
+        }).success(function( causeObj ) {
+            if ( causeObj === null ) {
                 res.json({
                     status: "failure",
                     timestamp: new Date().getTime(),
                     server: meta.name + " v" + meta.version,
                     error: {
-                        code: error.code,
-                        reason: error.type,
-                        message: error.message
+                        reason: "nxcampaign",
+                        message: "The campaign you have tried to donate to does not exist. Your card was not charged."
                     }
-                })
-            } else {
-                //mandrill.sendEmail(donation, cause);
-                //mailchimp.subscribeEmail(donation, cause);
-
-                database.Donation.create({
-                    stripeID: charge.id,
-                    amount: donation.amount,
-                    campaign: cause.slug,
-                    subcampaign: donation.subcampaign || null,
-                    donorName: donation.name,
-                    donorEmail: donation.email,
-                    donorIP: donation.ip,
-                    method: "website",
-                    recurring: false,
-                    source: donation.source
                 });
+            } else {
+                var cause = causeObj.dataValues;
 
-                res.json({
-                    status: "success",
-                    timestamp: new Date().getTime(),
-                    server: meta.name + " v" + meta.version,
-                })
+                stripe.process(donation, cause, function( error, charge ) {
+                    if ( error ) {
+                        res.json({
+                            status: "failure",
+                            timestamp: new Date().getTime(),
+                            server: meta.name + " v" + meta.version,
+                            error: {
+                                code: error.code,
+                                reason: error.type,
+                                message: error.message
+                            }
+                        })
+                    } else {
+                        //mailchimp.subscribeEmail(donation, cause);
+
+                        database.Donation.create({
+                            stripeID: charge.id,
+                            amount: donation.amount,
+                            campaign: cause.slug,
+                            subcampaign: donation.subcampaign || null,
+                            donorName: donation.name,
+                            donorEmail: donation.email,
+                            donorIP: donation.ip,
+                            method: "website",
+                            recurring: false,
+                            source: donation.source
+                        });
+
+                        res.json({
+                            status: "success",
+                            timestamp: new Date().getTime(),
+                            server: meta.name + " v" + meta.version,
+                        });
+
+                        mandrill.sendEmail(donation, cause, "one");
+                    }
+                });
             }
         });
 	});

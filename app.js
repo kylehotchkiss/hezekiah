@@ -1,6 +1,7 @@
 //
 // Illuminate Nations - DonateServ v.0.2.0
 // Copyright 2013-2014 Illuminate Nations
+// Released under the General Public Licence
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
@@ -34,7 +35,7 @@ app.set('views', __dirname + '/views');
 app.use(compress());
 app.use(bodyParser());
 app.use(cookieParser());
-app.use(session({ secret: process.env.DS_COOKIE_SECRET, cookie: { maxAge: 60 * 60 * 1000 }}));
+app.use(session({ secret: process.env.DS_COOKIE_SECRET, cookie: { maxAge: 3600000 }}));
 app.use('/assets', express.static('assets'));
 
 app.use(flash());
@@ -54,7 +55,8 @@ if ( environment === "development" ) {
 // Set CORS to set access domain
 //
 app.all('/*', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", config.access.domain);
+    //res.header("Access-Control-Allow-Origin", config.access.domain);
+    res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
     next();
@@ -97,13 +99,6 @@ database.sequelize.sync().complete(function( error ) {
     if ( error ) {
         console.log( error )
     } else {
-        database.Campaign.find({ where: { slug: "tests" } }).error(function( error ) {
-            console.log( "error" );
-        }).success(function( cause ) {
-            if ( cause === null ) { console.log("nullish!") }
-            console.log( cause );
-        });
-
         app.listen(process.env.PORT || 5000);
 
         console.log(meta.name + " v" + meta.version);

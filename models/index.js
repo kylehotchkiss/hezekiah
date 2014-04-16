@@ -1,6 +1,7 @@
 //
 // Illuminate Nations - DonateServ v.0.2.0
 // Copyright 2013-2014 Illuminate Nations
+// Released under the General Public Licence
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
@@ -16,7 +17,7 @@ if ( !global.hasOwnProperty('db') ) {
 			protocol: 'postgres',
 			port: connection[4],
 			host: connection[3],
-			logging:  true
+			logging: false
 		});
 	} else {
 		sequelize = new Sequelize("khotchkiss", "khotchkiss", "", {
