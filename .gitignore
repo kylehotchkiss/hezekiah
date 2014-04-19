@@ -4,4 +4,3 @@ node_modules/
 
 # Local Config
 .env
-config.json

@@ -1,0 +1,21 @@
+{
+    "organization": {
+        "name": "Illuminate Nations",
+        "url": "http://www.illuminatenations.org",
+        "hostname": "www.illuminatenations.org"
+    },
+    "email": {
+        "mcList": "b9e868f9cd",
+        "mcField": "Campaigns",
+        "fromEmail": "hello@illuminatenations.org",
+        "template": "official"
+    },
+    "access": {
+        "domain": "*.illuminatenations.org",
+        "email": "illuminatenations.org"
+    },
+    "frontend": {
+        "typekit": "mwu8mlw",
+        "gaurl": "https://www.google.com/analytics/web/?hl=en#report/conversions-ecommerce-overview/a39937936w75894693p78448211/"
+    }
+}
