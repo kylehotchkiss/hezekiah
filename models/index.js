@@ -20,13 +20,9 @@ if ( !global.hasOwnProperty('db') ) {
             logging: false
         });
     } else {
-        sequelize = new Sequelize("khotchkiss", "khotchkiss", "", {
-            dialect: 'postgres',
-            protocol: 'postgres',
-            port: 5432,
-            host: "localhost",
-            logging: console.log
-        });
+        console.error("DATABASE_URL is not valid.")
+
+        return 0;
     }
 
     /* Models */
