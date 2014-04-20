@@ -74,7 +74,7 @@ module.exports = function() {
     app.get('/campaigns', function(req, res) {
         // Campaigns Index + aggreate report
 
-        database.Campaign.find().error(function( error ) {
+        database.Campaign.findAll().error(function( error ) {
             res.render("error", { error: error });
         }).success(function( campaigns ) {
             res.render("admin/index_campaigns", { campaigns: campaigns });
