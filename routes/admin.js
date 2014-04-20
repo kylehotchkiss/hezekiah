@@ -67,11 +67,19 @@ module.exports = function() {
         res.redirect('/admin');
     });
 
+    var authenticate = function( req, res, next ) {
+        if ( req.isAuthenticated() ) {
+            return next();
+        }
+
+        res.redirect('/admin');
+    }
+
 
     ///////////////////////////////////////
     // Campaign Reporting and Management //
     ///////////////////////////////////////
-    app.get('/campaigns', function(req, res) {
+    app.get('/campaigns', authenticate, function(req, res) {
         // Campaigns Index + aggreate report
 
         database.Campaign.findAll().error(function( error ) {
@@ -81,19 +89,19 @@ module.exports = function() {
         });
     });
 
-    app.get('/campaigns/create', function(req, res) {
+    app.get('/campaigns/create', authenticate, function(req, res) {
         // Create Campaign VIEW
 
         res.render("admin/create_campaign", { user: Parse.User });
     });
 
-    app.post('/campaigns/create', function(req, res) {
+    app.post('/campaigns/create', authenticate, function(req, res) {
         // Create Campaign ACTION
 
         //req.body.
     })
 
-    app.get('/campaigns/:campaign', function(req, res) {
+    app.get('/campaigns/:campaign', authenticate, function(req, res) {
         // View Campaign VIEW
 
         var campaign = req.param("campaign");
@@ -109,7 +117,7 @@ module.exports = function() {
         });
     });
 
-    app.get('/campaigns/:campaign/edit', function(req, res) {
+    app.get('/campaigns/:campaign/edit', authenticate, function(req, res) {
         // Campaign Edit VIEW
 
         var campaign = req.param("campaign");
@@ -125,13 +133,13 @@ module.exports = function() {
         });
     });
 
-    app.post('/campaigns/:campaign/edit', function(req, res) {
+    app.post('/campaigns/:campaign/edit', authenticate, function(req, res) {
         // Edit Campaign ACTION
 
         var campaign = req.param("campaign");
     });
 
-    app.get('/campaigns/:campaign/archive', function(req, res) {
+    app.get('/campaigns/:campaign/archive', authenticate, function(req, res) {
         // Archive campaign ACTION
     });
 
@@ -139,12 +147,12 @@ module.exports = function() {
     //
     // Reporting
     //
-    app.get('/reports', function(req, res) {
+    app.get('/reports', authenticate, function(req, res) {
         // Reports index VIEW
         res.render("admin/index_reports", { user: Parse.User });
     });
 
-    app.get('/reports/search', function(req, res) {
+    app.get('/reports/search', authenticate, function(req, res) {
         // Check for q string VIEW
 
         null;
