@@ -68,15 +68,10 @@ module.exports = function() {
     app.get('/campaigns', function(req, res) {
         // Campaigns Index + aggreate report
 
-        var campaignsQuery = new Parse.Query("campaigns");
-
-        campaignsQuery.find({
-            success: function( campaigns ) {
-                res.render("admin/index_campaigns", { user: Parse.User, campaigns: campaigns });
-            },
-            error: function( error ) {
-                res.render("error", { error: error });
-            }
+        database.Campaign.find().error(function( error ) {
+            res.render("error", { error: error });
+        }).success(function( campaigns ) {
+            res.render("admin/index_campaigns", { campaigns: campaigns });
         });
     });
 
@@ -95,7 +90,7 @@ module.exports = function() {
     app.get('/campaigns/:campaign', function(req, res) {
         // View Campaign VIEW
 
-        var campaign = req.param("campaign");
+        /*var campaign = req.param("campaign");
 
         var campaignsQuery = new Parse.Query("campaigns");
         var donationsQuery = new Parse.Query("donations");
@@ -117,13 +112,13 @@ module.exports = function() {
             error: function( error ) {
                 res.render("error", { error: error });
             }
-        })
+        })*/
     });
 
     app.get('/campaigns/:campaign/edit', function(req, res) {
         // Campaign Edit VIEW
 
-        var campaign = req.param("campaign");
+        /*var campaign = req.param("campaign");
 
         var campaignsQuery = new Parse.Query("campaigns");
         campaignsQuery.equalTo("slug", campaign);
@@ -135,7 +130,7 @@ module.exports = function() {
             error: function( error ) {
                 res.render("error", { error: error });
             }
-        })
+        })*/
     });
 
     app.post('/campaigns/:campaign/edit', function(req, res) {

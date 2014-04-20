@@ -4,6 +4,8 @@
 // Released under the General Public Licence
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
+// TODO: Rename all causes to campaign
+//
 
 var express = require("express");
 var meta = require("../package.json");
