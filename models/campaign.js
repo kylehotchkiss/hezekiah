@@ -34,9 +34,12 @@ module.exports = function( sequelize, type ) {
         },
         image: {
             type: type.STRING,
-            comment: "Image URL"
+            comment: "Image URL",
+            validate: {
+                isUrl: true
+            }
         },
-        emailTitle: {
+        emailSubject: {
             type: type.STRING
         },
         emailTemplate: {

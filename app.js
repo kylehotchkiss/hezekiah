@@ -25,8 +25,6 @@ var environment = process.env.NODE_ENV || 'development';
 // Express Setup
 //
 var app = express();
-app.locals.meta = meta;
-app.locals.config = config;
 
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');

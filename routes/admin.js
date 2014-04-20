@@ -13,6 +13,7 @@ var google = require('passport-google').Strategy;
 var config = require('../config.json');
 var database = require('../models');
 
+
 module.exports = function() {
     var app = express();
 
@@ -52,7 +53,7 @@ module.exports = function() {
     ////////////////////
     app.get('/', function( req, res ) {
         if ( req.user ) {
-            res.send("Welcome!")
+            res.render("admin/index", { user: req.user })
         } else {
             res.render("admin/login", { flash: req.flash('message'), user: req.user })
         }
@@ -85,20 +86,28 @@ module.exports = function() {
         database.Campaign.findAll().error(function( error ) {
             res.render("error", { error: error });
         }).success(function( campaigns ) {
-            res.render("admin/index_campaigns", { campaigns: campaigns });
+            res.render("admin/index_campaigns", { campaigns: campaigns, user: req.user });
         });
     });
 
     app.get('/campaigns/create', authenticate, function(req, res) {
         // Create Campaign VIEW
 
-        res.render("admin/create_campaign", { user: Parse.User });
+        res.render("admin/create_campaign", { user: req.user });
     });
 
     app.post('/campaigns/create', authenticate, function(req, res) {
         // Create Campaign ACTION
 
-        //req.body.
+        var campaignObj = {
+            slug: req.body.slug,
+            name: req.body.name,
+            goal: req.body.goal,
+            plan: req.body.plan,
+            image: req.body.image,
+            emailSubject: req.body.emailSubject,
+            emailTemplate: req.body.emailTemplate
+        }
     })
 
     app.get('/campaigns/:campaign', authenticate, function(req, res) {
@@ -110,9 +119,9 @@ module.exports = function() {
             res.render("error", { error: error });
         }).success(function( campaignObj ) {
             if ( campaignObj === null ) {
-                res.render("error", { error: "Campaign not found" }); // 404
+                res.render("error", { error: "Campaign not found", user: req.user }); // 404
             } else {
-                res.render("admin/single_campaign", { /*donations: donations,*/ campaign: campaignObj });
+                res.render("admin/single_campaign", { /*donations: donations,*/ campaign: campaignObj, user: req.user });
             }
         });
     });
@@ -126,9 +135,9 @@ module.exports = function() {
             res.render("error", { error: error });
         }).success(function( campaignObj ) {
             if ( campaignObj === null ) {
-                res.render("error", { error: "Campaign not found" }); // 404
+                res.render("error", { error: "Campaign not found", user: req.user }); // 404
             } else {
-                res.render("admin/create_campaign", { campaign: campaignObj });
+                res.render("admin/create_campaign", { campaign: campaignObj, user: req.user });
             }
         });
     });
@@ -149,7 +158,7 @@ module.exports = function() {
     //
     app.get('/reports', authenticate, function(req, res) {
         // Reports index VIEW
-        res.render("admin/index_reports", { user: Parse.User });
+        res.render("admin/index_reports", { user: req.user });
     });
 
     app.get('/reports/search', authenticate, function(req, res) {
