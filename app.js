@@ -36,7 +36,7 @@ app.use(compress());
 app.use(bodyParser());
 app.use(cookieParser());
 app.use(session({ secret: process.env.DS_COOKIE_SECRET, cookie: { maxAge: 3600000 }}));
-app.use('/assets', express.static('assets'));
+app.use('/assets', express.static('public'));
 
 app.use(flash());
 

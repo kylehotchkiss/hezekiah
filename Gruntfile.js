@@ -2,7 +2,7 @@ module.exports = function(grunt) {
     require('load-grunt-tasks')(grunt);
 
     var wordpressScripts = [
-        '<%= config.assets %>/scripts/parsley.js',    
+        '<%= config.assets %>/scripts/parsley.js',
         '<%= config.assets %>/scripts/jQuery.cycle2.js',
         '<%= config.assets %>/scripts/jQuery.payment.js',
         '<%= config.assets %>/scripts/jQuery.magnific.js',
@@ -22,7 +22,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         config: {
             assets: 'assets',
-            parse: 'parse/public/assets',
+            parse: 'public',
             wordpress: 'wordpress/wp-content/themes/illuminatenations/assets',
             templates: 'wordpress/wp-content/themes/illuminatenations'
         },
@@ -72,14 +72,14 @@ module.exports = function(grunt) {
         copy: {
             wordpress: {
                 files: [
-                    { expand: true, cwd: '<%= config.assets %>/images', src: ['**'], dest: '<%= config.wordpress %>/images/' },                    
-                    { expand: true, cwd: '<%= config.assets %>/fonts', src: ['**'], dest: '<%= config.wordpress %>/fonts/' }              
+                    { expand: true, cwd: '<%= config.assets %>/images', src: ['**'], dest: '<%= config.wordpress %>/images/' },
+                    { expand: true, cwd: '<%= config.assets %>/fonts', src: ['**'], dest: '<%= config.wordpress %>/fonts/' }
                 ]
             },
             parse: {
                 files: [
-                    { expand: true, cwd: '<%= config.assets %>/images', src: ['**'], dest: '<%= config.parse %>/images/' },  
-                    { expand: true, cwd: '<%= config.assets %>/fonts', src: ['**'], dest: '<%= config.parse %>/fonts/' }                                
+                    { expand: true, cwd: '<%= config.assets %>/images', src: ['**'], dest: '<%= config.parse %>/images/' },
+                    { expand: true, cwd: '<%= config.assets %>/fonts', src: ['**'], dest: '<%= config.parse %>/fonts/' }
                 ]
             }
         },
