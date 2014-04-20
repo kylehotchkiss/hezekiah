@@ -1,0 +1,144 @@
+//
+// Illuminate Nations v3.0
+// Copyright 2013 Illuminate Nations
+// Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
+//
+
+.vertical {
+	position: absolute;
+	top: 0;
+	bottom: 0;			
+	display: table;
+	margin: auto;
+	width: 100%;
+}
+
+.center {
+	display: table;
+	margin: 0 auto;
+}
+
+body.home {
+	header {
+		position: absolute;
+		top: 0;
+		left: 0;
+		background-image: none;
+		margin-bottom: 0 !important;
+		width: 100%;
+		z-index: 1000;
+	}
+
+	.home-rotator {
+		@extend %full-height;
+
+		background-color: #000000; // Between slides
+
+		.slide {
+			@extend %full-height;
+
+			position: relative;
+			background-size: cover;
+			background-position: center center;
+			color: $color-white;
+
+			h1, h2, h3, p {
+				color: $color-white;
+				font-family: $font-sans;
+				margin: 0 0 10px 0;
+				max-width: 600px;
+				line-height: 1.3em;
+				text-align: center;
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
+
+			a {
+				color: $color-white;
+				text-decoration: none;
+			}			
+
+			p {
+				font-size: 20px;
+			}
+
+			.content {
+				padding: 30px;
+			}
+
+			&.signup {
+				input[type=email] {
+					background-color: $color-white;
+					border: 0;
+					color: $color-black;
+					font-family: $font-sans;
+					font-size: 16px;
+					line-height: 44px;
+					margin-right: 10px;
+					padding: 0 10px;
+					width: 200px;
+				}
+
+				input[type=submit] {
+					display: inline-block;
+				}
+
+
+			}
+		}
+	}
+
+	.home-video {
+		/* thx subtlepatterns.com */
+
+		@extend %full-height;
+
+		background-color: #000000;
+		background-size: 46px 23px;
+		color: #FFFFFF;
+		padding: 5% 0;
+		text-align: center;
+	}
+
+	.home-values {
+		@extend %full-height;
+
+		background-color: #EEEEEE;
+		//background-image: inline-image("background-shattered.png");
+		background-size: 50%;
+		position: relative;		
+		padding: 5% 0;
+
+		.subhead { // @extend?
+			margin-bottom: 60px;
+		}
+
+		h1, h3 {
+			margin-bottom: 10px;
+		}
+
+		span {
+			color: $color-gray;
+		}
+
+		p {
+			color: $color-gray;
+			font-size: .9em;
+			line-height: 1.44em;
+		}
+	}
+
+	.home-impact {
+		@extend %full-height;
+
+		#impactMap {
+			@extend %full-height;			
+		}
+	}
+
+	header .top li {
+		text-shadow: 0 0 0 !important;
+	}
+}

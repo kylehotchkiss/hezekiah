@@ -1,4 +1,6 @@
-<% include ../header.ejs %>
+{% extends "../layout.html" %}
+
+{% block content %}
     <section class="page-campaigns row">
         <div class="columns">
             <div class="row">
@@ -6,11 +8,15 @@
                     <div class="chart-heading text-center">Fundraising Campaigns</div>
 
                     <div class="campaigns">
-                        <ul class="large-block-grid-3 medium-block-grid-3 small-block-grid-1">
-                            <% for ( var i = 0; i < campaigns.length; i++ ) { %>
-                                <li><a href="/admin/campaigns/<%= campaigns[i].get("slug") %>"><%= campaigns[i].get("name") %></a></li>
-                            <% } %>
-                        </ul>
+                        {% if campaigns %}
+                            <ul class="large-block-grid-3 medium-block-grid-3 small-block-grid-1">
+                                {% for campaign in campaigns %}
+                                    <li><a href="/admin/campaigns/{{ campaigns.slug }}">{{ campaign.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            There are no campaigns - create one!
+                        {% endif %}
                     </div>
 
                     <div class="options">
@@ -21,4 +27,4 @@
             </div>
         </div>
     </section>
-<% include ../footer.ejs %>
+{% endblock %}

@@ -5,14 +5,20 @@
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
-module.exports = function() {
-    var config = require('../config.json');
-    var express = require('express');
-    var passport = require('passport');
-    var google = require('passport-google').Strategy;
+var swig = require('swig');
+var express = require('express');
+var passport = require('passport');
+var google = require('passport-google').Strategy;
 
+var config = require('../config.json');
+var database = require('../models');
+
+module.exports = function() {
     var app = express();
 
+    app.engine('html', swig.renderFile);
+    app.set('view engine', 'html');
+    app.set('views', __dirname + '/../views');
 
     //////////////////////////////
     // Passport Setup and Paths //
@@ -90,47 +96,33 @@ module.exports = function() {
     app.get('/campaigns/:campaign', function(req, res) {
         // View Campaign VIEW
 
-        /*var campaign = req.param("campaign");
+        var campaign = req.param("campaign");
 
-        var campaignsQuery = new Parse.Query("campaigns");
-        var donationsQuery = new Parse.Query("donations");
-
-        campaignsQuery.equalTo("slug", campaign);
-        donationsQuery.equalTo("cause", campaign);
-
-        campaignsQuery.find({
-            success: function( campaigns ) {
-                donationsQuery.find({
-                    success: function( donations ) {
-                        res.render("admin/single_campaign", { user: Parse.User, donations: donations, campaigns: campaigns });
-                    },
-                    error: function( error ) {
-                        res.render("error", { error: error });
-                    }
-                });
-            },
-            error: function( error ) {
-                res.render("error", { error: error });
+        database.Campaign.find({ slug: campaign }).error(function( error ) {
+            res.render("error", { error: error });
+        }).success(function( campaignObj ) {
+            if ( campaignObj === null ) {
+                res.render("error", { error: "Campaign not found" }); // 404
+            } else {
+                res.render("admin/single_campaign", { /*donations: donations,*/ campaign: campaignObj });
             }
-        })*/
+        });
     });
 
     app.get('/campaigns/:campaign/edit', function(req, res) {
         // Campaign Edit VIEW
 
-        /*var campaign = req.param("campaign");
+        var campaign = req.param("campaign");
 
-        var campaignsQuery = new Parse.Query("campaigns");
-        campaignsQuery.equalTo("slug", campaign);
-
-        campaignsQuery.find({
-            success: function( campaign ) {
-                res.render("admin/create_campaign", { user: Parse.User, campaign: campaign });
-            },
-            error: function( error ) {
-                res.render("error", { error: error });
+        database.Campaign.find({ slug: campaign }).error(function( error ) {
+            res.render("error", { error: error });
+        }).success(function( campaignObj ) {
+            if ( campaignObj === null ) {
+                res.render("error", { error: "Campaign not found" }); // 404
+            } else {
+                res.render("admin/create_campaign", { campaign: campaignObj });
             }
-        })*/
+        });
     });
 
     app.post('/campaigns/:campaign/edit', function(req, res) {

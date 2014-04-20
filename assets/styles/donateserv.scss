@@ -1,0 +1,229 @@
+//
+// Illuminate Nations v3.0
+// Copyright 2013 Illuminate Nations
+// Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
+//
+
+@import "variables";
+@import "foundation";
+@import "normalize";
+@import "fonts";
+
+html {
+	height: 100%;
+	min-height: 100%;
+
+	text-rendering: optimizeLegibility;
+}
+
+body {
+	background-size: cover;
+	color: $color-black;
+	font-family: $font-sans;
+	height: 100%;
+	min-height: 100%;
+	position: relative;
+}
+
+header {
+	$height: 75px;
+	$height-hover: 100px;
+	$margin: 60px;
+
+	background-color: $color-gray-light;
+	font-family: $font-slab;
+	font-size: 20px;
+	font-weight: 300;
+	height: $height;
+	margin-bottom: $margin + ($height-hover - $height);
+	
+	a {
+		color: $color-black;
+		text-decoration: none;
+		padding: 0 5px;
+
+		&.active {
+			border-bottom: 2px solid rgba($color-black, .85);
+		}
+	}
+
+	.top {
+		//text-align: center;
+
+		ul {
+			margin: 0 !important;
+			list-style: none;
+			position: relative;
+			padding: 0;
+		}
+
+		li {
+			display: inline-block;
+			margin-right: 50px;
+
+			@media #{$small-only} { 
+				margin-right: 40px;
+			}
+
+			&:last-child {
+				margin-right: 0;
+			}
+
+			&:hover {
+				> a {
+					@media #{$medium-up} {
+						border-bottom: 1px solid rgba($color-black, .85);	
+					}
+				}
+			}
+
+			&.active {
+				> a {
+					border-bottom: 1px solid rgba($color-black, .85);	
+				}
+			}
+		}
+	}
+
+	.top {
+		line-height: 75px;
+	}
+
+	.logo {
+		a {
+			background-image: url("../images/logo-small-black.png");
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center center;
+			display: inline-block;
+			height: 32px;
+			line-height: 32px;
+			text-indent: -9999em;
+			width: 180px;
+
+			&, &:hover {
+				border-bottom: 0 !important;
+			}	
+		}
+	}
+}
+
+// Footer 
+footer {
+	padding: 1.6em 0;
+
+	p {
+		color: $color-gray;
+		font-size: 11px;
+		margin: 0;
+
+		a {
+			color: $color-gray;
+		}
+	}
+
+	span {
+		display: table;
+		margin: 0 auto;
+
+		@media #{$medium-up} {
+			display: inline;
+		}
+	}
+}
+
+.chart-heading {
+	color: $color-gray;
+	font-size: 30px;
+	margin-bottom: 30px;
+}
+
+.chart {
+	height: 400px;
+	width: 100%;
+}
+
+.tabs {
+	span {
+		font-size: .8em;
+		margin-right: 10px;
+
+		a {
+			color: $color-gray;
+			text-decoration: none;
+		}
+
+		&.active {
+			font-weight: bold;
+
+			a {
+				color: $color-black;
+			}
+		}
+
+		&:last-child {
+			margin-right: 0;
+		}
+	}
+}
+
+.details {
+	padding: 60px 0;
+
+	.blurb {
+		border-right: 1px solid #EEE;
+
+		&:last-child {
+			border-right: 0;
+		}
+	}
+
+	strong {
+		color: $color-gray;
+		display: block;
+		margin-bottom: 10px;
+	}
+
+	.point {
+		font-size: 50px;
+		font-weight: 100;
+		line-height: 75px;
+	}
+
+	ol {
+		margin: 0;
+		padding: 0;
+	}
+
+	li {
+		font-size: 15px;
+		list-style-position: inside;
+		line-height: 25px;
+	}
+}
+
+.page-welcome {
+	$field-width: 300px;
+
+	h3 {
+		font-weight: 300;
+		line-height: 1.3em;
+	}
+
+	input[type=text], 
+	input[type=password] {
+		display: inline-block;
+		font-size: 20px;
+		line-height: 40px;
+		margin-bottom: 10px;
+		max-width: $field-width;
+		width: 100%;
+	}
+
+	input[type=submit] {
+		max-width: $field-width;
+		width: 100%;
+	}
+}
+
+@import "partials/interior";

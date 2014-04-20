@@ -1,0 +1,76 @@
+//
+// Illuminate Nations v3.0
+// Copyright 2013 Illuminate Nations
+// Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
+//
+// This bit is inspired by Codrops
+//
+
+.mobile-navigation {
+	top: 0;
+	left: 0;
+	position: fixed;
+	background: rgba($color-blue, 0.9);
+	height: 100%;
+	width: 100%;
+	z-index: 100000;
+
+	.close {
+		top: 15px;
+		right: 15px;
+		position: absolute;
+		cursor: pointer;
+
+		&:after {
+			content: '\2716';
+			color: $color-white;
+			font-size: 25px;
+		}
+	}
+
+	ul {
+		position: relative;
+		padding: 0;
+		height: 100%;
+		margin: 0;
+		list-style: none;
+	}
+
+	ul li {
+		backface-visibility: hidden;
+		-webkit-backface-visibility: hidden;
+		text-align: center;
+	}
+
+	ul li a { // kh
+		color: $color-white;
+		display: table;
+		font-family: $font-sans;
+		font-size: 25px;
+		font-weight: 300;
+		line-height: 50px;
+		margin: 0 auto;
+		text-decoration: none;
+		padding: 0 25px;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}
+
+.effect-slidedown {
+	visibility: hidden;
+	-webkit-transform: translateY(-100%);
+	transform: translateY(-100%);
+	-webkit-transition: -webkit-transform 0.4s ease-in-out, visibility 0s 0.4s;
+	transition: transform 0.4s ease-in-out, visibility 0s 0.4s;
+}
+
+.effect-slidedown.open {
+	visibility: visible;
+	-webkit-transform: translateY(0%);
+	transform: translateY(0%);
+	-webkit-transition: -webkit-transform 0.4s ease-in-out;
+	transition: transform 0.4s ease-in-out;
+}

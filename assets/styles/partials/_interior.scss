@@ -1,0 +1,600 @@
+//
+// Illuminate Nations v3.0
+// Copyright 2013 Illuminate Nations
+// Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
+//
+
+$row-spacing: 20px; // Primarily for forms
+
+.page-header {
+	padding-bottom: 1em;
+}
+
+.page-content {
+	margin-bottom: 3em;
+
+	h1, h2, h3, h4, h5, h6 {
+		margin-bottom: 10px;
+
+		a {
+			text-decoration: none;
+		}
+	}
+
+	.large-quote {
+		color: $color-gray;
+		font-size: 30px;
+		font-family: $font-slab;
+		margin: 6px auto 0 auto;
+		line-height: 1.5em;
+	}
+
+	.large-description {
+		font-size: 20px;
+		margin: 20px auto 40px auto;
+		max-width: 840px;
+	}
+
+	.meta {
+		color: $color-gray-medium;
+		font-size: 14px;
+		margin-bottom: 10px;
+
+		span {
+			color: $color-gray;
+		}
+	}
+
+	.page-gallery {
+		margin-bottom: 10px;
+
+		.cycle-pager {
+			left: 0;
+			bottom: 10px;
+			position: absolute;
+			text-align: center;
+			width: 100%;
+			z-index: 10000;
+
+			user-select: none;
+			-ms-user-select: none;
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			-webkit-touch-callout: none;
+
+			span {
+				$size: 10px;
+
+				background-color: $color-white;
+				background-color: rgba($color-white, 0.5);
+				border-radius: 50%;
+				cursor: pointer;
+				display: inline-block;
+				height: $size;
+				margin-right: 10px;
+				outline: none;
+				text-indent: -999em;
+				transition: transform 0.3s ease, background-color 0.3s ease;
+				-webkit-transition: -webkit-transform 0.3s ease, background-color 0.3s ease;
+				width: $size;
+
+				&:last-child {
+					margin-right:0;
+				}
+				
+				&.cycle-pager-active {
+					background-color: $color-white;
+					transform: scale(1.3);
+					-webkit-transform: scale(1.3);
+				}
+			}
+		}
+	}
+
+	.page-author {
+		padding: 30px 0;
+		border: 1px solid #EEEEEE;
+		
+		.avatar {
+			img {
+				border-radius: 50%;
+			}
+		}
+
+		.bio {
+			height: 96px;
+
+			p {
+				margin-bottom: 0;
+			}
+		}
+	}	
+
+	.featured {
+		margin-bottom: 10px;
+	}
+
+	.post {
+		margin-bottom: 3em;
+
+		.read-more {
+			display: block;
+		}
+	}
+
+	.pagination {
+		li {
+			display: inline-block;
+			padding: 5px 10px;
+
+			span {
+				color: $color-gray;
+				font-weight: bold;
+			}
+
+			a {
+				color: $color-gray-medium;
+			}
+		}
+	}
+
+	p, .wp-caption {
+		max-width: 100%;
+
+		img {
+			margin-left: -10%;
+			max-width: 120%;
+			width: 120%;
+		}
+
+		.wp-caption-text {
+			color: $color-gray;
+			font-style: italic;
+			font-size: 13px;
+			line-height: 1.6em;
+			margin-top: 10px;
+			text-align: center;
+		}
+	}
+}
+
+.aside {
+	.subtitle {
+		color: $color-gray;
+		font-family: $font-slab;
+		font-size: 35px;
+		text-align: center;
+	}
+
+	.widget-programs {
+		> div {
+			text-align: center;
+
+				&:last-child a {
+					border: 0;
+				}
+
+			a {
+				border-bottom: 1px solid $color-gray-light;
+				color: $color-gray;
+				display: block;
+				text-decoration: none;
+				padding: 30px 0;
+				margin-bottom: 15px;
+
+				&:hover,
+				&:hover p {
+					color: $color-gray;
+				}
+			}
+
+			span {
+				font-size: 30px;	
+				font-family: $font-slab;
+				margin-bottom: 5px;
+			}
+
+			p {
+				color: $color-gray-medium;
+				font-size: 13px;
+				margin: 0 auto;
+				max-width: 170px;
+			}
+		}
+	}
+}
+
+.page-community {
+	@extend %full-height;
+
+	background-color: #EEEEEE;
+	//background-image: inline-image("background-shattered.png");
+	background-size: 50%;
+	margin: -90px 0 60px 0;
+	position: relative;		
+	padding: 5% 0;
+	z-index: -100;
+
+	.subhead { // @extend?
+		margin-bottom: 60px;
+	}
+
+	h1, h3 {
+		margin-bottom: 10px;
+	}
+
+	span {
+		color: $color-gray;
+	}
+
+	p {
+		color: $color-gray;
+		font-size: .9em;
+		line-height: 1.44em;
+	}
+}
+
+.page-programs {
+	@extend %full-height
+}
+
+.page-donate,
+.page-gravity,
+.page-campaigns {
+	form {
+		.levels {
+			line-height: 2em;
+			margin-bottom: $row-spacing;
+
+			.level {
+				input[type=radio] {
+					margin-right: 5px;
+				}
+
+				label {
+					cursor: pointer;
+				}
+
+				input[type=radio]:checked + label {
+					font-weight: bold;
+				}
+			}
+		}
+
+		.amount {
+			margin-bottom: $row-spacing;
+
+			label {
+				display: block;
+			}
+
+			.option {
+				display: inline-block;
+
+				input[type=radio] {
+                	display: none;
+            	}
+
+	            input[type=radio]:checked + label {
+	                background-color: $color-blue;
+	                color: $color-white;
+	            }
+
+            	label {
+                	background-color: $color-gray-light;
+	                color: $color-gray;
+	                cursor: pointer;
+	                font-size: 15px;
+	                font-weight: 300;
+	                margin: 0 5px 5px 0;
+	                padding: 7px 15px;
+	                -webkit-transition: .1s linear;
+
+	                &:hover {
+	                    background-color: $color-blue;
+	                    color: $color-white;
+	                }
+	            }
+			}
+
+			.other {
+				display: inline-block;
+
+				input[type=text] {
+					font-size: 15px;
+					line-height: 30px;
+					margin-left: 5px;
+					width: 60px;
+				}
+			}
+		}
+
+		label {
+			//color: $color-black;
+			font-family: $font-sans;
+			font-size: 14px;
+			line-height: 18px;
+
+			div.large-6 & {
+				display: block;
+			}
+		}
+
+		label span.error,
+		label.parsley-error-list,
+		.gfield_description.validation_message {
+			color: $color-red;
+			font-size: 12px;
+			font-weight: bold;
+			margin-left: 10px;
+		}
+
+		.large-7, .large-5 {
+			span.error {
+				display: block;
+				margin-left: 0;
+			}
+		}
+
+		input[type=text],
+		input[type=email],
+		input[type=number],
+		textarea {
+			line-height: 40px;
+			font-size: 20px;
+			margin-bottom: $row-spacing;
+			outline: none;
+			width: 100%;
+
+			&:focus {
+				border: 1px solid $color-blue;
+			}
+
+			&.error {
+				border: 1px solid $color-red;
+			}
+		}
+		
+		.gfield_error {
+			input[type=text],
+			input[type=email],
+			input[type=number],
+			textarea {
+				border: 1px solid $color-red;
+			}
+		}
+
+		textarea {
+			height: 224px;
+			line-height: 1.6em;
+			padding: 10px;
+		}
+
+		.email-signup {
+		 	margin-bottom: $row-spacing;
+		}
+
+		p.disclaimers {
+			color: $color-gray;
+			font-size: 12px;
+			font-family: $font-sans;
+			margin: $row-spacing 0;
+			line-height: 19px;
+			text-align: center;
+		}
+	}
+
+	.payment-errors,
+	.validation_error {
+		color: $color-red;
+		font-family: $font-sans;
+		font-weight: bold;
+		margin-bottom: $row-spacing;
+	}
+}
+
+.page-video {
+	margin-bottom: 85px;
+	
+	iframe {
+		display: table;
+		margin: 0 auto;
+		max-width: 100%;
+	}
+}
+
+.program, .missionary { 
+	.image {
+		position: relative;
+		background-size: cover;
+		background-position: center center;
+		background-repeat: no-repeat;
+		color: $color-white;
+		display: block;
+		height: 171px;
+		text-decoration: none;
+
+		.overlay, .title {
+			transition: opacity .15s linear;
+			-webkit-transition: opacity .15s linear;
+		}
+
+		.overlay {
+			top: 0;
+			left: 0;
+			position: absolute;
+			background-color: rgba($color-black,.5);
+			height: 100%;
+			width: 100%;
+		}
+
+		.title {
+			font-family: $font-slab;
+			font-size: 24px;
+		}
+
+		&:hover {
+			.overlay {
+				background-color: rgba($color-black,.7);
+			}
+		}
+	}
+}
+
+
+// Forms
+form {
+	input[type=text],
+	input[type=email],
+	input[type=number],
+	input[type=password],
+	textarea {
+		-webkit-appearance: none;
+		border: 1px solid $color-gray-medium;
+		border-radius: 0;
+		font-family: $font-sans;
+		max-width: 100%;
+		outline: none;
+		padding: 0 10px;
+	}
+
+	input[type=submit] {
+		background-color: $color-blue;
+		background-repeat: no-repeat;
+		background-position: right 12px center;
+		border: 0;
+		color: $color-white;
+		cursor: pointer;
+		display: block;
+		font-family: $font-sans;
+		font-size: 20px;
+		line-height: 40px;
+		margin: 0 auto;
+		width: 200px;
+
+		&:hover,
+		&:active {
+			background-color: lighten($color-blue, 10%);
+		}
+
+		&:disabled {
+			background-color: $color-gray-light;
+			background-image: url('../images/loading.svg');			
+			color: $color-gray-medium;
+			cursor: auto;
+		}
+	}
+
+	input[type=checkbox] {
+		margin-right: 5px;
+	}
+}
+
+.page-gravity {
+	.gform_body {
+		ul {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+	}
+
+	.gfield {
+		position: relative;
+	}
+
+	.gfield_description.validation_message {
+		position: absolute;
+		top: 0;
+		right: 0;
+	}
+
+	.gform_validation_container {
+		display: none;
+	}
+	
+	.gfield_required {
+		color: $color-red;
+	}
+
+	.gfield_description {
+		font-family: $font-sans;
+		font-style: italic;
+		font-size: 12px;
+		line-height: 1.6em;
+		margin: 5px 10px;
+	}
+
+	.gfield_checkbox {
+		margin-bottom: $row-spacing !important;
+	}
+}
+
+.profile {
+	margin-bottom: 30px;
+}
+
+//
+// Prayer Wall
+// 
+.page-prayerwall {
+	margin-bottom: 3em;
+	
+	.prayers {
+		.prayer {
+			margin: 10px;
+			width: 300px;
+
+			figure {
+				cursor: pointer;
+    			margin: 0;
+    			position: relative;
+
+    			img {
+    				display: block;
+    				max-width: 100%;
+    				position: relative;
+    			}
+
+    			figcaption {
+					top: 0;
+				    left: 0;
+    				position: absolute;
+    				backface-visibility: hidden;
+					background-color: $color-blue;
+				    color: #FFFFFF;
+				    font-family: $font-sans;
+					height: 100%;
+				    opacity: 0;
+				    padding: 20px;
+				    text-align: center;
+				    transition: transform 0.3s, opacity 0.3s;				    
+				    -webkit-transition: -webkit-transform 0.3s, opacity 0.3s;		
+				    width: 100%;
+
+				    .title {
+				    	font-size: 24px;
+				    	margin-bottom: 12px;
+				    }
+
+				    p {
+				    	color: #FFFFFF;
+				    }
+    			}
+
+    			&:hover {
+    				figcaption {
+    					opacity: 1;
+    					transform: translate(15px, 15px);
+    					-webkit-transform: translate(15px, 15px);
+    				}
+    			}
+			}
+
+			.quote {
+				font-size: 24px;
+				line-height: 32px;
+			}
+		}
+	}
+}

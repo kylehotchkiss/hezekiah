@@ -26,5 +26,18 @@
     "compression": "~1.0.1",
     "express-session": "~1.0.2",
     "cookie-parser": "~1.0.1"
-  }
+  },
+  "devDependencies": {
+    "load-grunt-tasks": "*",
+    "grunt-remove-logging": "*",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-copy": "*",
+    "grunt-contrib-clean": "*",
+    "grunt-contrib-connect": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-watch": "*",
+    "time-grunt": "*",
+    "grunt": "*",
+    "grunt-sass": "*"
+    }
 }
