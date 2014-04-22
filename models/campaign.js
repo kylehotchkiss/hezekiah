@@ -17,6 +17,7 @@ module.exports = function( sequelize, type ) {
             type: type.STRING,
             unique: true,
             validate: {
+                len: [1,15],
                 isAlphanumeric: true
             },
             comment: "Campaign slug for DonateServ, Mailchimp, and website"
@@ -44,6 +45,10 @@ module.exports = function( sequelize, type ) {
         },
         emailTemplate: {
             type: type.STRING
+        },
+        archived: {
+            type: type.BOOLEAN,
+            defaultValue: false
         }
     })
 };

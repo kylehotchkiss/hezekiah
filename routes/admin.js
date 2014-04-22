@@ -5,21 +5,27 @@
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
-var swig = require('swig');
-var express = require('express');
-var passport = require('passport');
-var google = require('passport-google').Strategy;
+var os = require("os");
+var swig = require("swig");
+var flash = require('connect-flash');
+var express = require("express");
+var passport = require("passport");
+var google = require("passport-google").Strategy;
 
-var config = require('../config.json');
-var database = require('../models');
+var config = require("../config.json");
+var database = require("../models");
+var environment = process.env.NODE_ENV || 'development';
 
 
 module.exports = function() {
+    var returnURL, realm;
     var app = express();
 
     app.engine('html', swig.renderFile);
     app.set('view engine', 'html');
     app.set('views', __dirname + '/../views');
+
+    app.use(flash());
 
     //////////////////////////////
     // Passport Setup and Paths //
@@ -32,9 +38,17 @@ module.exports = function() {
         callback(null, obj);
     });
 
+    if ( environment === "development" ) {
+        realm = "http://localhost:5000/";
+        returnURL = "http://localhost:5000/admin/login/callback";
+    } else {
+        realm = "https://" + os.hostname() + "/";
+        returnURL = "https://" + os.hostname() + "/admin/login/callback";
+    }
+
     passport.use(new google({
-        returnURL: 'http://localhost:5000/admin/login/callback', // Figure out how to set this properly (doh)
-        realm: 'http://localhost:5000/'
+        realm: realm,
+        returnURL: returnURL
     }, function( identifier, profile, done ) {
         var email = profile.emails[0].value;
         var domain = email.substring( email.search("@") + 1 );
@@ -43,7 +57,7 @@ module.exports = function() {
         if ( domain === config.access.email ) {
             done(null, profile);
         } else {
-            done(null, false, { message: "You must be a member of " + config.organization.name + " to access DonateServ."});
+            done(null, false, { login: "You must be a member of " + config.organization.name + " to access DonateServ." });
         }
     }));
 
@@ -55,7 +69,10 @@ module.exports = function() {
         if ( req.user ) {
             res.render("admin/index", { user: req.user })
         } else {
-            res.render("admin/login", { flash: req.flash('message'), user: req.user })
+            //req.flash("login", "You must use an illuminatenations.org email to login.")
+            console.log( req.authInfo )
+
+            res.render("admin/login", { flash: req.flash('login'), user: req.user })
         }
     });
 
@@ -99,15 +116,19 @@ module.exports = function() {
     app.post('/campaigns/create', authenticate, function(req, res) {
         // Create Campaign ACTION
 
-        var campaignObj = {
+        database.Campaign.create({
             slug: req.body.slug,
             name: req.body.name,
-            goal: req.body.goal,
+            goal: req.body.goal || 0,
             plan: req.body.plan,
             image: req.body.image,
             emailSubject: req.body.emailSubject,
             emailTemplate: req.body.emailTemplate
-        }
+        }).error(function( error ) {
+            res.render("error", { error: error });
+        }).success(function() {
+            res.redirect("/admin/campaigns");
+        });
     })
 
     app.get('/campaigns/:campaign', authenticate, function(req, res) {
@@ -146,6 +167,28 @@ module.exports = function() {
         // Edit Campaign ACTION
 
         var campaign = req.param("campaign");
+
+        database.Campaign.find({ slug: campaign }).error(function( error ) {
+            res.render("error", { error: error });
+        }).success(function( campaignObj ) {
+            if ( campaignObj === null ) {
+                res.render("error", { error: "Campaign not found", user: req.user }); // 404
+            } else {
+                database.Campaign.update({
+                    slug: req.body.slug,
+                    name: req.body.name,
+                    goal: req.body.goal || 0,
+                    plan: req.body.plan,
+                    image: req.body.image,
+                    emailSubject: req.body.emailSubject,
+                    emailTemplate: req.body.emailTemplate
+                }, { id: campaignObj.id }).error(function( error ) {
+                    res.render("error", { error: error });
+                }).success(function() {
+                    res.redirect("/admin/campaigns/" + campaign);
+                });
+            }
+        });
     });
 
     app.get('/campaigns/:campaign/archive', authenticate, function(req, res) {

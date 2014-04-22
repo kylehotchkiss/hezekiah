@@ -17,7 +17,7 @@ if ( !global.hasOwnProperty('db') ) {
             protocol: 'postgres',
             port: connection[4],
             host: connection[3],
-            logging: false
+            logging: true
         });
     } else {
         console.error("DATABASE_URL is not valid.")

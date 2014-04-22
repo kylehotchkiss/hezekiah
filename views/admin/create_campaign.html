@@ -19,7 +19,7 @@
                         <div class="row slug">
                             <div class="columns">
                                 <label for="slug">Campaign Slug</label>
-                                <input type="text" name="slug" value="{% if campaign.slug %}{{ campaign.slug }}{% endif %}" required />
+                                <input type="text" name="slug" value="{% if campaign.slug %}{{ campaign.slug }}{% endif %}" maxlength="15" pattern="[a-zA-Z0-9]+" required />
                             </div>
                         </div>
 
@@ -33,7 +33,7 @@
                         <div class="row goal">
                             <div class="columns">
                                 <label for="goal">Campaign Goal</label>
-                                <input type="text" name="goal" value="{% if campaign.goal %}{{ campaign.goal }}{% endif %}" required />
+                                <input type="text" name="goal" value="{% if campaign.goal %}{{ campaign.goal }}{% endif %}" />
                             </div>
                         </div>
 
@@ -47,7 +47,7 @@
                         <div class="row image">
                             <div class="columns">
                                 <label for="image">Campaign Image (URL to Image)</label>
-                                <input type="text" name="image" value="{% if campaign.image %}{{ campaign.image }}{% endif %}" />
+                                <input type="text" name="image" value="{% if campaign.image %}{{ campaign.image }}{% endif %}" required />
                             </div>
                         </div>
 
