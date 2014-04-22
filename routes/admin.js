@@ -38,8 +38,6 @@ module.exports = function() {
         callback(null, obj);
     });
 
-    console.log(environment);
-
     if ( environment === "development" ) {
         realm = "http://localhost:5000/";
         returnURL = "http://localhost:5000/admin/login/callback";
