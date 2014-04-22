@@ -69,9 +69,6 @@ module.exports = function() {
         if ( req.user ) {
             res.render("admin/index", { user: req.user })
         } else {
-            //req.flash("login", "You must use an illuminatenations.org email to login.")
-            console.log( req.authInfo )
-
             res.render("admin/login", { flash: req.flash('login'), user: req.user })
         }
     });

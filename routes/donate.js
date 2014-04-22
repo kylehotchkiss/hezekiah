@@ -18,12 +18,12 @@ module.exports = function() {
     var app = express();
 
     // Todo
-    // 1) break actual stripe processing code into new function
-    // 2) proper error forwarding
-    // 3) return feedback (async)
-    // 4) sendemail function (async)
-    // 5) recordDonation (async)
-    // 6) subscribeemail (async)
+    // 1) break actual stripe processing code into new function //
+    // 2) proper error forwarding //
+    // 3) return feedback (async) //
+    // 4) sendemail function (async) //
+    // 5) recordDonation (async) //
+    // 6) subscribeemail (async) //
 
 
     app.post('/one', function( req, res ) {
