@@ -14,12 +14,14 @@ var google = require("passport-google").Strategy;
 
 var config = require("../config.json");
 var database = require("../models");
+var hostname = process.env.DS_HOSTNAME || "http://locahost:5000"
 var environment = process.env.NODE_ENV || 'development';
 
 
 module.exports = function() {
-    var returnURL, realm;
     var app = express();
+    var realm = hostname + "/";
+    var returnURL = hostname + "/admin/login/callback";
 
     app.engine('html', swig.renderFile);
     app.set('view engine', 'html');
@@ -37,16 +39,6 @@ module.exports = function() {
     passport.deserializeUser(function(obj, callback) {
         callback(null, obj);
     });
-
-    if ( environment === "development" ) {
-        realm = "http://localhost:5000/";
-        returnURL = "http://localhost:5000/admin/login/callback";
-    } else {
-        realm = "https://" + os.hostname() + "/";
-        returnURL = "https://" + os.hostname() + "/admin/login/callback";
-    }
-
-    console.log( realm + " " + returnURL );
 
     passport.use(new google({
         realm: realm,
