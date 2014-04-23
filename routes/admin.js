@@ -46,6 +46,8 @@ module.exports = function() {
         returnURL = "https://" + os.hostname() + "/admin/login/callback";
     }
 
+    console.log( realm + " " + returnURL );
+
     passport.use(new google({
         realm: realm,
         returnURL: returnURL
