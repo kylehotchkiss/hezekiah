@@ -26,9 +26,9 @@ var environment = process.env.NODE_ENV || 'development';
 //
 var app = express();
 
-app.engine('html', swig.renderFile);
-app.set('view engine', 'html');
-app.set('views', __dirname + '/views');
+//app.engine('html', swig.renderFile);
+//app.set('view engine', 'html');
+//app.set('views', __dirname + '/views');
 
 app.use(compress());
 app.use(bodyParser());

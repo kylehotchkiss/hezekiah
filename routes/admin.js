@@ -14,7 +14,7 @@ var google = require("passport-google").Strategy;
 
 var config = require("../config.json");
 var database = require("../models");
-var hostname = process.env.DS_HOSTNAME || "http://locahost:5000"
+var hostname = process.env.DS_HOSTNAME || "http://localhost:5000"
 var environment = process.env.NODE_ENV || 'development';
 
 
@@ -26,6 +26,8 @@ module.exports = function() {
     app.engine('html', swig.renderFile);
     app.set('view engine', 'html');
     app.set('views', __dirname + '/../views');
+
+    swig.setDefaults({ autoescape: false });
 
     app.use(flash());
 
@@ -61,7 +63,11 @@ module.exports = function() {
     ////////////////////
     app.get('/', function( req, res ) {
         if ( req.user ) {
-            res.render("admin/index", { user: req.user })
+            database.Donation.findAll().error(function( error ) {
+                res.render("error", { error: error });
+            }).success(function( donations ) {
+                res.render("admin/index", { user: req.user, donationsString: JSON.stringify( donations ) })
+            });
         } else {
             res.render("admin/login", { flash: req.flash('login'), user: req.user })
         }

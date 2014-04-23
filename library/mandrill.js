@@ -10,7 +10,7 @@ var request = require("request");
 var config = require("../config.json");
 
 var mandrillBase = "https://mandrillapp.com/api/1.0/";
-var mandrillAPI = process.env.DS_MANDRILL_API || "t2znvocdNFzqk5UwE1R8eA";
+var mandrillAPI = process.env.DS_MANDRILL_API;
 
 var messageBuilder = function( donation, cause, callback ) {
     // TODO should check emailTemplate for EXEC safety
@@ -46,9 +46,9 @@ exports.sendEmail = function( donation, cause, intent, callback ) {
                         "content": emailContent
                     }],
                     message: {
-                        to: [{ email: donation.email, name: donation.name }], // from func
-                        tags: [intent], // Consider - recurring vs one, unsub, etc intent param
-                        subject: "example subject", // from func
+                        to: [{ email: donation.email, name: donation.name }],
+                        tags: [intent],
+                        subject: "example subject", // TODO - from func
                         auto_text: true,
                         from_name: config.organization.name,
                         inline_css: true,

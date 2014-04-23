@@ -5,6 +5,8 @@
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
+var environment = process.env.NODE_ENV || 'development';
+
 if ( !global.hasOwnProperty('db') ) {
     var sequelize, Sequelize = require('sequelize');
 
@@ -17,7 +19,7 @@ if ( !global.hasOwnProperty('db') ) {
             protocol: 'postgres',
             port: connection[4],
             host: connection[3],
-            logging: true
+            logging: environment === "development"
         });
     } else {
         console.error("DATABASE_URL is not valid.")

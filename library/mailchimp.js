@@ -11,7 +11,7 @@
 var request = require("request");
 
 var mailchimpBase = "https://us7.api.mailchimp.com/2.0/";
-var mailchimpAPI = process.env.DS_MAILCHIMP_API || "eaa0a5f4f11557815e47cd18656598af";
+var mailchimpAPI = process.env.DS_MAILCHIMP_API;
 var mailchimpList = "b9e868f9cd";
 
 
