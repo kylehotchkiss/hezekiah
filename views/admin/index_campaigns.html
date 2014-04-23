@@ -11,7 +11,10 @@
                         {% if campaigns %}
                             <ul class="large-block-grid-3 medium-block-grid-3 small-block-grid-1">
                                 {% for campaign in campaigns %}
-                                    <li><a href="/admin/campaigns/{{ campaign.slug }}">{{ campaign.name }}</a></li>
+                                    <li>
+                                        <img src="{{ campaign.image }}" />
+                                        <a href="/admin/campaigns/{{ campaign.slug }}">{{ campaign.name }}</a>
+                                    </li>
                                 {% endfor %}
                             </ul>
                         {% else %}
@@ -20,8 +23,8 @@
                     </div>
 
                     <div class="options">
-                        <a class="button" href="/admin/campaigns/create">Create a Campaign</a>
-                        <a class="button" href="#">View Archived Campaigns</a>
+                        <a class="button" href="/admin/campaigns/create">Create a Campaign <i class="ss-navigateright"></i></a>
+                        <a class="button" href="#">View Archived Campaigns <i class="ss-navigateright"></i></a>
                     </div>
                 </div>
             </div>

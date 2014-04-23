@@ -5,6 +5,7 @@
 //
 
 @import "variables";
+@import "symbolset";
 @import "foundation";
 @import "normalize";
 @import "fonts";
@@ -36,7 +37,7 @@ header {
 	font-weight: 300;
 	height: $height;
 	margin-bottom: $margin + ($height-hover - $height);
-	
+
 	a {
 		color: $color-black;
 		text-decoration: none;
@@ -61,7 +62,7 @@ header {
 			display: inline-block;
 			margin-right: 50px;
 
-			@media #{$small-only} { 
+			@media #{$small-only} {
 				margin-right: 40px;
 			}
 
@@ -72,14 +73,14 @@ header {
 			&:hover {
 				> a {
 					@media #{$medium-up} {
-						border-bottom: 1px solid rgba($color-black, .85);	
+						border-bottom: 1px solid rgba($color-black, .85);
 					}
 				}
 			}
 
 			&.active {
 				> a {
-					border-bottom: 1px solid rgba($color-black, .85);	
+					border-bottom: 1px solid rgba($color-black, .85);
 				}
 			}
 		}
@@ -103,12 +104,12 @@ header {
 
 			&, &:hover {
 				border-bottom: 0 !important;
-			}	
+			}
 		}
 	}
 }
 
-// Footer 
+// Footer
 footer {
 	padding: 1.6em 0;
 
@@ -210,7 +211,7 @@ footer {
 		line-height: 1.3em;
 	}
 
-	input[type=text], 
+	input[type=text],
 	input[type=password] {
 		display: inline-block;
 		font-size: 20px;
@@ -224,6 +225,32 @@ footer {
 		max-width: $field-width;
 		width: 100%;
 	}
+}
+
+// campaign index
+div.campaigns {
+    margin-bottom: 30px;
+}
+
+.button {
+    background-color: $color-blue;
+    color: $color-white;
+    font-size: 14px;
+    margin-right: 10px;
+    padding: 10px 20px;
+    text-decoration: none;
+    transition: .5s;
+    -moz-transition: .5s;
+    -webkit-transition: .5s;
+
+    &:hover {
+        background-color: lighten($color-blue, 10%);
+    }
+
+    i {
+        position: relative;
+        top: 3px;
+    }
 }
 
 @import "partials/interior";
