@@ -12,8 +12,12 @@
                             <ul class="large-block-grid-3 medium-block-grid-3 small-block-grid-1">
                                 {% for campaign in campaigns %}
                                     <li>
-                                        <img src="{{ campaign.image }}" />
-                                        <a href="/admin/campaigns/{{ campaign.slug }}">{{ campaign.name }}</a>
+                                        <a href="/admin/campaigns/{{ campaign.slug }}">
+                                            <div class="imageWrapper">
+                                                <img src="{{ campaign.image }}">
+                                            </div>
+                                            {{ campaign.name }}
+                                        </a>
                                     </li>
                                 {% endfor %}
                             </ul>

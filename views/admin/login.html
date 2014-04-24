@@ -3,14 +3,13 @@
 {% block content %}
     <section class="page-welcome row">
         <div class="large-6 medium-6 large-centered medium-centered columns text-center">
-            <h3>
-                Welcome to Illuminate Nations <br /> Contribution Management <br />
-                Please Log In
-            </h3>
+            <h3>Welcome to Illuminate Nations <br /> Contribution Management</h3>
 
-            <div class="flash">{{ flash }}</div>
+            <div class="actions">
+                <div class="flash">{{ flash }}</div>
 
-            <a href="/admin/login" class="button">Login with Google</a>
+                <a href="/admin/login" class="button">Login with Google</a>
+            </div>
         </div>
     </section>
 {% endblock %}

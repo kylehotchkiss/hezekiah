@@ -3,9 +3,13 @@ var donations;
 //
 // Functions in General
 //
+// todo: remove stripe/square segration, use same code for all campaigns,
+// but find way to isolate campaigns countdown for all view
+//
+//
 var parseDonations = function( stripe, square, cash, period ) {
 	// much of this could be rewritten in underscore
-	var timeAmount, timeUnits, timeFormat, chartData; 
+	var timeAmount, timeUnits, timeFormat, chartData, topCampaigns = [];
 
 	var now = moment();
 	var labels = { stripe: [], square: [], cash: [] };
@@ -35,18 +39,18 @@ var parseDonations = function( stripe, square, cash, period ) {
 		now.subtract(timeUnit, 1);
 	}
 
-	if ( stripe ) {
+	if ( stripe ) { // dep
 		var end = moment();
 		var begin = moment().subtract(timeUnit, timeAmount);
 
-		for ( var i in donations ) {	
+		for ( var i in donations ) {
 			var donation = donations[i];
 			var time = moment( donation.createdAt );
 
-			if ( typeof campaignData[donation.cause] === "undefined" ) {
-				campaignData[donation.cause] = 1;
+			if ( typeof campaignData[donation.campaign] === "undefined" ) {
+				campaignData[donation.campaign] = 1;
 			} else {
-				campaignData[donation.cause] += 1;
+				campaignData[donation.campaign] += 1;
 			}
 
 			if ( time.isAfter( begin ) ) {
@@ -68,19 +72,23 @@ var parseDonations = function( stripe, square, cash, period ) {
 		}],
 	};
 
-	console.log(  _.invert(campaignData) ); // needs conversion to array then output
+    for ( var campaign in campaignData ) {
+        var i = campaignData[campaign];
+
+        topCampaigns[i] = campaign;
+    }
 
 	metaData = {
 		total: "$" + data.stripe.reduce(function(x, y) { return x + y; }, 0),
 		donations: totalDonations,
-		campaigns: _.toArray( _.invert(campaignData) )
+		campaigns: topCampaigns.reverse()
 	}
 
 	return { chart: chartData, meta: metaData }
 }
 
 
-// 
+//
 // jQuery Functions
 //
 var indexCharts = function() {
@@ -94,7 +102,7 @@ var indexCharts = function() {
 
 		var weeklyData = parseDonations( donations, null, null, "week" );
 		var monthlyData = parseDonations( donations, null, null, "month" );
-		var annualData = parseDonations( donations, null, null, "year" );		
+		var annualData = parseDonations( donations, null, null, "year" );
 
 
 		var $weeklyChart = $("#donations-week").get(0).getContext("2d");
@@ -102,18 +110,53 @@ var indexCharts = function() {
 		var $annualChart = $("#donations-annual").get(0).getContext("2d");
 
 
-		var week = new Chart( $weeklyChart ).Line( weeklyData.chart, opt );		
-		var month = new Chart( $monthlyChart ).Line( monthlyData.chart, opt );		
-		var annual = new Chart( $annualChart ).Line( annualData.chart, opt );		
+		var week = new Chart( $weeklyChart ).Line( weeklyData.chart, opt );
+		var month = new Chart( $monthlyChart ).Line( monthlyData.chart, opt );
+		var annual = new Chart( $annualChart ).Line( annualData.chart, opt );
+
+        var weeklyCampaigns = "<ol>";
+        var monthlyCampaigns = "<ol>";
+        var annualCampaigns = "<ol>";
+
+        for ( var i in weeklyData.meta.campaigns ) {
+            var campaign = weeklyData.meta.campaigns[i];
+
+            if ( i < 3 ) {
+                weeklyCampaigns += '<li><a href="/admin/campaigns/' + campaign + '/">' + campaign + '</a>';
+            }
+        }
+
+        for ( var i in monthlyData.meta.campaigns ) {
+            var campaign = monthlyData.meta.campaigns[i];
+
+            if ( i < 3 ) {
+                monthlyCampaigns += '<li><a href="/admin/campaigns/' + campaign + '/">' + campaign + '</a>';
+            }
+        }
+
+        for ( var i in annualData.meta.campaigns ) {
+            var campaign = annualData.meta.campaigns[i];
+
+            if ( i < 3 ) {
+                annualCampaigns += '<li><a href="/admin/campaigns/' + campaign + '/">' + campaign + '</a>';
+            }
+        }
+
+        weeklyCampaigns += "</ol>";
+        monthlyCampaigns += "</ol>";
+        annualCampaigns += "</ol>";
 
 		jQuery("#weekly-total").text(weeklyData.meta.total);
 		jQuery("#weekly-donations").text(weeklyData.meta.donations);
+        jQuery("#weekly-campaigns").html(weeklyCampaigns);
 
 		jQuery("#monthly-total").text(monthlyData.meta.total);
 		jQuery("#monthly-donations").text(monthlyData.meta.donations);
+        jQuery("#monthly-campaigns").html(monthlyCampaigns);
 
 		jQuery("#annual-total").text(annualData.meta.total);
 		jQuery("#annual-donations").text(annualData.meta.donations);
+        jQuery("#annual-campaigns").html(monthlyCampaigns);
 
 
 		$('.tabs').each(function() {
