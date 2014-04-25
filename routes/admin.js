@@ -149,7 +149,7 @@ module.exports = function() {
 
         var campaign = req.param("campaign");
 
-        database.Campaign.find({ slug: campaign }).error(function( error ) {
+        database.Campaign.find({ where: { slug: campaign } }).error(function( error ) {
             res.render("error", { error: error });
         }).success(function( campaignObj ) {
             if ( campaignObj === null ) {
@@ -165,7 +165,7 @@ module.exports = function() {
 
         var campaign = req.param("campaign");
 
-        database.Campaign.find({ slug: campaign }).error(function( error ) {
+        database.Campaign.find({ where: { slug: campaign } }).error(function( error ) {
             res.render("error", { error: error });
         }).success(function( campaignObj ) {
             if ( campaignObj === null ) {

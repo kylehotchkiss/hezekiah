@@ -29,10 +29,6 @@ module.exports = function( sequelize, type ) {
         goal: {
             type: type.FLOAT
         },
-        plan: {
-            type: type.STRING,
-            comment: "Matches corresponding Stripe plan name, if applicable"
-        },
         image: {
             type: type.STRING,
             comment: "Image URL",
@@ -44,7 +40,10 @@ module.exports = function( sequelize, type ) {
             type: type.STRING
         },
         emailTemplate: {
-            type: type.STRING
+            type: type.STRING,
+            validate: {
+                contains: ["{{ name }}", "{{ campaign }}", "{{ amount }}"]
+            }
         },
         archived: {
             type: type.BOOLEAN,

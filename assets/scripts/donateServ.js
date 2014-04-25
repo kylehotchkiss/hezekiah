@@ -186,6 +186,62 @@ var indexCharts = function() {
 	}
 }
 
+var campaignValidation = function() {
+    jQuery("#form-campaign #field-goal").payment('restrictNumeric');
+
+    jQuery("#form-campaign").parsley({
+        animate: false,
+        errorClass: "error",
+        messages: {
+            cvc: "Please enter a valid CVC.",
+            card: "Please enter a valid card number.",
+            expires: "Please enter a valid expiration date."
+        },
+        errors: {
+            errorElem: '<span></span>',
+            errorsWrapper: '<span class="error"></span>',
+            container: function( element ) {
+                var $container = element.parent().find("label");
+
+                return $container;
+            },
+        },
+        validators: {
+            card: function() {
+                return {
+                    validate: function( number ) {
+                        return jQuery.payment.validateCardNumber( number );
+                    },
+                    priority: 32
+                }
+            },
+            cvc: function() {
+                return {
+                    validate: function( cvc ) {
+                        return jQuery.payment.validateCardCVC( cvc );
+                    },
+                    priority: 32
+                }
+            },
+            expires: function() {
+                return {
+                    validate: function( date ) {
+                        var expiration = jQuery.payment.cardExpiryVal( date );
+
+                        if ( expiration.month === NaN || expiration.year == NaN ) {
+                            return false;
+                        } else {
+                            return jQuery.payment.validateCardExpiry( expiration.month, expiration.year );
+                        }
+                    },
+                    priority: 32
+                }
+            }
+        }
+    });
+}
+
 jQuery(function() {
 	indexCharts();
+    campaignValidation();
 });

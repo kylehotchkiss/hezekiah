@@ -4,6 +4,8 @@
 // Released under the General Public Licence
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
+// change "cause" to "campaign"
+//
 
 var swig = require("swig");
 var request = require("request");
@@ -19,7 +21,7 @@ var messageBuilder = function( donation, cause, callback ) {
         var emailContent = swig.render( cause.emailTemplate, {
             locals: {
                 name: donation.name,
-                cause: cause.name,
+                campaign: cause.name,
                 amount: donation.amount
             }
         });

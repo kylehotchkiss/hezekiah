@@ -9,6 +9,8 @@
 @import "foundation";
 @import "normalize";
 @import "fonts";
+@import "partials/interior";
+
 
 html {
 	height: 100%;
@@ -281,4 +283,8 @@ div.actions {
     }
 }
 
-@import "partials/interior";
+form textarea {
+    font-family: monospace;
+    font-size: 12px !important;
+}
+

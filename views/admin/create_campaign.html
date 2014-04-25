@@ -15,53 +15,46 @@
 
             <div class="row">
                 <div class="large-8 medium-8 large-centered medium-centered columns">
-                    <form method="post">
+                    <form method="post" id="form-campaign">
                         <div class="row slug">
                             <div class="columns">
                                 <label for="slug">Campaign Slug</label>
-                                <input type="text" name="slug" value="{% if campaign.slug %}{{ campaign.slug }}{% endif %}" maxlength="15" pattern="[a-zA-Z0-9]+" required />
+                                <input type="text" name="slug" id="field-slug" value="{% if campaign.slug %}{{ campaign.slug }}{% endif %}" maxlength="15" pattern="[a-zA-Z0-9]+" required />
                             </div>
                         </div>
 
                         <div class="row name">
                             <div class="columns">
                                 <label for="name">Campaign Name</label>
-                                <input type="text" name="name" value="{% if campaign.name %}{{ campaign.name }}{% endif %}" required />
+                                <input type="text" name="name" id="field-name" value="{% if campaign.name %}{{ campaign.name }}{% endif %}" required />
                             </div>
                         </div>
 
                         <div class="row goal">
                             <div class="columns">
                                 <label for="goal">Campaign Goal</label>
-                                <input type="text" name="goal" value="{% if campaign.goal %}{{ campaign.goal }}{% endif %}" />
-                            </div>
-                        </div>
-
-                        <div class="row plan">
-                            <div class="columns">
-                                <label for="plan">Campaign Plan (Stripe Plan ID)</label>
-                                <input type="text" name="plan" value="{% if campaign.plan %}{{ campaign.plan }}{% endif %}" />
+                                <input type="text" name="goal" id="field-goal" value="{% if campaign.goal %}{{ campaign.goal }}{% endif %}" />
                             </div>
                         </div>
 
                         <div class="row image">
                             <div class="columns">
                                 <label for="image">Campaign Image (URL to Image)</label>
-                                <input type="text" name="image" value="{% if campaign.image %}{{ campaign.image }}{% endif %}" required />
+                                <input type="text" name="image" id="field-image" value="{% if campaign.image %}{{ campaign.image }}{% endif %}" required />
                             </div>
                         </div>
 
                         <div class="row emailSubject">
                             <div class="columns">
                                 <label for="emailSubject">Email Subject</label>
-                                <input type="text" name="emailSubject" value="{% if campaign.emailSubject %}{{ campaign.emailSubject }}{% endif %}" required />
+                                <input type="text" name="emailSubject" id="field-emailSubject" value="{% if campaign.emailSubject %}{{ campaign.emailSubject }}{% endif %}" required />
                             </div>
                         </div>
 
                         <div class="row emailTemplate">
                             <div class="columns">
                                 <label for="emailTemplate">Email Template</label>
-                                <textarea name="emailTemplate" required>{% if campaign.emailTemplate %}{{ campaign.emailTemplate }}{% endif %}</textarea>
+                                <textarea name="emailTemplate" id="field-emailTemplate" required>{% if campaign.emailTemplate %}{{ campaign.emailTemplate }}{% endif %}</textarea>
                             </div>
                         </div>
 
