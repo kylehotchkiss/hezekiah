@@ -79,7 +79,10 @@ module.exports = function() {
                             }
                         })
                     } else {
-                        //mailchimp.subscribeEmail(donation, cause);
+                        if ( cause.emailSignup ) {
+                            mailchimp.subscribeEmail(donation, cause);
+                        }
+
 
                         database.Donation.create({
                             stripeID: charge.id,
