@@ -1,11 +1,19 @@
 {% extends "../layout.html" %}
 
 {% block content %}
-    <section class="page-campaigns row">
+    <section class="page-reports row">
         <div class="columns">
             <div class="row">
                 <div class="large-10 medium-10 large-centered medium-centered columns">
                     <div class="chart-heading text-center">Fundraising Reports</div>
+
+                    <div class="reports">
+                        <ul>
+                            {% for report in reports %}
+                                <li><a href="/admin/reports/{{ loop.key }}/">{{ report.name }} - {{ report.description }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

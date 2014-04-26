@@ -84,7 +84,7 @@ app.get("/status", function(req, res) {
 //
 // App Routing
 //
-//app.use('/api', require('./routes/api'));
+app.use('/api', require('./routes/api'));
 app.use('/admin', require('./routes/admin'));
 app.use('/donate', require('./routes/donate'));
 

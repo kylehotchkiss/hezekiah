@@ -11,6 +11,7 @@ var flash = require('connect-flash');
 var express = require("express");
 var passport = require("passport");
 var google = require("passport-google").Strategy;
+var reports = require('../library/reports');
 
 var config = require("../config.json");
 var database = require("../models");
@@ -137,7 +138,7 @@ module.exports = function() {
             res.render("error", { error: error });
         }).success(function( campaignObj ) {
             if ( campaignObj === null ) {
-                res.render("error", { error: "Campaign not found", user: req.user }); // 404
+                res.render('404', { user: req.user });
             } else {
                 res.render("admin/single_campaign", { /*donations: donations,*/ campaign: campaignObj, user: req.user });
             }
@@ -153,7 +154,7 @@ module.exports = function() {
             res.render("error", { error: error });
         }).success(function( campaignObj ) {
             if ( campaignObj === null ) {
-                res.render("error", { error: "Campaign not found", user: req.user }); // 404
+                res.render('404', { user: req.user });
             } else {
                 res.render("admin/create_campaign", { campaign: campaignObj, user: req.user });
             }
@@ -169,7 +170,7 @@ module.exports = function() {
             res.render("error", { error: error });
         }).success(function( campaignObj ) {
             if ( campaignObj === null ) {
-                res.render("error", { error: "Campaign not found", user: req.user }); // 404
+                res.render('404', { user: req.user });
             } else {
                 database.Campaign.update({
                     slug: req.body.slug,
@@ -198,7 +199,28 @@ module.exports = function() {
     //
     app.get('/reports', authenticate, function(req, res) {
         // Reports index VIEW
-        res.render("admin/index_reports", { user: req.user });
+
+        res.render("admin/index_reports", { reports: reports, user: req.user });
+    });
+
+    app.get('/reports/:report', authenticate, function(req, res) {
+        // View Reports VIEW
+
+        var report = req.param("report");
+
+        if ( typeof reports[report] !== "undefined" ) {
+            var thisReport = reports[report];
+
+            thisReport.generate(function( response ) {
+                if ( response.status !== "success" ) {
+                    console.log( error );
+                } else {
+                    res.render("admin/single_report", { name: thisReport.name, data: response.data, user: req.user })
+                }
+            });
+        } else {
+            res.render('404', { user: req.user });
+        }
     });
 
     app.get('/reports/search', authenticate, function(req, res) {
