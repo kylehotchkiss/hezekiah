@@ -37,22 +37,26 @@ module.exports = function() {
                 });
             } else {
                 if ( campaignObj.goal ) {
-                    database.Donation.findAll().error(function( error ) { // todo narrow down to campaign
+                    database.Donation.findAll({ where: { campaign: campaign }}).error(function( error ) { // todo narrow down to campaign
                         res.json({
                             status: "failure",
                             timestamp: new Date().getTime(),
                             server: meta.name + " v" + meta.version,
                             error: {
-                                reason: "dberror"
+                                reason: "dberror",
+                                description: error
                             }
                         });
                     }).success(function( donations ) {
+                        var sum = 0;
                         var total = 0;
 
                         for ( var i in donations ) {
                             var donation = donations[i];
 
-                            total += donation.amount;
+                            sum += donation.amount;
+
+                            total++;
                         }
 
                         res.json({
@@ -62,7 +66,8 @@ module.exports = function() {
                             data: {
                                 name: campaignObj.name,
                                 goal: campaignObj.goal,
-                                total: total
+                                percentage: ((sum / campaignObj.goal) * 100).toFixed(2),
+                                total: sum
                             }
                         });
                     });

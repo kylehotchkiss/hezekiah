@@ -21,14 +21,11 @@ var config = require('./config.json');
 var database = require('./models');
 var environment = process.env.NODE_ENV || 'development';
 
+
 //
 // Express Setup
 //
 var app = express();
-
-//app.engine('html', swig.renderFile);
-//app.set('view engine', 'html');
-//app.set('views', __dirname + '/views');
 
 app.use(compress());
 app.use(bodyParser());
@@ -40,8 +37,6 @@ app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-//swig.setDefaults({ autoescape: false }); // ??
 
 if ( environment === "development" ) {
     app.set('view cache', false);
@@ -87,7 +82,6 @@ app.get("/status", function(req, res) {
 app.use('/api', require('./routes/api'));
 app.use('/admin', require('./routes/admin'));
 app.use('/donate', require('./routes/donate'));
-
 
 
 //
