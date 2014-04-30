@@ -7,8 +7,7 @@
 
 var express = require('express');
 var database = require('../models');
-
-var meta = require('../package.json');
+var helpers = require('../library/helpers.js');
 
 module.exports = function() {
     var app = express();
@@ -17,36 +16,14 @@ module.exports = function() {
         var campaign = req.param("campaign");
 
         database.Campaign.find({ where: { slug: campaign } }).error(function( error ) {
-            res.json({
-                status: "failure",
-                timestamp: new Date().getTime(),
-                server: meta.name + " v" + meta.version,
-                error: {
-                    reason: "dberror"
-                }
-            });
+            helpers.json("failure", null, error, res);
         }).success(function( campaignObj ) {
             if ( campaignObj === null ) {
-                res.json({
-                    status: "failure",
-                    timestamp: new Date().getTime(),
-                    server: meta.name + " v" + meta.version,
-                    error: {
-                        reason: "nxcampaign"
-                    }
-                });
+                helpers.json("failure", null, { reason: "nxcampaign" }, res);
             } else {
                 if ( campaignObj.goal ) {
                     database.Donation.findAll({ where: { campaign: campaign }}).error(function( error ) { // todo narrow down to campaign
-                        res.json({
-                            status: "failure",
-                            timestamp: new Date().getTime(),
-                            server: meta.name + " v" + meta.version,
-                            error: {
-                                reason: "dberror",
-                                description: error
-                            }
-                        });
+                        helpers.json("failure", null, error, res);
                     }).success(function( donations ) {
                         var sum = 0;
                         var total = 0;
@@ -59,28 +36,22 @@ module.exports = function() {
                             total++;
                         }
 
-                        res.json({
-                            status: "success",
-                            timestamp: new Date().getTime(),
-                            server: meta.name + " v" + meta.version,
-                            data: {
-                                name: campaignObj.name,
-                                goal: campaignObj.goal,
-                                percentage: ((sum / campaignObj.goal) * 100).toFixed(2),
-                                total: sum
-                            }
-                        });
+                        var data = {
+                            name: campaignObj.name,
+                            goal: campaignObj.goal,
+                            percentage: ((sum / campaignObj.goal) * 100).toFixed(2),
+                            total: sum
+                        }
+
+                        helpers.json("success", data, null, res);
                     });
                 } else {
-                    res.json({
-                        status: "unavailable",
-                        timestamp: new Date().getTime(),
-                        server: meta.name + " v" + meta.version,
-                        error: {
-                            reason: "nxgoal",
-                            description: "A goal was not set for this campaign, so aggregate data is not provided."
-                        }
-                    });
+                    error = {
+                        reason: "nxgoal",
+                        description: "A goal was not set for this campaign, so aggregate data is not provided."
+                    };
+
+                    helpers.json("unavailable", null, error, res);
                 }
             }
         });

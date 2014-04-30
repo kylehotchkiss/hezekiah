@@ -8,9 +8,10 @@
 //
 
 var express = require("express");
-var meta = require("../package.json");
+//var meta = require("../package.json");
 var stripe = require("../library/stripe");
 var database = require('../models');
+var helpers = require('../library/helpers')
 var mandrill = require("../library/mandrill");
 var mailchimp = require("../library/mailchimp");
 
@@ -43,46 +44,36 @@ module.exports = function() {
         };
 
         database.Campaign.find({ where: { slug: cause.slug } }).error(function( error ) {
-            res.json({
-                status: "failure",
-                timestamp: new Date().getTime(),
-                server: meta.name + " v" + meta.version,
-                error: {
-                    reason: "dberror",
-                    message: "There was an internal server error. Your card was not charged."
-                }
-            });
+            var error = {
+                reason: "dberror",
+                message: "There was an internal server error. Your card was not charged."
+            }
+
+
         }).success(function( causeObj ) {
             if ( causeObj === null ) {
-                res.json({
-                    status: "failure",
-                    timestamp: new Date().getTime(),
-                    server: meta.name + " v" + meta.version,
-                    error: {
-                        reason: "nxcampaign",
-                        message: "The campaign you have tried to donate to does not exist. Your card was not charged."
-                    }
-                });
+                var error = {
+                    reason: "nxcampaign",
+                    message: "The campaign you have tried to donate to does not exist. Your card was not charged."
+                }
+
+                helpers.json("failure", null, error, res);
             } else {
                 var cause = causeObj.dataValues;
 
                 stripe.process(donation, cause, function( error, charge ) {
                     if ( error ) {
-                        res.json({
-                            status: "failure",
-                            timestamp: new Date().getTime(),
-                            server: meta.name + " v" + meta.version,
-                            error: {
-                                code: error.code,
-                                reason: error.type,
-                                message: error.message
-                            }
-                        })
+                        var error = {
+                            code: error.code,
+                            reason: error.type,
+                            message: error.message
+                        }
+
+                        helpers.json("failure", null, error, res);
                     } else {
                         if ( cause.emailSignup ) {
                             mailchimp.subscribeEmail(donation, cause);
                         }
-
 
                         database.Donation.create({
                             stripeID: charge.id,
@@ -97,11 +88,7 @@ module.exports = function() {
                             source: donation.source
                         });
 
-                        res.json({
-                            status: "success",
-                            timestamp: new Date().getTime(),
-                            server: meta.name + " v" + meta.version,
-                        });
+                        helpers.json("success", null, null, res);
 
                         mandrill.sendEmail(donation, cause, "one");
                     }
