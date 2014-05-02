@@ -5,14 +5,13 @@
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 // TODO: Use config.json variables
-// Check if user wants to subscribe
 //
 
 var request = require("request");
 
 var mailchimpBase = "https://us7.api.mailchimp.com/2.0/";
 var mailchimpAPI = process.env.DS_MAILCHIMP_API;
-var mailchimpList = "b9e868f9cd";
+var mailchimpList = process.env.DS_MAILCHIMP_LIST;
 
 
 //
@@ -128,9 +127,9 @@ var campaignValue = function( campaignSlug, callback ) {
     });
 }
 
-exports.subscribeEmail = function( donation, cause, callback ) {
+exports.subscribeEmail = function( donation, campaign, callback ) {
     campaignField(function( error ) {
-        campaignValue(cause.slug, function( error ) {
+        campaignValue(campaign.slug, function( error ) {
 
             request({
                 url: mailchimpBase + "/lists/subscribe.json",
@@ -144,10 +143,10 @@ exports.subscribeEmail = function( donation, cause, callback ) {
                     replace_interests: false,
                     email: { email: donation.email },
                     merge_vars: {
-                        //optin_ip: donation.ip, // TODO: Do we keep proper track of IP? We need to forward this.
+                        optin_ip: donation.ip,
                         groupings: [{
                             name: "Campaigns",
-                            groups: [ cause.slug ]
+                            groups: [ campaign.slug ]
                         }]
                     }
                 }

@@ -4,8 +4,6 @@
 // Released under the General Public Licence
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
-// change "cause" to "campaign"
-//
 
 var swig = require("swig");
 var request = require("request");
@@ -14,14 +12,14 @@ var config = require("../config.json");
 var mandrillBase = "https://mandrillapp.com/api/1.0/";
 var mandrillAPI = process.env.DS_MANDRILL_API;
 
-var messageBuilder = function( donation, cause, callback ) {
+var messageBuilder = function( donation, campaign, callback ) {
     // TODO should check emailTemplate for EXEC safety
 
-    if ( cause.emailTemplate ) {
-        var emailContent = swig.render( cause.emailTemplate, {
+    if ( campaign.emailTemplate ) {
+        var emailContent = swig.render( campaign.emailTemplate, {
             locals: {
                 name: donation.name,
-                campaign: cause.name,
+                campaign: campaign.name,
                 amount: donation.amount
             }
         });
@@ -32,8 +30,8 @@ var messageBuilder = function( donation, cause, callback ) {
     }
 }
 
-exports.sendEmail = function( donation, cause, intent, callback ) {
-    messageBuilder( donation, cause, function( emailContent ) {
+exports.sendEmail = function( donation, campaign, intent, callback ) {
+    messageBuilder( donation, campaign, function( emailContent ) {
         if ( emailContent ) {
             request({
                 url: mandrillBase + '/messages/send-template.json',

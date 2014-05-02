@@ -10,16 +10,16 @@
 var stripe = require("stripe")( process.env.DS_STRIPE_API );
 
 
-exports.process = function( donation, cause, callback ) {
+exports.process = function( donation, campaign, callback ) {
     var charge = stripe.charges.create({
         card: donation.token,
         currency: "usd",
         amount: donation.amount * 100,
-        description: "Donation" + (cause.title ? (" for " + cause.title) : ""),
-        statement_description: (cause.slug ? (" - " + cause.slug) : ""),
+        description: "Donation" + (campaign.title ? (" for " + campaign.title) : ""),
+        statement_description: (campaign.slug ? (" - " + campaign.slug) : ""),
         metadata: {
             ip: donation.ip,
-            cause:  cause.slug,
+            campaign:  campaign.slug,
             email: donation.email
         }
     }, function( error, charge ) {
@@ -32,10 +32,10 @@ exports.process = function( donation, cause, callback ) {
 };
 
 
-exports.subscribe = function( donation, cause, callback ) {
+exports.subscribe = function( donation, campaign, callback ) {
     var customer = stripe.customers.create({
         card: donation.token,
-        plan: cause.plan,
+        plan: campaign.plan,
         email: donation.email
     }, function( error, customer ) {
         if ( error ) {
