@@ -19,7 +19,7 @@ exports.process = function( donation, cause, callback ) {
         statement_description: (cause.slug ? (" - " + cause.slug) : ""),
         metadata: {
             ip: donation.ip,
-            cause:  "(" + cause.slug + ") " + cause.title,
+            cause:  cause.slug,
             email: donation.email
         }
     }, function( error, charge ) {
