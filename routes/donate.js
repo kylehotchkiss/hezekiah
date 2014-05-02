@@ -4,8 +4,6 @@
 // Released under the General Public Licence
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
-// TODO: Rename all causes to campaign
-//
 
 var express = require("express");
 //var meta = require("../package.json");
@@ -39,19 +37,17 @@ module.exports = function() {
             emailSignup: req.body.emailSignup
         };
 
-        var cause = {
-            slug: req.body.causeSlug
+        var campaign = {
+            slug: req.body.campaignSlug
         };
 
-        database.Campaign.find({ where: { slug: cause.slug } }).error(function( error ) {
+        database.Campaign.find({ where: { slug: campaign.slug } }).error(function( error ) {
             var error = {
                 reason: "dberror",
                 message: "There was an internal server error. Your card was not charged."
             }
-
-
-        }).success(function( causeObj ) {
-            if ( causeObj === null ) {
+        }).success(function( campaignObj ) {
+            if ( campaignObj === null ) {
                 var error = {
                     reason: "nxcampaign",
                     message: "The campaign you have tried to donate to does not exist. Your card was not charged."
@@ -59,9 +55,9 @@ module.exports = function() {
 
                 helpers.json("failure", null, error, res);
             } else {
-                var cause = causeObj.dataValues;
+                var campaign = campaignObj.dataValues;
 
-                stripe.process(donation, cause, function( error, charge ) {
+                stripe.process(donation, campaign, function( error, charge ) {
                     if ( error ) {
                         var error = {
                             code: error.code,
@@ -71,14 +67,14 @@ module.exports = function() {
 
                         helpers.json("failure", null, error, res);
                     } else {
-                        if ( cause.emailSignup ) {
-                            mailchimp.subscribeEmail(donation, cause);
+                        if ( campaign.emailSignup ) {
+                            mailchimp.subscribeEmail(donation, campaign);
                         }
 
                         database.Donation.create({
                             stripeID: charge.id,
                             amount: donation.amount,
-                            campaign: cause.slug,
+                            campaign: campaign.slug,
                             subcampaign: donation.subcampaign || null,
                             donorName: donation.name,
                             donorEmail: donation.email,
@@ -90,7 +86,7 @@ module.exports = function() {
 
                         helpers.json("success", null, null, res);
 
-                        mandrill.sendEmail(donation, cause, "one");
+                        mandrill.sendEmail(donation, campaign, "one");
                     }
                 });
             }
