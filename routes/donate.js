@@ -26,73 +26,85 @@ module.exports = function() {
 
 
     app.post('/one', function( req, res ) {
+        var allclear = true;
+        var required = function() { allclear = false; return false; }
+
         var donation = {
-            ip: req.connection.remoteAddress, // req/valid
-            name: req.body.donorName, // req
-            email: req.body.donorEmail, // req/valid
-            token: req.body.donationToken, // req/valid
-            //source:
-            thanks: req.body.donationThanks, // req
-            amount: req.body.donationAmount, // req
+            ip: req.connection.remoteAddress,
+            name: req.body.donorName || required(), // req
+            email: req.body.donorEmail || required(), // req/valid
+            token: req.body.donationToken || required(), // req/valid
+            thanks: req.body.donationThanks || required(), // req
+            amount: req.body.donationAmount || required(), // req
             emailSignup: req.body.emailSignup
+            //source:
         };
 
         var campaign = {
-            slug: req.body.campaignSlug
+            slug: req.body.campaignSlug || required()
         };
 
-        database.Campaign.find({ where: { slug: campaign.slug } }).error(function( error ) {
-            var error = {
-                reason: "dberror",
-                message: "There was an internal server error. Your card was not charged."
-            }
-
-            helpers.json("failure", null, error, res);
-        }).success(function( campaignObj ) {
-            if ( campaignObj === null ) {
+        if ( allclear ) {
+            database.Campaign.find({ where: { slug: campaign.slug } }).error(function( error ) {
                 var error = {
-                    reason: "nxcampaign",
-                    message: "The campaign you have tried to donate to does not exist. Your card was not charged."
+                    reason: "dberror",
+                    message: "There was an internal server error.<br />Your card was not charged."
                 }
 
                 helpers.json("failure", null, error, res);
-            } else {
-                var campaign = campaignObj.dataValues;
-
-                stripe.process(donation, campaign, function( error, charge ) {
-                    if ( error ) {
-                        var error = {
-                            code: error.code,
-                            reason: error.type,
-                            message: error.message
-                        }
-
-                        helpers.json("failure", null, error, res);
-                    } else {
-                        if ( campaign.emailSignup ) {
-                            mailchimp.subscribeEmail(donation, campaign);
-                        }
-
-                        database.Donation.create({
-                            stripeID: charge.id,
-                            amount: donation.amount,
-                            campaign: campaign.slug,
-                            subcampaign: donation.subcampaign || null,
-                            donorName: donation.name,
-                            donorEmail: donation.email,
-                            donorIP: donation.ip,
-                            method: "website",
-                            recurring: false,
-                            source: donation.source
-                        });
-
-                        helpers.json("success", null, null, res);
-
-                        mandrill.sendEmail(donation, campaign, "one");
+            }).success(function( campaignObj ) {
+                if ( campaignObj === null ) {
+                    var error = {
+                        reason: "nxcampaign",
+                        message: "The campaign you have tried to donate to does not exist.<br />Your card was not charged."
                     }
-                });
+
+                    helpers.json("failure", null, error, res);
+                } else {
+                    var campaign = campaignObj.dataValues;
+
+                    stripe.process(donation, campaign, function( error, charge ) {
+                        if ( error ) {
+                            var error = {
+                                code: error.code,
+                                reason: error.type,
+                                message: error.message
+                            }
+
+                            helpers.json("failure", null, error, res);
+                        } else {
+                            if ( campaign.emailSignup ) {
+                                mailchimp.subscribeEmail(donation, campaign);
+                            }
+
+                            database.Donation.create({
+                                stripeID: charge.id,
+                                amount: donation.amount,
+                                campaign: campaign.slug,
+                                subcampaign: donation.subcampaign || null,
+                                donorName: donation.name,
+                                donorEmail: donation.email,
+                                donorIP: donation.ip,
+                                method: "website",
+                                recurring: false,
+                                source: donation.source
+                            });
+
+                            helpers.json("success", null, null, res);
+
+                            mandrill.sendEmail(donation, campaign, "one");
+                        }
+                    });
+                }
+            });
+        } else {
+            var error = {
+                reason: "validation",
+                message: "You have ommited a required field.<br />Your card was not charged."
             }
-        });
+
+            helpers.json("failure", null, error, res);
+        }
     });
 
     app.post('/record', function(req, res) {
