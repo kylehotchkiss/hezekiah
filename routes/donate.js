@@ -31,6 +31,7 @@ module.exports = function() {
 
         var donation = {
             ip: req.connection.remoteAddress,
+            time: new Date().getTime(),
             name: req.body.donorName || required(), // req
             email: req.body.donorEmail || required(), // req/valid
             token: req.body.donationToken || required(), // req/valid
