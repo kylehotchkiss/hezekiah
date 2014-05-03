@@ -34,7 +34,7 @@ module.exports = function() {
             name: req.body.donorName || required(), // req
             email: req.body.donorEmail || required(), // req/valid
             token: req.body.donationToken || required(), // req/valid
-            amount: req.body.donationAmount || required(), // req
+            amount: req.body.donationAmount || req.body.customDonationAmount || required(), // req
             emailSignup: req.body.emailSignup
             //source:
         };
