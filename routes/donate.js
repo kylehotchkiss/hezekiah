@@ -46,6 +46,8 @@ module.exports = function() {
                 reason: "dberror",
                 message: "There was an internal server error. Your card was not charged."
             }
+
+            helpers.json("failure", null, error, res);
         }).success(function( campaignObj ) {
             if ( campaignObj === null ) {
                 var error = {

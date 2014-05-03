@@ -19,9 +19,7 @@ module.exports = function( sequelize, type ) {
         },
         amount: {
             type: type.FLOAT,
-            validate: {
-                min: 0
-            }
+            validate: { min: 0 }
         },
         campaign: {
             type: type.STRING,
@@ -37,9 +35,7 @@ module.exports = function( sequelize, type ) {
         },
         donorEmail: {
             type: type.STRING,
-            validate: {
-                isEmail: true
-            }
+            validate: { isEmail: true }
         },
         donorIP: {
             type: type.STRING
