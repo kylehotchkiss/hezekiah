@@ -49,7 +49,7 @@ module.exports = function( sequelize, type ) {
             defaultValue: false
         },
         source: {
-            type: type.STRING(2048),
+            type: type.STRING,
             comment: "Where donor came from, if available"
         }
     });

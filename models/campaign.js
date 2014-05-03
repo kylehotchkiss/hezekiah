@@ -40,7 +40,7 @@ module.exports = function( sequelize, type ) {
             type: type.STRING
         },
         emailTemplate: {
-            type: type.STRING,
+            type: type.STRING(2048),
             validate: {
                 contains: ["{{ name }}", "{{ campaign }}", "{{ amount }}"]
             }
