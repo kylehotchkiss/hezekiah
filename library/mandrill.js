@@ -48,7 +48,7 @@ exports.sendEmail = function( donation, campaign, intent, callback ) {
                     message: {
                         to: [{ email: donation.email, name: donation.name }],
                         tags: [intent],
-                        subject: "example subject", // TODO - from func
+                        subject: campaign.emailSubject, // TODO - from func
                         auto_text: true,
                         from_name: config.organization.name,
                         inline_css: true,
