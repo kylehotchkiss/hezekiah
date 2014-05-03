@@ -87,7 +87,7 @@ app.use('/donate', require('./routes/donate'));
 //
 // Start it UP!
 // Schema Lock - 5/2/14 - DO NOT FORCE, USE MIGRATE
-// database.sequelize.sync();
+database.sequelize.sync();
 //
 
 app.listen(process.env.PORT || 5000);
