@@ -1,6 +1,6 @@
 {
   "name": "donateserv",
-  "version": "0.2.0",
+  "version": "0.2.0-alpha",
   "author": "Kyle Hotchkiss <kyle@illuminatenations.org>",
   "subdomain": "illuminatenations",
   "private": true,
