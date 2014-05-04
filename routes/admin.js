@@ -1,5 +1,5 @@
 //
-// Illuminate Nations - DonateServ v.0.2.0
+// Illuminate Nations - DonateServ v0.2.0
 // Copyright 2013-2014 Illuminate Nations
 // Released under the General Public Licence
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
@@ -30,6 +30,7 @@ module.exports = function() {
 
     swig.setDefaults({ autoescape: false });
 
+    // Should work, never really does though.
     app.use(flash());
 
     //////////////////////////////

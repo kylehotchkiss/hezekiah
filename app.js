@@ -1,5 +1,5 @@
 //
-// Illuminate Nations - DonateServ v.0.2.0
+// Illuminate Nations - DonateServ v0.2.0
 // Copyright 2013-2014 Illuminate Nations
 // Released under the General Public Licence
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
@@ -48,8 +48,7 @@ if ( environment === "development" ) {
 // Set CORS to set access domain
 //
 app.all('/*', function(req, res, next) {
-    //res.header("Access-Control-Allow-Origin", config.access.domain);
-    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Origin", config.access.domain);
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
 
     next();

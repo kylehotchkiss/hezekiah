@@ -1,12 +1,11 @@
 //
-// Illuminate Nations - DonateServ v.0.2.0
+// Illuminate Nations - DonateServ v0.2.0
 // Copyright 2013-2014 Illuminate Nations
 // Released under the General Public Licence
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
 var express = require("express");
-//var meta = require("../package.json");
 var stripe = require("../library/stripe");
 var database = require('../models');
 var helpers = require('../library/helpers')
@@ -16,19 +15,11 @@ var mailchimp = require("../library/mailchimp");
 module.exports = function() {
     var app = express();
 
-    // Todo
-    // 1) break actual stripe processing code into new function //
-    // 2) proper error forwarding //
-    // 3) return feedback (async) //
-    // 4) sendemail function (async) //
-    // 5) recordDonation (async) //
-    // 6) subscribeemail (async) //
-
-
     app.post('/one', function( req, res ) {
         var allclear = true;
         var required = function() { allclear = false; return false; }
 
+        // Create donation object
         var donation = {
             ip: req.connection.remoteAddress,
             time: new Date().getTime(),
@@ -44,6 +35,7 @@ module.exports = function() {
             slug: req.body.campaignSlug || required()
         };
 
+        // Only proceed if all fields are valid
         if ( allclear ) {
             database.Campaign.find({ where: { slug: campaign.slug } }).error(function( error ) {
                 var error = {
@@ -63,6 +55,7 @@ module.exports = function() {
                 } else {
                     var campaign = campaignObj.dataValues;
 
+                    // Process the donation via stripe
                     stripe.process(donation, campaign, function( error, charge ) {
                         if ( error ) {
                             var error = {
@@ -73,10 +66,12 @@ module.exports = function() {
 
                             helpers.json("failure", null, error, res);
                         } else {
+                            // Sign user up for emails if they want
                             if ( campaign.emailSignup ) {
                                 mailchimp.subscribeEmail(donation, campaign);
                             }
 
+                            // Save donation to DB since Stripe accepted it.
                             database.Donation.create({
                                 stripeID: charge.id,
                                 amount: donation.amount,
@@ -90,8 +85,10 @@ module.exports = function() {
                                 source: donation.source
                             });
 
+                            // Continue the donation success for the user
                             helpers.json("success", null, null, res);
 
+                            // Send the user an email
                             mandrill.sendEmail(donation, campaign, "one");
                         }
                     });

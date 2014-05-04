@@ -1,5 +1,5 @@
 //
-// Illuminate Nations - DonateServ v.0.2.0
+// Illuminate Nations - DonateServ v0.2.0
 // Copyright 2013-2014 Illuminate Nations
 // Released under the General Public Licence
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
@@ -21,6 +21,7 @@ module.exports = function() {
             if ( campaignObj === null ) {
                 helpers.json("failure", null, { reason: "nxcampaign" }, res);
             } else {
+                // Only return API if campaign goal is set
                 if ( campaignObj.goal ) {
                     database.Donation.findAll({ where: { campaign: campaign }}).error(function( error ) { // todo narrow down to campaign
                         helpers.json("failure", null, error, res);

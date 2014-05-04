@@ -23,7 +23,6 @@ While this software is open-source and free for you to use, hosting it can becom
 
 * Reject non-https donations
 * Remove users from recurring campaigns when they unsubscribe
-* Slug max-length 15chars
 
 ## This is neat! How can I thank you?
 
