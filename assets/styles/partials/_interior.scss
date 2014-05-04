@@ -23,6 +23,14 @@ $row-spacing: 20px; // Primarily for forms
 			}
 		}
 
+        .description {
+            font-family: $font-sans;
+            font-style: italic;
+            font-size: 12px;
+            line-height: 1.6em;
+            margin: 5px 10px;
+        }
+
 		label span.error,
 		label.parsley-error-list,
 		.gfield_description.validation_message {

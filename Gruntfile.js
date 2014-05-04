@@ -4,6 +4,7 @@ module.exports = function(grunt) {
     var parseScripts = [
         '<%= config.assets %>/scripts/chart.js',
         '<%= config.assets %>/scripts/moment.js',
+        '<%= config.assets %>/scripts/parsley.js',
         '<%= config.assets %>/scripts/underscore.js',
         '<%= config.assets %>/scripts/jQuery.payment.js',
         '<%= config.assets %>/scripts/donateServ.js'

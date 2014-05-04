@@ -236,6 +236,26 @@ var campaignValidation = function() {
                     },
                     priority: 32
                 }
+            },
+            contains: function() {
+                return {
+                    validate: function( value, keys ) {
+                        var contains = true;
+                        keys = keys.split(", ");
+
+
+                        for ( var i in keys ) {
+                            var key = keys[i];
+
+                            if ( value.indexOf( key ) === -1 ) {
+                                contains = false;
+                            }
+                        }
+
+                        return contains;
+                    },
+                    priority: 32
+                }
             }
         }
     });
