@@ -43,7 +43,6 @@ module.exports = {
                             Email: donation.donorEmail,
                             Amount: "$" + donation.amount,
                             Campaign: '<a href="/admin/campaigns/' + donation.campaign + '">' + donation.campaign + '</a>',
-                            //Subcampaign: donation.subcampaign || "",
                             Details: '<a href="https://manage.stripe.com/payments/' + donation.stripeID + '">Details</a>'
                         })
                     }
@@ -124,7 +123,91 @@ module.exports = {
                     })
                 }
             });
+        }
+    },
 
+    campaigns: {
+        name: "Campaigns Summary",
+        description: "A list of total donated to each active campaign",
+        generate: function( callback ) {
+            var campaignsData = {};
+            var campaignsGroup = {};
+            var campaignsTable = [];
+
+            database.Donation.findAll().error(function( error ) { // todo narrow down to campaign
+                callback({
+                    status: "failure",
+                    error: {
+                        reason: "dberror"
+                    }
+                });
+            }).success(function( donations ) {
+                if ( donations === null ) {
+                    callback({
+                        status: "unavailable",
+                        error: {
+                            reason: "nxdonations"
+                        }
+                    })
+                } else {
+                    database.Campaign.findAll().error(function( error ) { // todo narrow down to campaign
+                        callback({
+                            status: "failure",
+                            error: {
+                                reason: "dberror"
+                            }
+                        });
+                    }).success(function( campaigns ) {
+                        if ( campaigns === null ) {
+                            callback({
+                                status: "unavailable",
+                                error: {
+                                    reason: "nxcampaigns"
+                                }
+                            })
+                        } else {
+                            // remap campaigns from db to slug-keyed obj
+                            for ( var i in campaigns ) {
+                                var campaign = campaigns[i];
+
+                                campaignsGroup[campaign.slug] = campaign.dataValues;
+                            }
+
+                            // map donations to campaign slug-keyed obj
+                            for ( var i in donations ) {
+                                var donation = donations[i];
+
+                                if ( campaignsData[donation.campaign] ) {
+                                    campaignsData[donation.campaign].count++;
+                                    campaignsData[donation.campaign].amount += donation.amount;
+                                } else {
+                                    campaignsData[donation.campaign] = {
+                                        count: 1,
+                                        amount: donation.amount
+                                    }
+                                }
+                            }
+
+                            // map campaign aggrigate data to array
+                            for ( var i in campaignsData ) {
+                                var thisCampaign = campaignsData[i];
+
+                                campaignsTable.push({
+                                    Name: campaignsGroup[i].name,
+                                    Count: thisCampaign.count,
+                                    Amount: "$" + thisCampaign.amount
+                                })
+                            }
+
+                            callback({
+                                status: "success",
+                                data: campaignsTable
+                            })
+                        }
+                    });
+
+                }
+            });
         }
     }
 }
