@@ -66,24 +66,28 @@ module.exports = function() {
 
                             helpers.json("failure", null, error, res);
                         } else {
-                            // Sign user up for emails if they want
-                            if ( campaign.emailSignup ) {
-                                mailchimp.subscribeEmail(donation, campaign);
-                            }
+                            // Only save to DB if donation is real.
 
-                            // Save donation to DB since Stripe accepted it.
-                            database.Donation.create({
-                                stripeID: charge.id,
-                                amount: donation.amount,
-                                campaign: campaign.slug,
-                                subcampaign: donation.subcampaign || null,
-                                donorName: donation.name,
-                                donorEmail: donation.email,
-                                donorIP: donation.ip,
-                                method: "website",
-                                recurring: false,
-                                source: donation.source
-                            });
+                            if ( charge.livemode ) {
+                                // Sign user up for emails if they want
+                                if ( campaign.emailSignup ) {
+                                    mailchimp.subscribeEmail(donation, campaign);
+                                }
+
+                                // Save donation to DB since Stripe accepted it.
+                                database.Donation.create({
+                                    stripeID: charge.id,
+                                    amount: donation.amount,
+                                    campaign: campaign.slug,
+                                    subcampaign: donation.subcampaign || null,
+                                    donorName: donation.name,
+                                    donorEmail: donation.email,
+                                    donorIP: donation.ip,
+                                    method: "website",
+                                    recurring: false,
+                                    source: donation.source
+                                });
+                            }
 
                             // Continue the donation success for the user
                             helpers.json("success", null, null, res);
