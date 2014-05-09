@@ -11,7 +11,7 @@
         "template": "official"
     },
     "access": {
-        "domain": "*.illuminatenations.org",
+        "domain": "www.illuminatenations.org",
         "email": "illuminatenations.org"
     },
     "frontend": {
