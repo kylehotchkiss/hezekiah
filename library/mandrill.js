@@ -17,7 +17,7 @@ var messageBuilder = function( donation, campaign, callback ) {
 
     if ( campaign.emailTemplate ) {
         var emailContent = swig.render( campaign.emailTemplate, {
-            varControls: ['{', '}'],
+            varControls: ['[[', ']]'],
             locals: {
                 date: new Date(donation.time).toDateString(),
                 name: donation.name,

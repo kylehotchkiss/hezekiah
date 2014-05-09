@@ -54,9 +54,9 @@
                         <div class="row emailTemplate">
                             <div class="columns">
                                 <label for="emailTemplate">Email Template</label>
-                                <p class="description">Compose an email using HTML and the following tags - {name}, {amount}, {campaign}, and {date}.</p>
+                                <p class="description">Compose an email using HTML and the following tags - [[name]], [[amount]], [[campaign]], and [[date]].</p>
 
-                                <textarea name="emailTemplate" id="field-emailTemplate" parsley-contains="{name}, {amount}, {campaign}, {date}" parsley-maxlength="2048" parsley-error-message="Template must contain all of the available tags" required>{% if campaign.emailTemplate %}{{ campaign.emailTemplate }}{% endif %}</textarea>
+                                <textarea name="emailTemplate" id="field-emailTemplate" parsley-contains="[[name]], [[amount]], [[campaign]], [[date]]" parsley-maxlength="2048" parsley-error-message="Template must contain all of the available tags" required>{% if campaign.emailTemplate %}{{ campaign.emailTemplate }}{% endif %}</textarea>
                             </div>
                         </div>
 
