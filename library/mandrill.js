@@ -16,10 +16,13 @@ var messageBuilder = function( donation, campaign, callback ) {
     // TODO should check emailTemplate for EXEC safety
 
     if ( campaign.emailTemplate ) {
+        var d = new Date(donation.time);
+        var dateTime = d.getMonth() + "/" + d.getDate() + "/" + d.getFullYear();
+
         var emailContent = swig.render( campaign.emailTemplate, {
             varControls: ['[[', ']]'],
             locals: {
-                date: new Date(donation.time).toDateString(),
+                date: dateTime,
                 name: donation.name,
                 campaign: campaign.name,
                 amount: "$" + donation.amount
