@@ -19,7 +19,7 @@ module.exports = function() {
         var allclear = true;
         var required = function() { allclear = false; return false; }
 
-        console.log( req.get("X-Forwarded-For") );
+        console.log( "ip " + req.headers['x-forwarded-for'] );
 
         // Create donation object
         var donation = {
@@ -30,7 +30,7 @@ module.exports = function() {
             token: req.body.donationToken || required(), // valid
             amount: req.body.donationAmount || req.body.customDonationAmount || required(), // req
             emailSignup: req.body.emailSignup
-            //source:
+            //source: // unused for now
         };
 
         var campaign = {
