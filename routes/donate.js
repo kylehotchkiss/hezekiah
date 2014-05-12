@@ -21,11 +21,11 @@ module.exports = function() {
 
         // Create donation object
         var donation = {
-            ip: req.connection.remoteAddress,
+            ip: req.get("X-Forwarded-For") || req.ip, // heroku
             time: new Date().getTime(),
-            name: req.body.donorName || required(), // req
-            email: req.body.donorEmail || required(), // req/valid
-            token: req.body.donationToken || required(), // req/valid
+            name: req.body.donorName || required(),
+            email: req.body.donorEmail || required(), // valid
+            token: req.body.donationToken || required(), // valid
             amount: req.body.donationAmount || req.body.customDonationAmount || required(), // req
             emailSignup: req.body.emailSignup
             //source:
