@@ -25,7 +25,8 @@
     "body-parser": "~1.0.1",
     "compression": "~1.0.1",
     "express-session": "~1.0.2",
-    "cookie-parser": "~1.0.1"
+    "cookie-parser": "~1.0.1",
+    "async": "~0.8.0"
   },
   "devDependencies": {
     "load-grunt-tasks": "*",
@@ -39,5 +40,5 @@
     "time-grunt": "*",
     "grunt": "*",
     "grunt-sass": "*"
-    }
+  }
 }

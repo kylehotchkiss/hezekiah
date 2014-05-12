@@ -7,6 +7,7 @@
 // TODO: Use config.json variables
 //
 
+var async = require("async");
 var request = require("request");
 
 var mailchimpBase = "https://us7.api.mailchimp.com/2.0/";
@@ -127,10 +128,17 @@ var campaignValue = function( campaignSlug, callback ) {
     });
 }
 
-exports.subscribeEmail = function( donation, campaign, callback ) {
+exports.subscribeEmail = function( email, lists, ip, callback ) {
     campaignField(function( error ) {
-        campaignValue(campaign.slug, function( error ) {
+        if ( typeof lists === "string" ) {
+            lists = [ lists ];
+        }
 
+        async.eachSeries(lists, function( list, callback ) {
+            campaignValue(list, function( error ) {
+                callback( error );
+            });
+        }, function( error ) {
             request({
                 url: mailchimpBase + "/lists/subscribe.json",
                 json: true,
@@ -141,25 +149,26 @@ exports.subscribeEmail = function( donation, campaign, callback ) {
                     double_optin: false,
                     update_existing: true,
                     replace_interests: false,
-                    email: { email: donation.email },
+                    email: { email: email },
                     merge_vars: {
-                        optin_ip: donation.ip,
+                        optin_ip: ip,
                         groupings: [{
                             name: "Campaigns",
-                            groups: [ campaign.slug ]
+                            groups: lists
                         }]
                     }
                 }
             }, function( error, response, body ) {
-                if ( error ) {
-                    callback( error, false );
-                } else if ( typeof body.status === "string" ) {
-                    callback( body, false );
-                } else {
-                    callback( false, body );
+                if ( typeof callback === "function" ) {
+                    if ( error ) {
+                        callback( error, false );
+                    } else if ( typeof body.status === "string" ) {
+                        callback( body, false );
+                    } else {
+                        callback( false, body );
+                    }
                 }
             });
-
-        });
+        })
     });
 }

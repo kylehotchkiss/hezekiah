@@ -67,11 +67,10 @@ module.exports = function() {
                             helpers.json("failure", null, error, res);
                         } else {
                             // Only save to DB if donation is real.
-
                             if ( charge.livemode ) {
                                 // Sign user up for emails if they want
-                                if ( campaign.emailSignup ) {
-                                    mailchimp.subscribeEmail(donation, campaign);
+                                if ( donation.emailSignup ) {
+                                    mailchimp.subscribeEmail(donation.email, [campaign.slug, "donor"], donation.ip);
                                 }
 
                                 // Save donation to DB since Stripe accepted it.
