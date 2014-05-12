@@ -19,8 +19,6 @@ module.exports = function() {
         var allclear = true;
         var required = function() { allclear = false; return false; }
 
-        console.log( "ip " + req.headers['x-forwarded-for'] );
-
         // Create donation object
         var donation = {
             ip: req.get("X-Forwarded-For") || req.ip, // heroku
