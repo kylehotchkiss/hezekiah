@@ -15,8 +15,7 @@ exports.process = function( donation, campaign, callback ) {
         card: donation.token,
         currency: "usd",
         amount: donation.amount * 100,
-        description: "Donation" + (campaign.title ? (" for " + campaign.title) : ""),
-        statement_description: (campaign.slug ? (" - " + campaign.slug) : ""),
+        description: "Donation" + (campaign.name ? (" for " + campaign.name) : ""),
         metadata: {
             ip: donation.ip,
             campaign:  campaign.slug,
