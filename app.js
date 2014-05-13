@@ -5,6 +5,12 @@
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
+var environment = process.env.NODE_ENV || 'development';
+
+if ( environment === "production" ) {
+    require('newrelic');
+}
+
 var swig = require('swig');
 var flash = require('connect-flash');
 var google = require('passport-google').Strategy;
@@ -19,7 +25,6 @@ var cookieParser = require('cookie-parser');
 var meta = require('./package.json');
 var config = require('./config.json');
 var database = require('./models');
-var environment = process.env.NODE_ENV || 'development';
 
 
 //
