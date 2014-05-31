@@ -224,6 +224,36 @@ module.exports = function() {
         }
     });
 
+    app.get('/reports/:report/download', authenticate, function( req, res ) {
+        // Download Report VIEW
+
+        var report = req.param("report");
+
+        if ( typeof reports[report] !== "undefined" ) {
+            var thisReport = reports[report];
+
+            thisReport.generate(function( response ) {
+                if ( response.status !== "success" ) {
+                    console.log( error );
+                } else {
+                    res.set({
+                        "content-type": "text/csv",
+                        "content-disposition": "attachment; filename=" + report + ".csv"
+                    });
+
+                    if ( response.download ) {
+                        res.render("admin/download_report", { data: response.download })
+                    } else {
+                        res.render("admin/download_report", { data: response.data })
+                    }
+                }
+            });
+        } else {
+            res.render('404', { user: req.user });
+        }
+
+    })
+
     app.get('/reports/search', authenticate, function(req, res) {
         // Check for q string VIEW
 

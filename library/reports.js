@@ -30,6 +30,7 @@ module.exports = {
                 } else {
                     donations = donations.reverse();
                     var donationsTable = [];
+                    var donationsTableDownload = [];
 
                     for ( var i in donations ) {
                         var donation = donations[i];
@@ -47,9 +48,25 @@ module.exports = {
                         })
                     }
 
+                    for ( var j in donations ) {
+                        var donation = donations[j];
+
+                        var d = new Date(donation.createdAt);
+                        var dateTime = d.getMonth() + "/" + d.getDate() + "/" + d.getFullYear();
+
+                        donationsTableDownload.push({
+                            Date: dateTime,
+                            Name: donation.donorName,
+                            Email: donation.donorEmail,
+                            Amount: "$" + donation.amount,
+                            Campaign: donation.campaign
+                        })
+                    }
+
                     callback({
                         status: "success",
-                        data: donationsTable
+                        data: donationsTable,
+                        download: donationsTableDownload
                     })
                 }
             });
