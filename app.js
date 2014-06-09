@@ -63,8 +63,14 @@ app.all('/*', function(req, res, next) {
 //
 // Redirect slash to org URL
 //
-app.get('/', function(req, res) {
+app.get('/', function( req, res ) {
     res.redirect( config.organization.url );
+});
+
+
+// Detectify
+app.get('/aadd69545f5d08cccbd8ff2f46c7144e.txt', function( req, res ) {
+    res.send("detectify")
 });
 
 
