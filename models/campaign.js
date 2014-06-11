@@ -29,6 +29,9 @@ module.exports = function( sequelize, type ) {
         goal: {
             type: type.FLOAT
         },
+        goalPeriod: {
+            type: type.STRING
+        },
         image: {
             type: type.STRING,
             comment: "Image URL",

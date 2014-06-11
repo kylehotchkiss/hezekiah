@@ -21,6 +21,6 @@ module.exports = {
             response.data = data;
         }
 
-        res.json( response );
+        res.jsonp( response );
     }
 }
