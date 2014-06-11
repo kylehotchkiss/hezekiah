@@ -22,8 +22,29 @@ module.exports = function() {
                 helpers.json("failure", null, { reason: "nxcampaign" }, res);
             } else {
                 // Only return API if campaign goal is set
-                if ( campaignObj.goal ) {
-                    database.Donation.findAll({ where: { campaign: campaign }}).error(function( error ) { // todo narrow down to campaign
+                if ( campaignObj.goal && campaignObj.goalPeriod ) {
+                    var query;
+
+                    if ( campaignObj.goalPeriod === "monthly" ) {
+                        var d = new Date();
+
+                        query = {
+                            where: {
+                                campaign: campaign,
+                                createdAt: {
+                                    gte: new Date( d.getFullYear(), d.getMonth(), 1 )
+                                }
+                            }
+                        }
+                    } else {
+                        query = {
+                            where: {
+                                campaign: campaign
+                            }
+                        }
+                    }
+
+                    database.Donation.findAll( query ).error(function( error ) { // todo narrow down to campaign
                         helpers.json("failure", null, error, res);
                     }).success(function( donations ) {
                         var sum = 0;
@@ -40,7 +61,8 @@ module.exports = function() {
                         var data = {
                             name: campaignObj.name,
                             goal: campaignObj.goal,
-                            percentage: ((sum / campaignObj.goal) * 100).toFixed(2),
+                            goalPeriod: campaignObj.goalPeriod,
+                            percentage: (( sum / campaignObj.goal ) * 100).toFixed( 2 ),
                             total: sum
                         }
 
