@@ -30,16 +30,17 @@
     "newrelic": "~1.5.4"
   },
   "devDependencies": {
-    "load-grunt-tasks": "*",
-    "grunt-remove-logging": "*",
-    "grunt-contrib-concat": "*",
-    "grunt-contrib-copy": "*",
+    "grunt": "*",
     "grunt-contrib-clean": "*",
+    "grunt-contrib-concat": "*",
     "grunt-contrib-connect": "*",
+    "grunt-contrib-copy": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-watch": "*",
-    "time-grunt": "*",
-    "grunt": "*",
-    "grunt-sass": "*"
+    "grunt-remove-logging": "*",
+    "grunt-sass": "*",
+    "load-grunt-tasks": "*",
+    "pg": "^3.0.3",
+    "time-grunt": "*"
   }
 }
