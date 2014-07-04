@@ -70,7 +70,7 @@ module.exports = function() {
                             if ( charge.livemode ) {
                                 // Sign user up for emails if they want
                                 if ( donation.emailSignup ) {
-                                    mailchimp.subscribeEmail(donation.email, [campaign.slug, "donor"], donation.ip);
+                                    mailchimp.subscribeEmail(donation.name, donation.email, [campaign.slug, "donor"], donation.ip);
                                 }
 
                                 // Save donation to DB since Stripe accepted it.

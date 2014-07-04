@@ -128,7 +128,7 @@ var campaignValue = function( campaignSlug, callback ) {
     });
 }
 
-exports.subscribeEmail = function( email, lists, ip, callback ) {
+exports.subscribeEmail = function( name, email, lists, ip, callback ) {
     campaignField(function( error ) {
         if ( typeof lists === "string" ) {
             lists = [ lists ];
