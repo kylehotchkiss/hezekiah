@@ -151,6 +151,7 @@ exports.subscribeEmail = function( name, email, lists, ip, callback ) {
                     replace_interests: false,
                     email: { email: email },
                     merge_vars: {
+                        name: name,
                         optin_ip: ip,
                         groupings: [{
                             name: "Campaigns",
