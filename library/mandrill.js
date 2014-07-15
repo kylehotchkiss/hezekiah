@@ -17,7 +17,7 @@ var messageBuilder = function( donation, campaign, callback ) {
 
     if ( campaign.emailTemplate ) {
         var d = new Date(donation.time);
-        var dateTime = d.getMonth() + "/" + d.getDate() + "/" + d.getFullYear();
+        var dateTime = ( d.getMonth() + 1 ) + "/" + d.getDate() + "/" + d.getFullYear();
 
         var emailContent = swig.render( campaign.emailTemplate, {
             varControls: ['[[', ']]'],
