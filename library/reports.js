@@ -36,7 +36,7 @@ module.exports = {
                         var donation = donations[i];
 
                         var d = new Date(donation.createdAt);
-                        var dateTime = d.getMonth() + "/" + d.getDate() + "/" + d.getFullYear();
+                        var dateTime = ( d.getMonth() + 1 ) + "/" + d.getDate() + "/" + d.getFullYear();
 
                         donationsTable.push({
                             Date: dateTime,
@@ -52,7 +52,7 @@ module.exports = {
                         var donation = donations[j];
 
                         var d = new Date(donation.createdAt);
-                        var dateTime = d.getMonth() + "/" + d.getDate() + "/" + d.getFullYear();
+                        var dateTime = ( d.getMonth() + 1 ) + "/" + d.getDate() + "/" + d.getFullYear();
 
                         donationsTableDownload.push({
                             Date: dateTime,
@@ -102,7 +102,7 @@ module.exports = {
 
                         // Date Formatting
                         var d = new Date(donation.createdAt);
-                        var dateTime = d.getMonth() + "/" + d.getDate() + "/" + d.getFullYear();
+                        var dateTime = ( d.getMonth() + 1 ) + "/" + d.getDate() + "/" + d.getFullYear();
 
                         if ( typeof donors[donation.donorEmail] !== "undefined" ) {
                             // Concatinate donation amount
@@ -110,7 +110,7 @@ module.exports = {
 
                             if ( d.getTime() > new Date( donors[donation.donorEmail].createdAt ).getTime() ) {
                                 var d = new Date( donors[donation.donorEmail].createdAt ).getTime();
-                                var dateTime = d.getMonth() + "/" + d.getDate() + "/" + d.getFullYear();
+                                var dateTime = ( d.getMonth() + 1 ) + "/" + d.getDate() + "/" + d.getFullYear();
 
                                 donors[donation.donorEmail].lastDonation = dateTime;
                             }
