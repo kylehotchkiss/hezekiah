@@ -312,7 +312,7 @@ module.exports = {
                             for ( var i in campaignsData ) {
                                 var thisMonth = campaignsData[i];
 
-                                stripe = !!stripe;
+                                stripe = !stripe;
 
                                 for ( var j in thisMonth ) {
                                     var thisCampaign = thisMonth[j];
