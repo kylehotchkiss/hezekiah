@@ -323,9 +323,9 @@ module.exports = {
                                     campaignsTable.push({
                                         modifier: ( stripe ? "stripe" : "" ),
                                         Month: thisCampaign.month,
-                                        Name: campaignsGroup[j].name,
-                                        Count: thisCampaign.count,
-                                        Amount: "$" + thisCampaign.amount
+                                        Campaign: campaignsGroup[j].name,
+                                        "Amount of Donations": thisCampaign.count,
+                                        "Total Donated": "$" + thisCampaign.amount
                                     })
                                 }
                             }
