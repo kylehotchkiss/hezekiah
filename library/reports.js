@@ -270,7 +270,7 @@ module.exports = {
                             })
                         } else {
                             var x = 0;
-                            var stripe = false;
+                            var stripe = true;
                             var lastMonth = "";
 
                             // Reverse donations so they come in proper order:
