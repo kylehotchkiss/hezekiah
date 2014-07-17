@@ -6,6 +6,7 @@
 //
 
 var database = require("../models");
+var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 
 module.exports = {
     donors: {
@@ -214,6 +215,116 @@ module.exports = {
                                     Count: thisCampaign.count,
                                     Amount: "$" + thisCampaign.amount
                                 })
+                            }
+
+                            callback({
+                                status: "success",
+                                data: campaignsTable
+                            })
+                        }
+                    });
+
+                }
+            });
+        }
+    },
+
+    campaignsMonthly: {
+        name: "Monthly Campaigns Summary",
+        description: "Funds raised per-campaign. Monthly, for wires.",
+        generate: function( callback ) {
+            var stripe = false;
+            var campaignsData = {};
+            var campaignsGroup = {};
+            var campaignsTable = [];
+
+            database.Donation.findAll().error(function( error ) { // todo narrow down to campaign
+                callback({
+                    status: "failure",
+                    error: {
+                        reason: "dberror"
+                    }
+                });
+            }).success(function( donations ) {
+                if ( donations === null ) {
+                    callback({
+                        status: "unavailable",
+                        error: {
+                            reason: "nxdonations"
+                        }
+                    })
+                } else {
+                    database.Campaign.findAll().error(function( error ) { // todo narrow down to campaign
+                        callback({
+                            status: "failure",
+                            error: {
+                                reason: "dberror"
+                            }
+                        });
+                    }).success(function( campaigns ) {
+                        if ( campaigns === null ) {
+                            callback({
+                                status: "unavailable",
+                                error: {
+                                    reason: "nxcampaigns"
+                                }
+                            })
+                        } else {
+                            var lastMonth = "";
+                            var x = 0;
+
+                            // remap campaigns from db to slug-keyed obj
+                            for ( var i in campaigns ) {
+                                var campaign = campaigns[i];
+
+                                campaignsGroup[campaign.slug] = campaign.dataValues;
+                            }
+
+                            // map donations to campaign slug-keyed obj
+                            for ( var i in donations ) {
+                                var donation = donations[i];
+
+                                var d = new Date( donation.createdAt );
+                                thisMonth = ( d.getMonth() + 1 ) + "" + d.getFullYear()
+
+                                if ( thisMonth !== lastMonth ) {
+                                    lastMonth = thisMonth;
+                                    x++;
+                                }
+
+                                if ( !campaignsData[x] ) {
+                                    campaignsData[x] = {};
+                                }
+
+                                if ( campaignsData[x][donation.campaign] ) {
+                                    campaignsData[x][donation.campaign].count++;
+                                    campaignsData[x][donation.campaign].amount += donation.amount;
+                                } else {
+                                    campaignsData[x][donation.campaign] = {
+                                        month: monthNames[ d.getMonth() ] + " " + d.getFullYear(),
+                                        count: 1,
+                                        amount: donation.amount
+                                    }
+                                }
+                            }
+
+                            // map campaign aggrigate data to array
+                            for ( var i in campaignsData ) {
+                                var thisMonth = campaignsData[i];
+
+                                stripe = !!stripe;
+
+                                for ( var j in thisMonth ) {
+                                    var thisCampaign = thisMonth[j];
+
+                                    campaignsTable.push({
+                                        modifier: ( stripe ? "stripe" : "" ),
+                                        Month: thisCampaign.month,
+                                        Name: campaignsGroup[j].name,
+                                        Count: thisCampaign.count,
+                                        Amount: "$" + thisCampaign.amount
+                                    })
+                                }
                             }
 
                             callback({

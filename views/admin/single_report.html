@@ -13,15 +13,19 @@
                     <table class="report">
                         <tr class="header">
                             {% for col in data|first %}
-                                <td>
-                                    {{ loop.key }}
-                                </td>
+                                {% if loop.key != "modifier" %}
+                                    <td>
+                                        {{ loop.key }}
+                                    </td>
+                                {% endif %}
                             {% endfor %}
                         </tr>
                         {% for row in data %}
-                            <tr class="data row-{{ loop-index }}">
+                            <tr class="data row-{{ loop-index }} {% if row.modifier %}{{ row.modifier }}{% endif %}">
                                 {% for col in row %}
-                                    <td>{{ col }}</td>
+                                    {% if loop.key != "modifier" %}
+                                        <td>{{ col }}</td>
+                                    {% endif %}
                                 {% endfor %}
                             </tr>
                         {% endfor %}
