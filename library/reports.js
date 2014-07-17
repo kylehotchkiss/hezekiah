@@ -233,7 +233,6 @@ module.exports = {
         name: "Monthly Campaigns Summary",
         description: "Funds raised per-campaign. Monthly, for wires.",
         generate: function( callback ) {
-            var stripe = false;
             var campaignsData = {};
             var campaignsGroup = {};
             var campaignsTable = [];
@@ -270,8 +269,12 @@ module.exports = {
                                 }
                             })
                         } else {
-                            var lastMonth = "";
                             var x = 0;
+                            var stripe = false;
+                            var lastMonth = "";
+
+                            // Reverse donations so they come in proper order:
+                            donations.reverse();
 
                             // remap campaigns from db to slug-keyed obj
                             for ( var i in campaigns ) {
