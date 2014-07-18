@@ -56,7 +56,7 @@ exports.sendEmail = function( donation, campaign, intent, callback ) {
                         subject: campaign.emailSubject, // TODO - from func
                         auto_text: true,
                         from_name: config.organization.name,
-                        inline_css: true,
+                        inline_css: false, // We inline it
                         from_email: config.email.fromEmail,
                         track_opens: true,
                         signing_domain: config.organization.hostname,
