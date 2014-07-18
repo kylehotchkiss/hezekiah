@@ -26,6 +26,21 @@ var meta = require('./package.json');
 var config = require('./config.json');
 var database = require('./models');
 
+//
+// Redis Setup
+//
+var redis;
+
+if ( process.env.REDISTOGO_URL ) {
+    var redisToGo   = require("url").parse( process.env.REDISTOGO_URL );
+
+    redis = require("redis").createClient(redisToGo.port, redisToGo.hostname);
+    redis.auth(redisToGo.auth.split(":")[1]);
+} else {
+    redis = require("redis").createClient();
+}
+
+var redisSession = require('connect-redis')(session);
 
 //
 // Express Setup
@@ -35,7 +50,11 @@ var app = express();
 app.use(compress());
 app.use(bodyParser());
 app.use(cookieParser());
-app.use(session({ secret: process.env.DS_COOKIE_SECRET, cookie: { maxAge: 3600000 }}));
+app.use(session({
+    store: new redisSession({ client: redis }),
+    secret: process.env.DS_COOKIE_SECRET,
+    cookie: { maxAge: 3600000 },
+}));
 app.use('/assets', express.static('public'));
 
 app.use(flash());
