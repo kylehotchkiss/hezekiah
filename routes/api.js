@@ -50,7 +50,6 @@ module.exports = function() {
 
                         donationsTable.push({
                             Date: dateTime,
-                            Name: donation.donorName,
                             Amount: "$" + donation.amount,
                             Campaign: donation.campaign
                         })
