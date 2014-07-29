@@ -9,13 +9,15 @@
         {% endfor %}
     </tr>
     {% for row in data %}
-        <tr class="data row-{{ loop-index }} {% if row.modifier %}{{ row.modifier }}{% endif %}">
-            {% for col in row %}
-                {% if loop.key != "modifier" %}
-                    <td>{{ col }}</td>
-                {% endif %}
-            {% endfor %}
-        </tr>
+        {% if loop.index < 10 %}
+            <tr class="data row-{{ loop-index }} {% if row.modifier %}{{ row.modifier }}{% endif %}">
+                {% for col in row %}
+                    {% if loop.key != "modifier" %}
+                        <td>{{ col }}</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endif %}
     {% endfor %}
 </table>
 
