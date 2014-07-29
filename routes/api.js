@@ -5,12 +5,63 @@
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
+var swig = require("swig");
 var express = require('express');
 var database = require('../models');
 var helpers = require('../library/helpers.js');
 
 module.exports = function() {
     var app = express();
+
+    app.engine('html', swig.renderFile);
+    app.set('view engine', 'html');
+    app.set('views', __dirname + '/../views');
+
+    swig.setDefaults({ autoescape: false });
+
+    app.get('/statusboard/:key', function( req, res ) {
+        var key = req.param("key");
+
+        if ( key === process.env.DS_STATUS_KEY ) {
+            database.Donation.findAll().error(function( error ) { // todo narrow down to campaign
+                callback({
+                    status: "failure",
+                    error: {
+                        reason: "dberror"
+                    }
+                });
+            }).success(function( donations ) {
+                if ( donations === null ) {
+                    callback({
+                        status: "unavailable",
+                        error: {
+                            reason: "nxdonations"
+                        }
+                    })
+                } else {
+                    donations = donations.reverse();
+                    var donationsTable = [];
+
+                    for ( var i in donations ) {
+                        var donation = donations[i];
+
+                        var d = new Date(donation.createdAt);
+                        var dateTime = ( d.getMonth() + 1 ) + "/" + d.getDate() + "/" + d.getFullYear();
+
+                        donationsTable.push({
+                            Date: dateTime,
+                            Name: donation.donorName,
+                            Amount: "$" + donation.amount,
+                            Campaign: donation.campaign
+                        })
+                    }
+
+                    res.render("api/statusboard", { data: donationsTable });
+                }
+            });
+        }
+    });
+
 
     app.get('/:campaign', function( req, res ) {
         var campaign = req.param("campaign");

@@ -1,0 +1,21 @@
+<table class="report">
+    <tr class="header">
+        {% for col in data|first %}
+            {% if loop.key != "modifier" %}
+                <th>
+                    {{ loop.key }}
+                </th>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    {% for row in data %}
+        <tr class="data row-{{ loop-index }} {% if row.modifier %}{{ row.modifier }}{% endif %}">
+            {% for col in row %}
+                {% if loop.key != "modifier" %}
+                    <td>{{ col }}</td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+
