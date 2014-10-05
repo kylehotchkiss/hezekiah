@@ -5,23 +5,25 @@
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
+var meta = require('../package.json');
+
 var hook = require("./hook.js");
 var donate = require("./donate.js");
 
 var express = require('express');
 
-module.exports = function( app ) {	
+module.exports = function( app ) {
 	// Hooks
 	app.post('/hook/stripe', hook.dispatcher);
 	app.get('/hook/backup', hook.backup);
-	
-	
+
+
 	// Donation Processing
 	app.get('/donate/retrieve', donate.retrieve);
 	app.post('/donate/one', donate.one);
 	app.post('/donate/recurring', donate.recurring);
-	app.post('/donate/cancel', donate.cancel);	
-	
+	app.post('/donate/cancel', donate.cancel);
+
 	// 404
 	app.get("*", function( req, res ) {
 		res.json(404, {
@@ -31,6 +33,6 @@ module.exports = function( app ) {
 			server: meta.name + " v" + meta.version,
 		})
 	});
-	
+
 	return app;
 }

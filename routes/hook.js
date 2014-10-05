@@ -6,9 +6,13 @@
 //
 
 exports.dispatcher = function( req, res ) {
-	var event = JSON.parse( req.body );
-	
-	console.log( event )
-	
-	response.send(200);
+	var stripeEvent = req.body;
+
+	console.log( stripeEvent )
+
+	res.send(200);
+}
+
+exports.backup = function( req, res ) {
+
 }

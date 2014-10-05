@@ -11,13 +11,12 @@ if ( environment === "production" ) {
     require('newrelic');
 }
 
-var express = require('express');
-
-var compress = require('compression');
-var bodyParser = require('body-parser');
-
 var meta = require('./package.json');
 var config = require('./config.json');
+
+var express = require('express');
+var compress = require('compression');
+var bodyParser = require('body-parser');
 
 
 //
