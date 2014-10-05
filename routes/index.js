@@ -5,14 +5,15 @@
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
-var stripe = require("./stripe.js");
+var hook = require("./hook.js");
 var donate = require("./donate.js");
 
 var express = require('express');
 
 module.exports = function( app ) {	
-	// Stripe Webhook
-	app.post('/stripe/hook', stripe.dispatcher);
+	// Hooks
+	app.post('/hook/stripe', hook.dispatcher);
+	app.get('/hook/backup', hook.backup);
 	
 	
 	// Donation Processing
