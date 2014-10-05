@@ -1,3 +1,0 @@
-{% for col in data|first %}{{ loop.key }}{% if !loop.last %},{% endif %}{% endfor %}
-{% for row in data %}{% for col in row %}{{ col }}{% if !loop.last %},{% endif %}{% endfor %}
-{% endfor %}

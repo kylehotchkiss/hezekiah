@@ -1,5 +1,5 @@
 //
-// Illuminate Nations - DonateServ v.0.2.0
+// Illuminate Nations - Hezekiah v.0.3.0
 // Copyright 2013-2014 Illuminate Nations
 // Released under the General Public Licence
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
@@ -31,31 +31,16 @@ exports.process = function( donation, campaign, callback ) {
 };
 
 
-exports.subscribe = function( donation, campaign, callback ) {
-    var customer = stripe.customers.create({
-        card: donation.token,
-        plan: campaign.plan,
-        email: donation.email
-    }, function( error, customer ) {
-        if ( error ) {
-            callback( error, false );
-        } else {
-            callback( false, customer );
-        }
-    });
+exports.retrieve = function( callback ) {
+
 };
 
 
-exports.unsubscribe = function( customer, subscription, callback ) {
-    stripe.customers.cancelSubscription(
-        customer,
-        subscription,
-        function( error, confirmation ) {
-            if ( error ) {
-                callback( error, false );
-            } else {
-                callback( false, confirmation );
-            }
-        }
-    );
+exports.create = function( callback ) {
+
 };
+
+
+exports.update = function( ) {
+
+}
