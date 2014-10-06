@@ -8,7 +8,19 @@
 exports.dispatcher = function( req, res ) {
 	var stripeEvent = req.body;
 
-	console.log( stripeEvent )
+	if ( stripeEvent.type === "charge.refunded" || stripeEvent.type === "charge.dispute.funds_withdrawn" ) {
+        console.log( stripeEvent )
+
+        // Set transactions to "refunded"
+    } else if ( stripeEvent.type === "invoice.payment_succeeded" ) {
+        console.log( stripeEvent )
+
+        // Payment confirmed actions
+    } else if ( stripeEvent.type === "customer.subscription.deleted" ) {
+        console.log( stripeEvent )
+
+        // Delete subscription
+    }
 
 	res.send(200);
 }
