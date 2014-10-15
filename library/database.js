@@ -8,10 +8,14 @@
 var mongoose = require("mongoose");
 var validate = require("validator");
 
-
 mongoose.connect(process.env.MONGO_URL);
 
 
+//
+// This is the schema for all indivdual donations. It keeps track of everything
+// we need to legally track. However, it is most efficent to use these in
+// combination with indivdual donors to grab lists of donations per donor.
+//
 var DonationSchema = mongoose.Schema({
     /* Meta */
     id: {
@@ -53,19 +57,19 @@ var DonationSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    donorName: {
+    name: {
         type: String,
         required: true
     },
-    donorEmail: {
+    email: {
         type: String,
         required: true,
         validator: function( val ) {
             return validate.isEmail( val );
         }
     },
-    donorPostal: {
-        type: Number,
+    postal: {
+        type: String,
         required: true
     },
     subcampaign: {
@@ -78,17 +82,56 @@ var DonationSchema = mongoose.Schema({
         type: String,
         required: true,
         validator: function( val ) {
-            return ( validate.contains(val, "ch_") && validate.isLength(27) )
+            return ( validate.contains(val, "ch_") && validate.isLength(27) );
         }
     },
     customerID: {
         type: String,
         required: true,
         validator: function( val ) {
-            return ( validate.contains(val, "cus_") && validate.isLength(18) )
+            return ( validate.contains(val, "cus_") && validate.isLength(18) );
         }
     }
     //quickbooksID: String
 });
 
+
+//
+// This are simple entites for indivdual donors, linking us with their prior
+// donation history for reporting, simple donor counts, linking donations
+// internally within Stripe, and allowing us to easily connect emails to Stripe
+// customer IDs for future donations and recurring donation cancelations.
+//
+// Emails alone will be used to connect a new donation to a Customer. Email and
+// postal shall be used to cancel a monthly donation.
+//
+var DonorSchema = mongoose.Schema({
+    id: {
+        type: mongoose.Schema.Types.ObjectId
+    },
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true,
+        validator: function( val ) {
+            return validate.isEmail( val );
+        }
+    },
+    postal: {
+        type: String,
+        required: true
+    },
+    customerID: {
+        type: String,
+        required: true,
+        validator: function( val ) {
+            return ( validate.contains(val, "cus_") && validate.isLength(18) );
+        }
+    }
+});
+
 exports.DonationModel = mongoose.model("Donation", DonationSchema);
+exports.DonorModel = mongoose.model("Donor", DonorSchema);

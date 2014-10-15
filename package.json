@@ -20,5 +20,8 @@
     "request": "~2.34.0",
     "stripe": "~2.4.4",
     "validator": "^3.19.1"
+  },
+  "devDependencies": {
+    "node-env-file": "^0.1.4"
   }
 }

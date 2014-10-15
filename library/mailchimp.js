@@ -64,7 +64,7 @@ var campaignField = function( callback ) {
             callback( false, true );
         }
     });
-}
+};
 
 
 //
@@ -126,7 +126,7 @@ var campaignValue = function( campaignSlug, callback ) {
             callback( false, true );
         }
     });
-}
+};
 
 exports.subscribeEmail = function( name, email, lists, ip, callback ) {
     campaignField(function( error ) {
@@ -170,6 +170,6 @@ exports.subscribeEmail = function( name, email, lists, ip, callback ) {
                     }
                 }
             });
-        })
+        });
     });
-}
+};

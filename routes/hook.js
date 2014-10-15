@@ -9,22 +9,26 @@ exports.dispatcher = function( req, res ) {
 	var stripeEvent = req.body;
 
 	if ( stripeEvent.type === "charge.refunded" || stripeEvent.type === "charge.dispute.funds_withdrawn" ) {
-        console.log( stripeEvent )
+        console.log( stripeEvent );
 
         // Set transactions to "refunded"
     } else if ( stripeEvent.type === "invoice.payment_succeeded" ) {
-        console.log( stripeEvent )
+        console.log( stripeEvent );
 
         // Payment confirmed actions
     } else if ( stripeEvent.type === "customer.subscription.deleted" ) {
-        console.log( stripeEvent )
+        console.log( stripeEvent );
 
         // Delete subscription
     }
 
+	// plan changed, deleted,
+	// customer deleted
+	// throw Blunder issues
+
 	res.send(200);
-}
+};
 
 exports.backup = function( req, res ) {
 
-}
+};

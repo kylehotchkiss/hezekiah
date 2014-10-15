@@ -9,6 +9,8 @@ var environment = process.env.NODE_ENV || 'development';
 
 if ( environment === "production" ) {
     require('newrelic');
+} else {
+    require('node-env-file')(__dirname + '/.env');
 }
 
 var meta = require('./package.json');
