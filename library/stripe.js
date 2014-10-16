@@ -8,6 +8,13 @@
 var stripe = require("stripe")( "sk_test_NNOEYfuSLvdLlZrd7jNFRIzg" || process.env.DS_STRIPE_API );
 var database = require("./database.js");
 
+//
+// Idea: direct fundrasing platform for missionaries
+// We'd need to track all campaigns and check against a list of users to see if
+// a match is found. If everything checks out, initiate the transfer immediately.
+// Otherwise, leave funds alone for stripe to transfer all by itself.
+//
+
 
 // Grab ID for Stripe Customer given an email address
 var retrieveCustomer = function( email, postal, callback ) {
@@ -281,9 +288,47 @@ exports.monthly = function( donation, callback ) {
 exports.cancel = function( email, postal, callback ) {
     retrieveCustomer( email, postal, function( error, donorID ) {
         if ( error ) {
-
+            callback( error, false );
         } else {
+            retrieveSubscriptions( donorID, function( error, subscriptions ) {
+                if ( error ) {
+                    callback( error, false );
+                } else if ( !subscriptions.data ) {
+                    callback( false, 0 );
+                } else {
+                    var subscriptionsIDs = [];
 
+                    // Put all the Subscription IDs in an iterable array.
+                    for ( var i in subscriptions.data ) {
+                        var subscription = subscriptions.data[i];
+
+                        subscriptionsIDs.push( subscription.id );
+                    }
+
+                    // Async Loop to unsub from all Subscriptions
+                    var j = 0;
+
+                    var unsubscribe = (function unsubscribe() {
+                        if ( j < subscriptionsIDs.length ) {
+                            var id = subscriptionsIDs[j];
+
+                            j++;
+
+                            stripe.customers.cancelSubscription( donorID, id, function( error, subscription ) {
+                                if ( error ) {
+                                    callback( false, false );
+                                } else {
+                                    unsubscribe();
+                                }
+                            });
+                        } else {
+                            // Finished
+
+                            callback( false, j );
+                        }
+                    })();
+                }
+            });
         }
     });
 };

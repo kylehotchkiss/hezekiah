@@ -8,7 +8,7 @@
 var mongoose = require("mongoose");
 var validate = require("validator");
 
-mongoose.connect(process.env.MONGO_URL);
+mongoose.connect( process.env.MONGO_URL );
 
 
 //

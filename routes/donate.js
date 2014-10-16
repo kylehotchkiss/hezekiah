@@ -9,6 +9,8 @@ var database = require("../library/database.js");
 var stripe = require("../library/stripe.js");
 
 exports.one = function( req, res ) {
+    var now = new Date().getTime();
+
     var donation = {
         ip: "10.10.10.10",
         name: "Somebody Else",
@@ -17,13 +19,16 @@ exports.one = function( req, res ) {
         amount: 13,
         campaign: "test",
         campaignName: "Test"
-    }
+    };
 
     stripe.single(donation, function( error, charge ) {
         if ( error ) {
-            console.log( error )
+            console.log( error );
         } else {
-            res.json({ status: "success" })
+            var done = new Date().getTime();
+            console.log( ( done - now ) / 1000 + "s" );
+
+            res.json({ status: "success" });
 
             donation.stripeID = charge.id;
             donation.customerID = charge.customer;
@@ -32,16 +37,16 @@ exports.one = function( req, res ) {
 
             donationData.save(function( error ) {
                 if ( error ) {
-                    console.log( error )
+                    console.log( error );
                 } else {
-                    console.log( "db updated" )
+                    console.log( "db updated" );
 
                     //database.DonationModel.find({ }).exec(function( error, docs ) { console.log(docs) });
                 }
-            })
+            });
         }
-    })
-}
+    });
+};
 
 exports.monthly = function( req, res ) {
     var donation = {
@@ -52,14 +57,14 @@ exports.monthly = function( req, res ) {
         amount: 100,
         campaign: "test",
         campaignName: "Test"
-    }
+    };
 
 
     stripe.monthly(donation, function( error, subscription ) {
         if ( error ) {
-            console.log( error )
+            console.log( error );
         } else {
-            res.json({ status: "success" })
+            res.json({ status: "success" });
 
             donation.recurring = true;
             donation.stripeID = subscription.id;
@@ -69,21 +74,23 @@ exports.monthly = function( req, res ) {
 
             donationData.save(function( error ) {
                 if ( error ) {
-                    console.log( error )
+                    console.log( error );
                 } else {
-                    
+
 
                     //database.DonationModel.find({ }).exec(function( error, docs ) { console.log(docs) });
                 }
-            })
+            });
         }
-    })
-}
-
-exports.recurring = function( req, res ) {
-
-}
+    });
+};
 
 exports.cancel = function( req, res ) {
+    stripe.cancel("monthly@example.org", 24502, function( error, total ) {
+        if ( error ) {
 
-}
+        } else {
+            console.log( total );
+        }
+    });
+};

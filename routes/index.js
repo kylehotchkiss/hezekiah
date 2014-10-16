@@ -22,7 +22,7 @@ module.exports = function( app ) {
 	//app.get('/donate/retrieve', donate.retrieve);
 	app.get('/donate/one', donate.one);
 	app.get('/donate/monthly', donate.monthly);
-	app.post('/donate/cancel', donate.cancel);
+	app.get('/donate/cancel', donate.cancel);
 
 	// 404
 	app.get("*", function( req, res ) {
