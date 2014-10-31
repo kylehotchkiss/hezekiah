@@ -9,25 +9,21 @@ var database = require("../library/database.js");
 var stripe = require("../library/stripe.js");
 
 exports.one = function( req, res ) {
-    var now = new Date().getTime();
-
     var donation = {
-        ip: "10.10.10.10",
-        name: "Somebody Else",
-        email: "somebody@example.org",
-        postal: 24502,
-        amount: 13,
+        ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+        token: req.body.token,
+        name: req.body.name,
+        email: req.body.email,
+        postal: req.body.postal,
+        amount: req.body.amount,
         campaign: "test",
         campaignName: "Test"
     };
 
     stripe.single(donation, function( error, charge ) {
         if ( error ) {
-            console.log( error );
+            res.json({ status: "error", error: error.code, message: error.message });
         } else {
-            var done = new Date().getTime();
-            console.log( ( done - now ) / 1000 + "s" );
-
             res.json({ status: "success" });
 
             donation.stripeID = charge.id;
@@ -38,10 +34,6 @@ exports.one = function( req, res ) {
             donationData.save(function( error ) {
                 if ( error ) {
                     console.log( error );
-                } else {
-                    console.log( "db updated" );
-
-                    //database.DonationModel.find({ }).exec(function( error, docs ) { console.log(docs) });
                 }
             });
         }
@@ -50,11 +42,12 @@ exports.one = function( req, res ) {
 
 exports.monthly = function( req, res ) {
     var donation = {
-        ip: "10.10.10.10",
-        name: "Monthly User",
-        email: "monthly@example.org",
-        postal: 24502,
-        amount: 100,
+        ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+        token: req.body.token,
+        name: req.body.name,
+        email: req.body.email,
+        postal: req.body.postal,
+        amount: req.body.amount,
         campaign: "test",
         campaignName: "Test"
     };
@@ -62,7 +55,7 @@ exports.monthly = function( req, res ) {
 
     stripe.monthly(donation, function( error, subscription ) {
         if ( error ) {
-            console.log( error );
+            res.json({ status: "error", error: error });
         } else {
             res.json({ status: "success" });
 
@@ -75,22 +68,31 @@ exports.monthly = function( req, res ) {
             donationData.save(function( error ) {
                 if ( error ) {
                     console.log( error );
-                } else {
-
-
-                    //database.DonationModel.find({ }).exec(function( error, docs ) { console.log(docs) });
                 }
             });
         }
     });
 };
 
+exports.retrieve = function( req, res ) {
+    var email = req.param("email");
+    var postal = req.param("postal");
+
+    if ( email && postal ) { // TODO FILTER
+        stripe.retrieve(email, postal, function() {
+
+        });
+    } else {
+        res.json({ status: "error", error: "You must provide your email and postal code" });
+    }
+};
+
 exports.cancel = function( req, res ) {
     stripe.cancel("monthly@example.org", 24502, function( error, total ) {
         if ( error ) {
-
+            res.json({ status: "error", error: error });
         } else {
-            console.log( total );
+            res.json({ status: "success", total: total });
         }
     });
 };

@@ -19,9 +19,9 @@ module.exports = function( app ) {
 
 
 	// Donation Processing
-	//app.get('/donate/retrieve', donate.retrieve);
-	app.get('/donate/one', donate.one);
-	app.get('/donate/monthly', donate.monthly);
+	app.get('/donate/retrieve', donate.retrieve);
+	app.post('/donate/one', donate.one);
+	app.post('/donate/monthly', donate.monthly);
 	app.get('/donate/cancel', donate.cancel);
 
 	// 404
@@ -35,4 +35,4 @@ module.exports = function( app ) {
 	});
 
 	return app;
-}
+};

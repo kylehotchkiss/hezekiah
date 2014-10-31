@@ -87,7 +87,6 @@ var DonationSchema = mongoose.Schema({
     },
     customerID: {
         type: String,
-        required: true,
         validator: function( val ) {
             return ( validate.contains(val, "cus_") && validate.isLength(18) );
         }

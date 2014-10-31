@@ -16,6 +16,7 @@ if ( environment === "production" ) {
 var meta = require('./package.json');
 var config = require('./config.json');
 
+var cors = require('cors');
 var express = require('express');
 var compress = require('compression');
 var bodyParser = require('body-parser');
@@ -25,19 +26,9 @@ var bodyParser = require('body-parser');
 // Express Setup
 //
 var app = express();
+app.use(cors());
 app.use(compress());
 app.use(bodyParser());
-
-
-//
-// Set CORS to set access domain
-//
-app.all('/*', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", config.access.domain);
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-
-    next();
-});
 
 
 //

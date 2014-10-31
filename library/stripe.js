@@ -224,27 +224,21 @@ var dedupSubscription = function( donation, donorID, callback ) {
 
 
 exports.single = function( donation, callback ) {
-    processCustomer(donation, function( error, donorID ) {
+    stripe.charges.create({
+        card: donation.token,
+        currency: "usd",
+        amount: donation.amount * 100,
+        description: "Donation" + (donation.campaignName ? (" for " + donation.campaignName) : ""),
+        metadata: {
+            ip: donation.ip,
+            campaign: donation.campaign,
+            email: donation.email
+        }
+    }, function( error, charge ) {
         if ( error ) {
             callback( error, false );
         } else {
-            stripe.charges.create({
-                customer: donorID,
-                currency: "usd",
-                amount: donation.amount * 100,
-                description: "Donation" + (donation.campaignName ? (" for " + donation.campaignName) : ""),
-                metadata: {
-                    ip: donation.ip,
-                    campaign: donation.campaign,
-                    email: donation.email
-                }
-            }, function( error, charge ) {
-                if ( error ) {
-                    callback( error, false );
-                } else {
-                    callback( false, charge );
-                }
-            });
+            callback( false, charge );
         }
     });
 };
@@ -256,7 +250,7 @@ exports.monthly = function( donation, callback ) {
             if ( error ) {
                 callback( error, false );
             } else if ( duplicate ) {
-                callback( "Duplicate Subscription", false );
+                callback( { type: "HezekiahDuplicate" }, false );
             } else {
                 verifyPlan(function( error ) {
                     if ( error ) {
@@ -281,6 +275,21 @@ exports.monthly = function( donation, callback ) {
                 });
             }
         });
+    });
+};
+
+
+exports.retrieve = function( email, postal, callback ) {
+    retrieveCustomer( email, postal, function( error, donorID ) {
+        if ( error ) {
+            callback( error, false );
+        } else {
+            retrieveSubscriptions( donorID, function( error, subscriptions ) {
+
+                console.log( subscriptions );
+
+            });
+        }
     });
 };
 
