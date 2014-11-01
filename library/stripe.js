@@ -223,22 +223,55 @@ var dedupSubscription = function( donation, donorID, callback ) {
 };
 
 
-exports.single = function( donation, callback ) {
-    stripe.charges.create({
-        card: donation.token,
-        currency: "usd",
-        amount: donation.amount * 100,
-        description: "Donation" + (donation.campaignName ? (" for " + donation.campaignName) : ""),
-        metadata: {
-            ip: donation.ip,
-            campaign: donation.campaign,
-            email: donation.email
-        }
-    }, function( error, charge ) {
+//
+// Check to see if same donation was made by email (while checking campaign and
+// amount) within the past 5 minutes.
+//
+var dedupDonation = function( donation, callback ) {
+    var fiveMin = new Date().getTime() - 300000;
+    fiveMin = new Date( fiveMin );
+
+    var params = {
+        email: donation.email,
+        amount: donation.amount,
+        campaign: donation.campaign,
+        date: { "$gte": fiveMin }
+    };
+
+    database.DonationModel.count(params, function( error, count ) {
         if ( error ) {
             callback( error, false );
         } else {
-            callback( false, charge );
+            callback( false, !!count );
+        }
+    });
+};
+
+
+exports.single = function( donation, callback ) {
+    dedupDonation( donation, function( error, duplicate ) {
+        if ( error ) {
+            callback( error, false );
+        } else if ( duplicate ) {
+            callback( { slug: "duplicate", message: "You made this donation within the past five minutes. <br /> Please wait a few minutes to try again." }, false );
+        } else {
+            stripe.charges.create({
+                card: donation.token,
+                currency: "usd",
+                amount: donation.amount * 100,
+                description: "Donation" + (donation.campaignName ? (" for " + donation.campaignName) : ""),
+                metadata: {
+                    ip: donation.ip,
+                    campaign: donation.campaign,
+                    email: donation.email
+                }
+            }, function( error, charge ) {
+                if ( error ) {
+                    callback( error, false );
+                } else {
+                    callback( false, charge );
+                }
+            });
         }
     });
 };

@@ -52,12 +52,15 @@ exports.monthly = function( req, res ) {
         campaignName: "Test"
     };
 
-
     stripe.monthly(donation, function( error, subscription ) {
         if ( error ) {
             res.json({ status: "error", error: error });
         } else {
             res.json({ status: "success" });
+
+            // TODO: our webhooks will provide a better interface to this than
+            // we can right here (ie we only get subscribtion id and not the
+            // transaction id) so remove this db call.
 
             donation.recurring = true;
             donation.stripeID = subscription.id;
