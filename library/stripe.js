@@ -283,7 +283,7 @@ exports.monthly = function( donation, callback ) {
             if ( error ) {
                 callback( error, false );
             } else if ( duplicate ) {
-                callback( { type: "HezekiahDuplicate" }, false );
+                callback( { slug: "duplicate", message: "You already make monthly donations to this cause." }, false );
             } else {
                 verifyPlan(function( error ) {
                     if ( error ) {

@@ -54,7 +54,8 @@ exports.monthly = function( req, res ) {
 
     stripe.monthly(donation, function( error, subscription ) {
         if ( error ) {
-            res.json({ status: "error", error: error });
+            // TODO: this is proper error json
+            res.json({ status: "error", error: error.slug, message: error.message });
         } else {
             res.json({ status: "success" });
 
@@ -86,6 +87,7 @@ exports.retrieve = function( req, res ) {
 
         });
     } else {
+        // TODO: Not proper error json
         res.json({ status: "error", error: "You must provide your email and postal code" });
     }
 };
