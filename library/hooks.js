@@ -19,3 +19,20 @@ refund
     send to keenio (?)
     send to quickbooks (?)
     send to slack
+
+
+exports.postDonate = function( donation, callback ) {
+
+}
+
+exports.postRefund = function() {
+
+}
+
+exports.postSubscribe = function() {
+
+}
+
+exports.postUnsubscribe = function() {
+
+}

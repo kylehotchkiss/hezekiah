@@ -5,6 +5,30 @@
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
+var send = function( email, subject, content, template, callback ) {
+    var loadedTemplate;
+    var send = true;
+
+    // Swig uses sync error handling so we try-catch specifically for whether or
+    // not we can load the template file here.
+    // TODO: This seems safe since the template name is only set from private
+    // functions but just double check any ramifications of FS access.
+    try {
+        loadedTemplate = swig.compileFile("./emails/" + template + ".html");
+    } catch( error ) {
+        send = false;
+    }
+
+    
+
+
+
+
+
+
+
+
+
 var swig = require("swig");
 var request = require("request");
 var config = require("../config.json");
@@ -77,4 +101,3 @@ exports.sendEmail = function( donation, campaign, intent, callback ) {
         }
     });
 };
-

@@ -16,8 +16,8 @@ exports.one = function( req, res ) {
         email: req.body.email,
         postal: req.body.postal,
         amount: req.body.amount,
-        campaign: "test",
-        campaignName: "Test"
+        campaign: req.body.campaign,
+        campaignName: req.body.campaignName
     };
 
     stripe.single(donation, function( error, charge ) {
@@ -48,8 +48,8 @@ exports.monthly = function( req, res ) {
         email: req.body.email,
         postal: req.body.postal,
         amount: req.body.amount,
-        campaign: "test",
-        campaignName: "Test"
+        campaign: req.body.campaign,
+        campaignName: req.body.campaignName
     };
 
     stripe.monthly(donation, function( error, subscription ) {
