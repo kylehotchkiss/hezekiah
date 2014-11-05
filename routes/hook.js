@@ -6,6 +6,7 @@
 //
 
 var hooks = require("../library/hooks.js");
+var stripe = require("../library/stripe.js");
 
 exports.dispatcher = function( req, res ) {
 	var stripeEvent = req.body;
@@ -15,23 +16,29 @@ exports.dispatcher = function( req, res ) {
 
         // Set transactions to "refunded"
     } else if ( stripeEvent.type === "invoice.payment_succeeded" ) {
-		console.log( stripeEvent.data );
+		var transaction = stripeEvent.data;
+		var customer = transaction.customer;
+		var subscription = transaction.subscription;
 
         var donation = {
 			recurring: true,
-			ip: stripeEvent.data.metadata.ip,
-			stripeID: stripeEvent.data.charge,
-			amount: stripeEvent.data.amount_due,
-			name: stripeEvent.data.metadata.name,
-			customerID: stripeEvent.data.customer,
-			email: stripeEvent.data.metadata.email,
-			postal: stripeEvent.data.metadata.postal,
-			campaign: stripeEvent.data.metadata.campaign,
-			date: new Date(stripeEvent.data.date).getTime(),
-			campaignName: stripeEvent.data.metadata.campaignName
-		}
+			customerID: customer,
+			subscription: subscription,
+			stripeID: transaction.charge,
+			amount: transaction.amount_due,
+			date: new Date(transaction.date).getTime(),
+		};
 
-		hook.postDonate( donation );
+		stripe.customers.retrieveSubscription( subscription, customer, function( error, subscription ) {
+			donation.ip = subscription.metadata.ip;
+			donation.name = subscription.metadata.name;
+			donation.email = subscription.metadata.email;
+			donation.postal = subscription.metadata.postal;
+			donation.campaign = subscription.metadata.campaign;
+			donation.campaignName = ssubscription.metadata.campaignName;
+
+			hook.postDonate( donation );
+		});
     } else if ( stripeEvent.type === "customer.subscription.deleted" ) {
         console.log( stripeEvent );
 
