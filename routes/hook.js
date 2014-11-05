@@ -16,7 +16,7 @@ exports.dispatcher = function( req, res ) {
 
         // Set transactions to "refunded"
     } else if ( stripeEvent.type === "invoice.payment_succeeded" ) {
-		var transaction = stripeEvent.data;
+		var transaction = stripeEvent.data.object;
 		var customer = transaction.customer;
 		var subscription = transaction.subscription;
 
