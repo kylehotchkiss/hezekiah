@@ -5,9 +5,14 @@
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
+var Keen = require('keen.io');
 var mandrill = require("../library/mandrill.js");
 var database = require("../library/database.js");
 
+var keen = Keen.configure({
+    projectId: process.env.HEZ_KEEN_PROJECT,
+    writeKey: process.env.HEZ_KEEN_WRITE
+});
 
 /*donation
     single or recurring?
@@ -61,14 +66,24 @@ var notification = function( donation, subject, template, callback ) {
     });
 };
 
+var keenio = function( donation, callback ) {
+    donation.amount = parseInt( donation.amount );
+
+    keen.addEvent( "Donations", donation, function() {
+        if ( typeof callback === "function" ) {
+            callback();
+        }
+    });
+};
 
 exports.postDonate = function( donation, callback ) {
     save( donation );
+    keenio( donation );
     receipt( donation, "Thank you for your donation!", "donation-receipt" );
     notification( donation, "[donation] A donation has been processed", "donation-notification" );
-    //keenio
-    //quickbooks
-    //slack?
+    // subscription
+    // quickbooks
+    // slack?
 };
 
 exports.postRefund = function() {

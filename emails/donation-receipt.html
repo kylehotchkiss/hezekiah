@@ -1,13 +1,31 @@
+{% if recurring %}
+
 <p>
 Hey {{ name }},
-</p>
-<p>
-Thank you so much for your generous donation of ${{ amount }} to Illuminate Nations for {{ campaignName }} on {{ date }}.
 </p><p>
-100% of your donation (minus processing fees) will be sent to {{ donation.campaign }} so that they can spread the gospel into the unreached corners of the globe!
+Your monthly donation of ${{ amount }} to Illuminate Nations for {{ campaignName }} was successfully processed on {{ date }}.
+</p><p>
+100% of your donation (minus processing fees) will be sent to {{ campaignName }} so that they can spread the gospel into the unreached corners of the globe!
 We're so excited that you would come alongside us in spreading the good news around the world.
-</p>
-<p>
+</p><p>
+If you need to change your monthly donations, <a href="http://www.illuminatenations.org/donate/manage?email={{ email|escape }}&amp;postal={{ postal }}">you can modify them here</a>. 
+</p><p>
 Have a wonderful day, <br />
 The Illuminate Nations team
 </p>
+
+{% else %}
+
+<p>
+Hey {{ name }},
+</p><p>
+Thank you so much for your generous donation of ${{ amount }} to Illuminate Nations for {{ campaignName }} on {{ date }}.
+</p><p>
+100% of your donation (minus processing fees) will be sent to {{ campaignName }} so that they can spread the gospel into the unreached corners of the globe!
+We're so excited that you would come alongside us in spreading the good news around the world.
+</p><p>
+Have a wonderful day, <br />
+The Illuminate Nations team
+</p>
+
+{% endif %}

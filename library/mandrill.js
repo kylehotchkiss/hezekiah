@@ -12,7 +12,7 @@ var request = require("request");
 var config = require("../config.json");
 
 var mandrillBase = "https://mandrillapp.com/api/1.0/";
-var mandrillAPI = process.env.DS_MANDRILL_API;
+var mandrillAPI = process.env.HEZ_MANDRILL_API;
 
 exports.send = function( email, subject, content, template, callback ) {
     var loadedTemplate;

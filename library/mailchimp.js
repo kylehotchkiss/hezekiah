@@ -11,8 +11,8 @@ var async = require("async");
 var request = require("request");
 
 var mailchimpBase = "https://us7.api.mailchimp.com/2.0/";
-var mailchimpAPI = process.env.DS_MAILCHIMP_API;
-var mailchimpList = process.env.DS_MAILCHIMP_LIST;
+var mailchimpAPI = process.env.HEZ_MAILCHIMP_API;
+var mailchimpList = process.env.HEZ_MAILCHIMP_LIST;
 
 
 //

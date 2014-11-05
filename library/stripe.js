@@ -5,7 +5,7 @@
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
-var stripe = require("stripe")( "sk_test_NNOEYfuSLvdLlZrd7jNFRIzg" || process.env.DS_STRIPE_API );
+var stripe = require("stripe")( process.env.HEZ_STRIPE_API );
 var database = require("./database.js");
 
 //
@@ -40,23 +40,19 @@ var retrieveCustomer = function( email, postal, callback ) {
 
 
 // Creates a new Stripe Customer, updates local record if it exists
-var createCustomer = function( email, name, postal, callback ) {
+var createCustomer = function( donation, callback ) {
     stripe.customers.create({
-        description: name,
-        email: email,
-        card: {
-            number: "4242424242424242",
-            exp_year: "2015",
-            exp_month: "02"
-        }
+        description: donation.name,
+        email: donation.email,
+        card: donation.token
     }, function( error, customer ) {
         if ( error ) {
             callback( error, false );
         } else {
             var donor = {
-                name: name,
-                email: email,
-                postal: postal,
+                name: donation.name,
+                email: donation.email,
+                postal: donation.postal,
                 customerID: customer.id
             };
 
@@ -78,11 +74,7 @@ var createCustomer = function( email, name, postal, callback ) {
 // provided. TODO: does this affect monthly processing if they use a new card?
 var updateCustomer = function( donation, donorID, callback ) {
     stripe.customers.update(donorID, {
-        card: {
-            number: "4242424242424242",
-            exp_year: "2015",
-            exp_month: "02"
-        }
+        card: donation.token
     }, function( error, customer ) {
         if ( error ) {
             callback( error );
@@ -98,7 +90,7 @@ var processCustomer = function( donation, callback ) {
     retrieveCustomer( donation.email, function( error, donorID ) {
         // Create Customer if not found, update if found.
         if ( error || donorID === false ) {
-            createCustomer( donation.email, donation.name, donation.postal, function( error, donorID ) {
+            createCustomer( donation, function( error, donorID ) {
                 if ( error ) {
                     callback( error, false );
                 } else {
@@ -112,7 +104,7 @@ var processCustomer = function( donation, callback ) {
                         // Stripe Customer has been deleted, create new one.
                         // Also, flag this. Huge data management issue.
 
-                        createCustomer( donation.email, donation.name, donation.postal, function( error, donorID ) {
+                        createCustomer( donation, function( error, donorID ) {
                             if ( error ) {
                                 callback( error, false );
                             } else {
@@ -294,8 +286,9 @@ exports.monthly = function( donation, callback ) {
                             quantity: Math.floor( donation.amount ),
                             metadata: {
                                 ip: donation.ip,
+                                email: donation.email,
                                 campaign: donation.campaign,
-                                email: donation.email
+                                campaignName: donation.campaignName
                             }
                         }, function( error, subscription ) {
                             if ( error ) {
