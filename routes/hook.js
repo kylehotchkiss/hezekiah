@@ -29,7 +29,9 @@ exports.dispatcher = function( req, res ) {
 			date: new Date(transaction.date).getTime(),
 		};
 
-		stripe.customers.retrieveSubscription( subscription, customer, function( error, subscription ) {
+		console.log( donation )
+
+		stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
 			donation.ip = subscription.metadata.ip;
 			donation.name = subscription.metadata.name;
 			donation.email = subscription.metadata.email;
