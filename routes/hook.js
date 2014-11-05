@@ -25,8 +25,8 @@ exports.dispatcher = function( req, res ) {
 			customerID: customer,
 			subscription: subscription,
 			stripeID: transaction.charge,
-			amount: (transaction.amount_due / 100),
-			date: new Date(transaction.date).getTime(),
+			amount: ( transaction.amount_due / 100 ),
+			date: new Date( transaction.date * 1000 ).getTime(),
 		};
 
 		stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
