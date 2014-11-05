@@ -37,7 +37,7 @@ exports.dispatcher = function( req, res ) {
 			donation.campaign = subscription.metadata.campaign;
 			donation.campaignName = subscription.metadata.campaignName;
 
-			hook.postDonate( donation );
+			hooks.postDonate( donation );
 		});
     } else if ( stripeEvent.type === "customer.subscription.deleted" ) {
         console.log( stripeEvent );
