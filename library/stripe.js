@@ -286,7 +286,9 @@ exports.monthly = function( donation, callback ) {
                             quantity: Math.floor( donation.amount ),
                             metadata: {
                                 ip: donation.ip,
+                                name: donation.name,
                                 email: donation.email,
+                                postal: donation.postal,
                                 campaign: donation.campaign,
                                 campaignName: donation.campaignName
                             }
