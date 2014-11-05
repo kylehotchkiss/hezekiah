@@ -15,6 +15,8 @@ exports.dispatcher = function( req, res ) {
 
         // Set transactions to "refunded"
     } else if ( stripeEvent.type === "invoice.payment_succeeded" ) {
+		console.log( stripeEvent.data );
+
         var donation = {
 			recurring: true,
 			ip: stripeEvent.data.metadata.ip,
