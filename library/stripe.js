@@ -56,7 +56,7 @@ var createCustomer = function( donation, callback ) {
                 customerID: customer.id
             };
 
-            database.DonorModel.findOneAndUpdate({ "email": email }, donor,
+            database.DonorModel.findOneAndUpdate({ "email": donation.email }, donor,
                 { upsert: true }, function( error ) {
 
                 if ( error ) {
