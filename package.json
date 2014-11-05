@@ -16,10 +16,13 @@
     "compression": "~1.0.1",
     "cors": "^2.5.0",
     "express": "~4.0.0",
+    "moment": "^2.8.3",
     "mongoose": "^3.8.17",
     "newrelic": "~1.5.4",
+    "numeral": "^1.5.3",
     "request": "~2.34.0",
     "stripe": "~2.4.4",
+    "swig": "^1.4.2",
     "validator": "^3.19.1"
   },
   "devDependencies": {

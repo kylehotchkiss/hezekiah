@@ -5,12 +5,15 @@
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
-var database = require("../library/database.js");
+var hooks = require("../library/hooks.js");
 var stripe = require("../library/stripe.js");
+var database = require("../library/database.js");
+
 
 exports.one = function( req, res ) {
     var donation = {
         ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+        date: Date.now(),
         token: req.body.token,
         name: req.body.name,
         email: req.body.email,
@@ -29,13 +32,7 @@ exports.one = function( req, res ) {
             donation.stripeID = charge.id;
             donation.customerID = charge.customer;
 
-            donationData = new database.DonationModel( donation );
-
-            donationData.save(function( error ) {
-                if ( error ) {
-                    console.log( error );
-                }
-            });
+            hooks.postDonate( donation );
         }
     });
 };
@@ -43,6 +40,7 @@ exports.one = function( req, res ) {
 exports.monthly = function( req, res ) {
     var donation = {
         ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+        date: Date.now(),
         token: req.body.token,
         name: req.body.name,
         email: req.body.email,
