@@ -6,7 +6,7 @@
 //
 
 var hooks = require("../library/hooks.js");
-var stripe = require("../library/stripe.js");
+var stripe = require("stripe")( process.env.HEZ_STRIPE_API );
 
 exports.dispatcher = function( req, res ) {
 	var stripeEvent = req.body;
