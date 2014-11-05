@@ -25,11 +25,9 @@ exports.dispatcher = function( req, res ) {
 			customerID: customer,
 			subscription: subscription,
 			stripeID: transaction.charge,
-			amount: transaction.amount_due,
+			amount: (transaction.amount_due / 100),
 			date: new Date(transaction.date).getTime(),
 		};
-
-		console.log( donation )
 
 		stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
 			donation.ip = subscription.metadata.ip;
@@ -37,7 +35,7 @@ exports.dispatcher = function( req, res ) {
 			donation.email = subscription.metadata.email;
 			donation.postal = subscription.metadata.postal;
 			donation.campaign = subscription.metadata.campaign;
-			donation.campaignName = ssubscription.metadata.campaignName;
+			donation.campaignName = subscription.metadata.campaignName;
 
 			hook.postDonate( donation );
 		});
