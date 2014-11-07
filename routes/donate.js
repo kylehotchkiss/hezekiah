@@ -81,21 +81,31 @@ exports.retrieve = function( req, res ) {
     var postal = req.param("postal");
 
     if ( email && postal ) { // TODO FILTER
-        stripe.retrieve(email, postal, function() {
-
+        stripe.retrieve(email, postal, function( error, total ) {
+            if ( error ) {
+                res.json({ status: "error", error: error });
+            } else {
+                res.json({ status: "success", total: total });
+            }
         });
     } else {
-        // TODO: Not proper error json
-        res.json({ status: "error", error: "You must provide your email and postal code" });
+        res.json({ status: "error", error: "validation", message: "You must provide your email and postal code" });
     }
 };
 
 exports.cancel = function( req, res ) {
-    stripe.cancel("monthly@example.org", 24502, function( error, total ) {
-        if ( error ) {
-            res.json({ status: "error", error: error });
-        } else {
-            res.json({ status: "success", total: total });
-        }
-    });
+    var email = req.param("email");
+    var postal = req.param("postal");
+
+    if ( email && postal ) {
+        stripe.cancel(email, postal, function( error, total ) {
+            if ( error ) {
+                res.json({ status: "error", error: error });
+            } else {
+                res.json({ status: "success", total: total });
+            }
+        });
+    } else {
+        res.json({ status: "error", error: "validation", message: "You must provide your email and postal code" });
+    }
 };

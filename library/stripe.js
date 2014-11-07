@@ -313,9 +313,11 @@ exports.retrieve = function( email, postal, callback ) {
             callback( error, false );
         } else {
             retrieveSubscriptions( donorID, function( error, subscriptions ) {
-
-                console.log( subscriptions );
-
+                if ( error ) {
+                    callback( error, false );
+                } else {
+                    callback( false, subscriptions.data.length );
+                }
             });
         }
     });
