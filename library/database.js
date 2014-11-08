@@ -17,7 +17,7 @@ mongoose.connect( process.env.MONGO_URL );
 // combination with indivdual donors to grab lists of donations per donor.
 //
 var DonationSchema = mongoose.Schema({
-    /* Meta */
+    /* General Meta */
     id: {
         type: mongoose.Schema.Types.ObjectId
     },
@@ -32,19 +32,6 @@ var DonationSchema = mongoose.Schema({
         type: Date,
         required: true,
         default: Date.now
-    },
-    source: {
-        type: String,
-        required: false,
-        default: ""
-    },
-    refunded: {
-        type: Boolean,
-        default: false
-    },
-    recurring: {
-        type: Boolean,
-        default: false
     },
 
     /* Donation */
@@ -68,16 +55,35 @@ var DonationSchema = mongoose.Schema({
             return validate.isEmail( val );
         }
     },
-    postal: {
+    source: {
+        type: String,
+        required: false,
+        default: ""
+    },
+
+    /* Address */
+    addressCity: {
         type: String,
         required: true
     },
-    subcampaign: {
+	addressState: {
         type: String,
-        required: false
+        required: true
+    },
+	addressStreet: {
+        type: String,
+        required: true
+    },
+    addressPostal: {
+        type: String,
+        required: true
+    },
+	addressCountry: {
+        type: String,
+        required: true
     },
 
-    /* Donation Meta */
+    /* Payment Details */
     stripeID: {
         type: String,
         required: true,
@@ -90,8 +96,19 @@ var DonationSchema = mongoose.Schema({
         validator: function( val ) {
             return ( validate.contains(val, "cus_") && validate.isLength(18) );
         }
-    }
-    //quickbooksID: String
+    },
+    refunded: {
+        type: Boolean,
+        default: false
+    },
+    recurring: {
+        type: Boolean,
+        default: false
+    },
+
+    /* Unused */
+    // subcampaign: String
+    // quickbooksID: String
 });
 
 

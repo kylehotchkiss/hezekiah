@@ -15,10 +15,6 @@ var keen = Keen.configure({
 });
 
 /*donation
-    single or recurring?
-    send to db
-    send email
-    send to keenio
     send to quickbooks
     send to slack (XX has made a $XX donation to XX)
 

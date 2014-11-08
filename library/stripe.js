@@ -52,7 +52,7 @@ var createCustomer = function( donation, callback ) {
             var donor = {
                 name: donation.name,
                 email: donation.email,
-                postal: donation.postal,
+                postal: donation.addressPostal,
                 customerID: customer.id
             };
 
@@ -288,7 +288,7 @@ exports.monthly = function( donation, callback ) {
                                 ip: donation.ip,
                                 name: donation.name,
                                 email: donation.email,
-                                postal: donation.postal,
+                                postal: donation.addressPostal,
                                 campaign: donation.campaign,
                                 campaignName: donation.campaignName
                             }
