@@ -35,6 +35,8 @@ var save = function( donation, callback ) {
         if ( error ) {
             // Log DB Error
 
+            console.log( error );
+
             if ( typeof callback === "function" ) {
                 callback( error );
             }

@@ -10,13 +10,16 @@ var stripe = require("stripe")( process.env.HEZ_STRIPE_API );
 
 exports.dispatcher = function( req, res ) {
 	var stripeEvent = req.body;
+	var transaction = stripeEvent.data.object;
 
 	if ( stripeEvent.type === "charge.refunded" || stripeEvent.type === "charge.dispute.funds_withdrawn" ) {
         console.log( stripeEvent );
 
         // Set transactions to "refunded"
     } else if ( stripeEvent.type === "invoice.payment_succeeded" ) {
-		var transaction = stripeEvent.data.object;
+		//
+		// Recurring Donations successfully made
+		//
 		var customer = transaction.customer;
 		var subscription = transaction.subscription;
 
@@ -39,7 +42,20 @@ exports.dispatcher = function( req, res ) {
 
 			hooks.postDonate( donation );
 		});
-    } else if ( stripeEvent.type === "customer.subscription.deleted" ) {
+    } else if ( stripeEvent.type === "customer.subscription.created" ) {
+		var customer = transaction.customer;
+		var subscription = transaction.id;
+
+		stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
+			console.log( subscription )
+
+			/*hooks.postSubscribe({
+				name: transaction.metadata.name,
+				email: transaction.metadata.email,
+				campaignName: transaction.metadata.campaignName
+			});*/
+		});
+	} else if ( stripeEvent.type === "customer.subscription.deleted" ) {
         console.log( stripeEvent );
 
         // Delete subscription

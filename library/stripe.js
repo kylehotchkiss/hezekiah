@@ -312,13 +312,17 @@ exports.retrieve = function( email, postal, callback ) {
         if ( error ) {
             callback( error, false );
         } else {
-            retrieveSubscriptions( donorID, function( error, subscriptions ) {
-                if ( error ) {
-                    callback( error, false );
-                } else {
-                    callback( false, subscriptions.data.length );
-                }
-            });
+            if ( !donorID ) {
+                callback( false, 0 );
+            } else {
+                retrieveSubscriptions( donorID, function( error, subscriptions ) {
+                    if ( error ) {
+                        callback( error, false );
+                    } else {
+                        callback( false, subscriptions.data.length );
+                    }
+                });
+            }
         }
     });
 };
