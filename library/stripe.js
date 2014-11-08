@@ -50,10 +50,15 @@ var createCustomer = function( donation, callback ) {
             callback( error, false );
         } else {
             var donor = {
+                active: true,
                 name: donation.name,
                 email: donation.email,
-                postal: donation.addressPostal,
-                customerID: customer.id
+                customerID: customer.id,
+                addressCity: req.body.addressCity,
+                addressState: req.body.addressState,
+                addressPostal: req.body.addressPostal,
+                addressStreet: req.body.addressStreet,
+                addressCountry: req.body.addressCountry
             };
 
             database.DonorModel.findOneAndUpdate({ "email": donation.email }, donor,
@@ -367,7 +372,9 @@ exports.cancel = function( email, postal, callback ) {
                         } else {
                             // Finished
 
-                            callback( false, j );
+                            database.DonorModel.findOneAndUpdate({ customerID: donorID}, { active: false }, function( error ) {
+                                callback( false, j );
+                            });                            
                         }
                     })();
                 }

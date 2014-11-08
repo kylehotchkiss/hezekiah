@@ -32,11 +32,9 @@ exports.dispatcher = function( req, res ) {
 			date: new Date( transaction.date * 1000 ).getTime(),
 		};
 
-		stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
-			donation.ip = subscription.metadata.ip;
+		stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {			
 			donation.name = subscription.metadata.name;
 			donation.email = subscription.metadata.email;
-			donation.postal = subscription.metadata.postal;
 			donation.campaign = subscription.metadata.campaign;
 			donation.campaignName = subscription.metadata.campaignName;
 

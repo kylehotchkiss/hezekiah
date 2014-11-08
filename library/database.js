@@ -17,24 +17,15 @@ mongoose.connect( process.env.MONGO_URL );
 // combination with indivdual donors to grab lists of donations per donor.
 //
 var DonationSchema = mongoose.Schema({
-    /* General Meta */
+    /* All Donations */
     id: {
         type: mongoose.Schema.Types.ObjectId
-    },
-    ip: {
-        type: String,
-        required: true,
-        validator: function( val ) {
-            return validate.isIP( val );
-        }
     },
     date: {
         type: Date,
         required: true,
         default: Date.now
     },
-
-    /* Donation */
     amount: {
         type: Number,
         required: true,
@@ -55,35 +46,6 @@ var DonationSchema = mongoose.Schema({
             return validate.isEmail( val );
         }
     },
-    source: {
-        type: String,
-        required: false,
-        default: ""
-    },
-
-    /* Address */
-    addressCity: {
-        type: String,
-        required: true
-    },
-	addressState: {
-        type: String,
-        required: true
-    },
-	addressStreet: {
-        type: String,
-        required: true
-    },
-    addressPostal: {
-        type: String,
-        required: true
-    },
-	addressCountry: {
-        type: String,
-        required: true
-    },
-
-    /* Payment Details */
     stripeID: {
         type: String,
         required: true,
@@ -91,20 +53,51 @@ var DonationSchema = mongoose.Schema({
             return ( validate.contains(val, "ch_") && validate.isLength(27) );
         }
     },
+    refunded: {
+        type: Boolean,
+        default: false
+    },
+
+
+    /* Singular Donations */
+    ip: {
+        type: String,
+        validator: function( val ) {
+            return validate.isIP( val );
+        }
+    },
+    source: {
+        type: String
+    },
+    addressCity: {
+        type: String
+    },
+    addressState: {
+        type: String
+    },
+    addressStreet: {
+        type: String
+    },
+    addressPostal: {
+        type: String
+    },
+    addressCountry: {
+        type: String
+    },
+
+
+    /* Monthly Donations */
     customerID: {
         type: String,
         validator: function( val ) {
             return ( validate.contains(val, "cus_") && validate.isLength(18) );
         }
     },
-    refunded: {
-        type: Boolean,
-        default: false
-    },
     recurring: {
         type: Boolean,
         default: false
     },
+    
 
     /* Unused */
     // subcampaign: String
