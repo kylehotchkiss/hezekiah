@@ -6,6 +6,7 @@
 //
 
 var Keen = require('keen.io');
+var request = require('request');
 var mandrill = require("../library/mandrill.js");
 var database = require("../library/database.js");
 var mailchimp = require("../library/mailchimp.js");
@@ -86,12 +87,21 @@ var subscribe = function( donation, callback ) {
      });
 };
 
+var slack = function( message, callback ) {
+    request({
+        url: process.env.HEZ_SLACK_URL,
+        body: { text: message }
+    });
+};
+
 exports.postDonate = function( donation, callback ) {
     save( donation );
     keenio( donation );
+    slack("[donation] A $" + donation.amount + " donation for " + donation.campaignName + " was successfully processed" );
     receipt( donation, "Thank you for your donation!", "donation-receipt" );
     notification( donation, "[donation] A donation has been processed", "donation-notification" );
     subscribe( donation );
+
     // quickbooks
     // slack?
 };
