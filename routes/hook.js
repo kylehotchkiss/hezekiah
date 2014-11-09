@@ -56,6 +56,8 @@ exports.dispatcher = function( req, res ) {
 
 		// TODO: can we get metadata w/o retreieveSub?
 
+		console.log( transaction );
+
 		stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
 			hooks.postSubscribe({
 				name: subscription.metadata.name,
