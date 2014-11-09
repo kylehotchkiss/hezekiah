@@ -9,10 +9,15 @@ var hooks = require("../library/hooks.js");
 var stripe = require("stripe")( process.env.HEZ_STRIPE_API );
 
 exports.dispatcher = function( req, res ) {
+	var customer, subscription;
+
 	var stripeEvent = req.body;
 	var transaction = stripeEvent.data.object;
 
 	if ( stripeEvent.type === "charge.refunded" || stripeEvent.type === "charge.dispute.funds_withdrawn" ) {
+		//
+		// Refund or dispute successfully processed
+		//
         console.log( stripeEvent );
 
         // Set transactions to "refunded"
@@ -20,8 +25,9 @@ exports.dispatcher = function( req, res ) {
 		//
 		// Recurring Donations successfully made
 		//
-		var customer = transaction.customer;
-		var subscription = transaction.subscription;
+
+		customer = transaction.customer;
+		subscription = transaction.subscription;
 
         var donation = {
 			recurring: true,
@@ -32,7 +38,7 @@ exports.dispatcher = function( req, res ) {
 			date: new Date( transaction.date * 1000 ).getTime(),
 		};
 
-		stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {			
+		stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
 			donation.name = subscription.metadata.name;
 			donation.email = subscription.metadata.email;
 			donation.campaign = subscription.metadata.campaign;
@@ -41,20 +47,33 @@ exports.dispatcher = function( req, res ) {
 			hooks.postDonate( donation );
 		});
     } else if ( stripeEvent.type === "customer.subscription.created" ) {
-		var customer = transaction.customer;
-		var subscription = transaction.id;
+		//
+		// Monthly donations successfully begun
+		//
+
+		customer = transaction.customer;
+		subscription = transaction.id;
 
 		stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
-			console.log( subscription )
-
-			/*hooks.postSubscribe({
-				name: transaction.metadata.name,
-				email: transaction.metadata.email,
-				campaignName: transaction.metadata.campaignName
-			});*/
+			hooks.postSubscribe({
+				name: subscription.metadata.name,
+				date: new Date( subscription.start ),
+				email: subscription.metadata.email,
+				amount: subscription.quantity,
+				campaignName: subscription.metadata.campaignName
+			});
 		});
 	} else if ( stripeEvent.type === "customer.subscription.deleted" ) {
-        console.log( stripeEvent );
+		//
+		// Monthly donations successfully ended
+		//
+
+		customer = transaction.customer;
+		subscription = transaction.id;
+
+		stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
+			console.log( subscription );
+		});
 
         // Delete subscription
     }

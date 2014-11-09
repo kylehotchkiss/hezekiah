@@ -92,7 +92,8 @@ exports.postRefund = function() {
 };
 
 exports.postSubscribe = function() {
-
+    receipt( donation, "You now make monthly donations!", "subscription-receipt" );
+    notification( donation, "[subscriptions] A donor has enabled automatic donations", "subscription-notification" );
 };
 
 exports.postUnsubscribe = function() {
