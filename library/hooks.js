@@ -91,7 +91,7 @@ var slack = function( message, callback ) {
     request({
         json: true,
         body: { text: message },
-        url: process.env.HEZ_SLACK_URL            
+        url: process.env.HEZ_SLACK_URL
     });
 };
 
@@ -112,11 +112,13 @@ exports.postRefund = function() {
 };
 
 exports.postSubscribe = function( subscription, callback ) {
+    slack("[subscriptions] A $" + donation.amount + " subscription for " + donation.campaignName + " was successfully started" );
     receipt( subscription, "You now make monthly donations!", "subscription-receipt" );
     notification( subscription, "[subscriptions] A donor has enabled automatic donations", "subscription-notification" );
 };
 
 exports.postUnsubscribe = function( subscription, callback ) {
+    slack("[subscriptions] A $" + donation.amount + " subscription for " + donation.campaignName + " was canceled" );
     receipt( subscription, "You have disabled monthly donations", "unsubscription-receipt" );
     notification( subscription, "[subscriptions] A donor has disabled automatic donations", "unsubscription-notification" );
 };
