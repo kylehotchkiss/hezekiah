@@ -49,7 +49,7 @@ var save = function( donation, callback ) {
 };
 
 var receipt = function( data, subject, template, callback ) {
-    mandrill.send( donation.email, subject, data, template, function() {
+    mandrill.send( data.email, subject, data, template, function() {
         if ( typeof callback === "function" ) {
             callback();
         }
