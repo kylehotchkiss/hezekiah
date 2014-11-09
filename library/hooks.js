@@ -65,9 +65,12 @@ var notification = function( donation, subject, template, callback ) {
 };
 
 var keenio = function( donation, callback ) {
-    donation.amount = parseInt( donation.amount );
+    // Weird scope leaks keep happening here, so lock the scope of any edits
+    // to the donation object.
+    var thisDonation = donation;
+    thisDonation.amount = parseFloat( thisDonation.amount );
 
-    keen.addEvent( "Donations", donation, function() {
+    keen.addEvent( "Donations", thisDonation, function() {
         if ( typeof callback === "function" ) {
             callback();
         }
@@ -75,8 +78,6 @@ var keenio = function( donation, callback ) {
 };
 
 exports.postDonate = function( donation, callback ) {
-    console.log( donation );
-    
     save( donation );
     keenio( donation );
     receipt( donation, "Thank you for your donation!", "donation-receipt" );

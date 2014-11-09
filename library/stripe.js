@@ -254,7 +254,7 @@ exports.single = function( donation, callback ) {
         } else {
             // Fix floating point math issues with Javascript.
             // CRIES A LITTLE CRIES A LOT.
-            var amount = ( donation.amount * 100 ).toFixed(2);
+            var amount = parseInt( donation.amount * 100 );
 
             stripe.charges.create({
                 card: donation.token,
