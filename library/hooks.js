@@ -48,16 +48,16 @@ var save = function( donation, callback ) {
     });
 };
 
-var receipt = function( donation, subject, template, callback ) {
-    mandrill.send( donation.email, subject, donation, template, function() {
+var receipt = function( data, subject, template, callback ) {
+    mandrill.send( donation.email, subject, data, template, function() {
         if ( typeof callback === "function" ) {
             callback();
         }
     });
 };
 
-var notification = function( donation, subject, template, callback ) {
-    mandrill.send( "kyle@kylehotchkiss.com", subject, donation, template, function() {
+var notification = function( data, subject, template, callback ) {
+    mandrill.send( "kyle@kylehotchkiss.com", subject, data, template, function() {
         if ( typeof callback === "function" ) {
             callback();
         }
@@ -91,9 +91,9 @@ exports.postRefund = function() {
 
 };
 
-exports.postSubscribe = function() {
-    receipt( donation, "You now make monthly donations!", "subscription-receipt" );
-    notification( donation, "[subscriptions] A donor has enabled automatic donations", "subscription-notification" );
+exports.postSubscribe = function( subscription, callback ) {
+    receipt( subscription, "You now make monthly donations!", "subscription-receipt" );
+    notification( subscription, "[subscriptions] A donor has enabled automatic donations", "subscription-notification" );
 };
 
 exports.postUnsubscribe = function() {
