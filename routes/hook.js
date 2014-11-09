@@ -35,7 +35,7 @@ exports.dispatcher = function( req, res ) {
 			subscription: subscription,
 			stripeID: transaction.charge,
 			amount: ( transaction.amount_due / 100 ),
-			date: new Date( transaction.date * 1000 ).getTime(),
+			date: transaction.date * 1000,
 		};
 
 		stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
@@ -57,9 +57,9 @@ exports.dispatcher = function( req, res ) {
 		stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
 			hooks.postSubscribe({
 				name: subscription.metadata.name,
-				date: new Date( subscription.start ),
+				date: subscription.start * 1000,
 				email: subscription.metadata.email,
-				amount: subscription.quantity,
+				amount: subscription.quantity, // Stripe tracks quantity for plans
 				campaignName: subscription.metadata.campaignName
 			});
 		});
@@ -72,6 +72,7 @@ exports.dispatcher = function( req, res ) {
 		subscription = transaction.id;
 
 		stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
+			console.log( transaction );
 			console.log( subscription );
 		});
 
