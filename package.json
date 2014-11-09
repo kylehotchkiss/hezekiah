@@ -22,6 +22,7 @@
     "newrelic": "~1.5.4",
     "node-env-file": "^0.1.4",
     "numeral": "^1.5.3",
+    "raven": "^0.7.2",
     "request": "~2.34.0",
     "stripe": "~2.4.4",
     "swig": "^1.4.2",

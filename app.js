@@ -17,6 +17,7 @@ var meta = require('./package.json');
 var config = require('./config.json');
 
 var cors = require('cors');
+var raven = require('raven');
 var express = require('express');
 var compress = require('compression');
 var bodyParser = require('body-parser');
@@ -26,6 +27,11 @@ var bodyParser = require('body-parser');
 // Express Setup
 //
 var app = express();
+
+if ( process.env.HEZ_SENTRY_URL ) {
+    app.use(raven.middleware.express(  process.env.HEZ_SENTRY_URL ));
+}
+
 app.use(cors());
 app.use(compress());
 app.use(bodyParser());
