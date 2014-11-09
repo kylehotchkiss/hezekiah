@@ -8,6 +8,7 @@
 var Keen = require('keen.io');
 var mandrill = require("../library/mandrill.js");
 var database = require("../library/database.js");
+var mailchimp = require("../library/mailchimp.js");
 
 var keen = Keen.configure({
     projectId: process.env.HEZ_KEEN_PROJECT,
@@ -77,12 +78,20 @@ var keenio = function( donation, callback ) {
     });
 };
 
+var subscribe = function( donation, callback ) {
+     mailchimp.subscribeEmail( donation.name, donation.email, [ donation.campaign, "donor" ], donation.ip, function() {
+        if ( typeof callback === "function" ) {
+            callback();
+        }
+     });
+};
+
 exports.postDonate = function( donation, callback ) {
     save( donation );
     keenio( donation );
     receipt( donation, "Thank you for your donation!", "donation-receipt" );
     notification( donation, "[donation] A donation has been processed", "donation-notification" );
-    // subscription
+    subscribe( donation );
     // quickbooks
     // slack?
 };
