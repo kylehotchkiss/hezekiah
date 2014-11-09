@@ -96,6 +96,7 @@ exports.postSubscribe = function( subscription, callback ) {
     notification( subscription, "[subscriptions] A donor has enabled automatic donations", "subscription-notification" );
 };
 
-exports.postUnsubscribe = function() {
-
+exports.postUnsubscribe = function( subscription, callback ) {
+    receipt( subscription, "You have disabled monthly donations", "unsubscription-receipt" );
+    notification( subscription, "[subscriptions] A donor has disabled automatic donations", "unsubscription-notification" );
 };

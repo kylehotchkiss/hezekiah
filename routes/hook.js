@@ -54,6 +54,8 @@ exports.dispatcher = function( req, res ) {
 		customer = transaction.customer;
 		subscription = transaction.id;
 
+		// TODO: can we get metadata w/o retreieveSub?
+
 		stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
 			hooks.postSubscribe({
 				name: subscription.metadata.name,
@@ -68,15 +70,13 @@ exports.dispatcher = function( req, res ) {
 		// Monthly donations successfully ended
 		//
 
-		customer = transaction.customer;
-		subscription = transaction.id;
-
-		stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
-			console.log( transaction );
-			console.log( subscription );
+		hooks.postUnsubscribe({
+			name: transaction.metadata.name,
+			date: transaction.canceled_at * 1000,
+			email: transaction.metadata.email,
+			amount: transaction.quantity, // Stripe tracks quantity for plans
+			campaignName: transaction.metadata.campaignName
 		});
-
-        // Delete subscription
     }
 
 	// plan changed, deleted,
