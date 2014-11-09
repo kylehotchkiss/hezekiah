@@ -252,10 +252,14 @@ exports.single = function( donation, callback ) {
         } else if ( duplicate ) {
             callback( { slug: "duplicate", message: "You made this donation within the past five minutes. <br /> Please wait a few minutes to try again." }, false );
         } else {
+            // Fix floating point math issues with Javascript.
+            // CRIES A LITTLE CRIES A LOT.
+            var amount = ( donation.amount * 100 ).toFixed(2);
+
             stripe.charges.create({
                 card: donation.token,
                 currency: "usd",
-                amount: donation.amount * 100,
+                amount: amount,
                 description: "Donation" + (donation.campaignName ? (" for " + donation.campaignName) : ""),
                 metadata: {
                     ip: donation.ip,
@@ -374,7 +378,7 @@ exports.cancel = function( email, postal, callback ) {
 
                             database.DonorModel.findOneAndUpdate({ customerID: donorID}, { active: false }, function( error ) {
                                 callback( false, j );
-                            });                            
+                            });
                         }
                     })();
                 }

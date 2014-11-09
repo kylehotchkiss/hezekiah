@@ -75,6 +75,8 @@ var keenio = function( donation, callback ) {
 };
 
 exports.postDonate = function( donation, callback ) {
+    console.log( donation );
+    
     save( donation );
     keenio( donation );
     receipt( donation, "Thank you for your donation!", "donation-receipt" );
