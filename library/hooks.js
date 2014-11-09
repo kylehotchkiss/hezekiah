@@ -89,8 +89,9 @@ var subscribe = function( donation, callback ) {
 
 var slack = function( message, callback ) {
     request({
-        url: process.env.HEZ_SLACK_URL,
-        body: { text: message }
+        json: true,
+        body: { text: message },
+        url: process.env.HEZ_SLACK_URL            
     });
 };
 
