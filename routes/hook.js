@@ -51,21 +51,12 @@ exports.dispatcher = function( req, res ) {
 		// Monthly donations successfully begun
 		//
 
-		customer = transaction.customer;
-		subscription = transaction.id;
-
-		// TODO: can we get metadata w/o retreieveSub?
-
-		console.log( transaction );
-
-		stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
-			hooks.postSubscribe({
-				name: subscription.metadata.name,
-				date: subscription.start * 1000,
-				email: subscription.metadata.email,
-				amount: subscription.quantity, // Stripe tracks quantity for plans
-				campaignName: subscription.metadata.campaignName
-			});
+		hooks.postSubscribe({
+			name: transaction.metadata.name,
+			date: transaction.start * 1000,
+			email: transaction.metadata.email,
+			amount: transaction.quantity, // Stripe tracks quantity for plans
+			campaignName: transaction.metadata.campaignName
 		});
 	} else if ( stripeEvent.type === "customer.subscription.deleted" ) {
 		//
