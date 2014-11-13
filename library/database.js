@@ -97,7 +97,7 @@ var DonationSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
-    
+
 
     /* Unused */
     // subcampaign: String
@@ -129,16 +129,32 @@ var DonorSchema = mongoose.Schema({
             return validate.isEmail( val );
         }
     },
-    postal: {
-        type: String,
-        required: true
-    },
     customerID: {
         type: String,
         required: true,
         validator: function( val ) {
             return ( validate.contains(val, "cus_") && validate.isLength(18) );
         }
+    },
+    
+    addressCity: {
+        type: String
+    },
+    addressState: {
+        type: String
+    },
+    addressStreet: {
+        type: String
+    },
+    addressPostal: {
+        type: String
+    },
+    addressCountry: {
+        type: String
+    },
+
+    active: {
+        type: Boolean
     }
 });
 

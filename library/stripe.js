@@ -25,7 +25,7 @@ var retrieveCustomer = function( email, postal, callback ) {
     if ( typeof postal === "function" ) {
         callback = postal;
     } else {
-        params.postal = postal;
+        params.addressPostal = postal;
     }
 
     database.DonorModel.findOne(params, 'customerID', function( error, donor ) {
@@ -50,6 +50,8 @@ var createCustomer = function( donation, callback ) {
         if ( error ) {
             callback( error, false );
         } else {
+            console.log( donation )
+
             var donor = {
                 active: true,
                 name: donation.name,
