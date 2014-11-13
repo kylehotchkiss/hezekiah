@@ -1,6 +1,6 @@
 {
   "name": "hezekiah",
-  "version": "0.3.0-alpha",
+  "version": "0.3.0-beta",
   "author": "Kyle Hotchkiss <kyle@illuminatenations.org>",
   "subdomain": "hezekiah",
   "private": true,

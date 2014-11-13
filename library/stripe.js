@@ -55,11 +55,11 @@ var createCustomer = function( donation, callback ) {
                 name: donation.name,
                 email: donation.email,
                 customerID: customer.id,
-                addressCity: req.body.addressCity,
-                addressState: req.body.addressState,
-                addressPostal: req.body.addressPostal,
-                addressStreet: req.body.addressStreet,
-                addressCountry: req.body.addressCountry
+                addressCity: donation.addressCity,
+                addressState: donation.addressState,
+                addressPostal: donation.addressPostal,
+                addressStreet: donation.addressStreet,
+                addressCountry: donation.addressCountry
             };
 
             database.DonorModel.findOneAndUpdate({ "email": donation.email }, donor,
