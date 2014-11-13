@@ -9,6 +9,7 @@ var meta = require('../package.json');
 
 var hook = require("./hook.js");
 var donate = require("./donate.js");
+var reporting = require("./reporting.js");
 
 var express = require('express');
 
@@ -24,6 +25,12 @@ module.exports = function( app ) {
 	app.post('/donate/monthly', donate.monthly);
 	app.get('/donate/cancel', donate.cancel);
 
+	// Reporting
+	app.get('/reporting/monthly', reporting.monthly);
+	//app.get('/donate/cancel', donate.cancel);
+	//app.get('/donate/cancel', donate.cancel);
+	//app.get('/donate/cancel', donate.cancel);
+
 	// 404
 	app.get("*", function( req, res ) {
 		res.json(404, {
@@ -31,7 +38,7 @@ module.exports = function( app ) {
 			message: "Not Found",
 			timestamp: new Date().getTime(),
 			server: meta.name + " v" + meta.version,
-		})
+		});
 	});
 
 	return app;

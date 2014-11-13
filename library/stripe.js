@@ -7,6 +7,7 @@
 
 var stripe = require("stripe")( process.env.HEZ_STRIPE_API );
 var database = require("./database.js");
+var siftscience = require("./siftscience.js");
 
 //
 // Idea: direct fundrasing platform for missionaries
@@ -272,6 +273,8 @@ exports.single = function( donation, callback ) {
                 } else {
                     callback( false, charge );
                 }
+
+                siftscience.report( donation, charge );
             });
         }
     });
@@ -376,7 +379,7 @@ exports.cancel = function( email, postal, callback ) {
                         } else {
                             // Finished
 
-                            database.DonorModel.findOneAndUpdate({ customerID: donorID}, { active: false }, function( error ) {
+                            database.DonorModel.findOneAndUpdate({ customerID: donorID }, { active: false }, function( error ) {
                                 callback( false, j );
                             });
                         }
