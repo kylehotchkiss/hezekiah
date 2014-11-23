@@ -16,10 +16,28 @@ var siftscience = require("./siftscience.js");
 // Otherwise, leave funds alone for stripe to transfer all by itself.
 //
 
+// Create a processDonor function that replaces processCustomer
+// always check/create donor
+// check/create customer if donation is recurring
+// return donorID
+
+
+// Retrieve or Create a Donor
+var retrieveDonor = function( donor, callback ) {
+    database.DonorModel.findOneAndUpdate({ "email": donor.email }, donor,
+        { upsert: true }, function( error, record ) {
+
+        if ( error ) {
+            callback( error, false );
+        } else {
+            callback( false, record );
+        }
+    });
+};
+
 
 // Grab ID for Stripe Customer given an email address
 var retrieveCustomer = function( email, postal, callback ) {
-    var match = false;
     var params = { "email": email };
 
     if ( typeof postal === "function" ) {
@@ -50,18 +68,10 @@ var createCustomer = function( donation, callback ) {
         if ( error ) {
             callback( error, false );
         } else {
-            console.log( donation )
-
             var donor = {
-                active: true,
-                name: donation.name,
-                email: donation.email,
-                customerID: customer.id,
-                addressCity: donation.addressCity,
-                addressState: donation.addressState,
-                addressPostal: donation.addressPostal,
-                addressStreet: donation.addressStreet,
-                addressCountry: donation.addressCountry
+                subscriber: true,
+                lastAction: Date.now(),
+                customerID: customer.id
             };
 
             database.DonorModel.findOneAndUpdate({ "email": donation.email }, donor,
@@ -78,8 +88,6 @@ var createCustomer = function( donation, callback ) {
 };
 
 
-// Even though we're using Customers, we always want to use the card they just
-// provided. TODO: does this affect monthly processing if they use a new card?
 var updateCustomer = function( donation, donorID, callback ) {
     stripe.customers.update(donorID, {
         card: donation.token
@@ -87,45 +95,57 @@ var updateCustomer = function( donation, donorID, callback ) {
         if ( error ) {
             callback( error );
         } else {
-            callback( false );
+            database.DonorModel.findOneAndUpdate({ customerID: donorID }, { subscriber: true, lastAction: Date.now() }, function( error ) {
+                callback( false );
+            });
         }
     });
 };
 
 
-// Takes care of additional processing for our donor/Customer interface
-var processCustomer = function( donation, callback ) {
-    retrieveCustomer( donation.email, function( error, donorID ) {
-        // Create Customer if not found, update if found.
-        if ( error || donorID === false ) {
-            createCustomer( donation, function( error, donorID ) {
-                if ( error ) {
-                    callback( error, false );
-                } else {
-                    callback( false, donorID );
-                }
-            });
+// Takes care of processing for our Donor-Customer interface
+var processDonor = function( donation, callback ) {
+    retrieveDonor( donation, function( error, donor ) {
+        if ( error || !donor ) {
+            callback( true, false );
         } else {
-            updateCustomer( donation, donorID, function( error ) {
-                if ( error ) {
-                    if ( error.type === "StripeInvalidRequest" ) {
-                        // Stripe Customer has been deleted, create new one.
-                        // Also, flag this. Huge data management issue.
+            if ( donation.recurring ) {
+                if ( !donor.customerID ) {
 
-                        createCustomer( donation, function( error, donorID ) {
-                            if ( error ) {
-                                callback( error, false );
-                            } else {
-                                callback( false, donorID );
-                            }
-                        });
-                    } else {
-                        callback( error, false );
-                    }
+                    console.log( "create..." );
+
+                    createCustomer( donation, function( error, customerID ) {
+                        if ( error ) {
+                            callback( error, false );
+                        } else {
+                            callback( false, donor._id, customerID );
+                        }
+                    });
                 } else {
-                    callback( false, donorID );
+                    updateCustomer( donation, donor._id, function( error ) {
+                        if ( error ) {
+                            if ( error.type === "StripeInvalidRequest" ) {
+                                // Stripe Customer has been deleted, create new one.
+                                // Also, flag this. Huge data management issue.
+
+                                createCustomer( donation, function( error, customerID ) {
+                                    if ( error ) {
+                                        callback( error, false );
+                                    } else {
+                                        callback( false, donor._id, customerID );
+                                    }
+                                });
+                            } else {
+                                callback( error, false );
+                            }
+                        } else {
+                            callback( false, donor._id, customerID );
+                        }
+                    });
                 }
-            });
+            } else {
+                callback( false, donor._id );
+            }
         }
     });
 };
@@ -199,27 +219,31 @@ var retrieveSubscriptions = function( donorID, callback ) {
 // Throw error if so (prevents theortical runaway card usage attacks)
 //
 var dedupSubscription = function( donation, donorID, callback ) {
-    retrieveSubscriptions( donorID, function( error, subscriptions ) {
-        if ( error ) {
-            callback( error, false );
-        } else {
-            if ( subscriptions.data.length ) {
-                var match = false;
-
-                for ( var i in subscriptions.data ) {
-                    var subscription = subscriptions.data[i];
-
-                    if ( subscription.metadata.campaign === donation.campaign ) {
-                        match = true;
-                    }
-                }
-
-                callback( false, match );
+    if ( donorID ) {
+        retrieveSubscriptions( donorID, function( error, subscriptions ) {
+            if ( error ) {
+                callback( error, false );
             } else {
-                callback( false, false );
+                if ( subscriptions.data.length ) {
+                    var match = false;
+
+                    for ( var i in subscriptions.data ) {
+                        var subscription = subscriptions.data[i];
+
+                        if ( subscription.metadata.campaign === donation.campaign ) {
+                            match = true;
+                        }
+                    }
+
+                    callback( false, match );
+                } else {
+                    callback( false, false );
+                }
             }
-        }
-    });
+        });
+    } else {
+        callback( false, false );
+    }
 };
 
 
@@ -249,43 +273,49 @@ var dedupDonation = function( donation, callback ) {
 
 
 exports.single = function( donation, callback ) {
-    dedupDonation( donation, function( error, duplicate ) {
-        if ( error ) {
-            callback( error, false );
-        } else if ( duplicate ) {
-            callback( { slug: "duplicate", message: "You made this donation within the past five minutes. <br /> Please wait a few minutes to try again." }, false );
-        } else {
-            // Fix floating point math issues with Javascript.
-            // CRIES A LITTLE CRIES A LOT.
-            var amount = parseInt( donation.amount * 100 );
+    processDonor( donation, function( error, donor ) {
+        donation.donor = donor;
 
-            stripe.charges.create({
-                card: donation.token,
-                currency: "usd",
-                amount: amount,
-                description: "Donation" + (donation.campaignName ? (" for " + donation.campaignName) : ""),
-                metadata: {
-                    ip: donation.ip,
-                    campaign: donation.campaign,
-                    email: donation.email
-                }
-            }, function( error, charge ) {
-                if ( error ) {
-                    callback( error, false );
-                } else {
-                    callback( false, charge );
-                }
+        dedupDonation( donation, function( error, duplicate ) {
+            if ( error ) {
+                callback( error, false );
+            } else if ( duplicate ) {
+                callback( { slug: "duplicate", message: "You made this donation within the past five minutes. <br /> Please wait a few minutes to try again." }, false );
+            } else {
+                // Fix floating point math issues with Javascript.
+                // CRIES A LITTLE CRIES A LOT.
+                var amount = parseInt( donation.amount * 100 );
 
-                siftscience.report( donation, charge );
-            });
-        }
+                stripe.charges.create({
+                    card: donation.token,
+                    currency: "usd",
+                    amount: amount,
+                    description: "Donation" + (donation.campaignName ? (" for " + donation.campaignName) : ""),
+                    metadata: {
+                        ip: donation.ip,
+                        campaign: donation.campaign,
+                        email: donation.email
+                    }
+                }, function( error, charge ) {
+                    if ( error ) {
+                        callback( error, false );
+                    } else {
+                        callback( false, charge );
+                    }
+
+                    siftscience.report( donation, charge );
+                });
+            }
+        });
     });
 };
 
 
 exports.monthly = function( donation, callback ) {
-    processCustomer(donation, function( error, donorID ) {
-        dedupSubscription( donation, donorID, function( error, duplicate ) {
+    processDonor(donation, function( error, donorID, customerID ) {
+        donation.donor = donorID;
+
+        dedupSubscription( donation, customerID, function( error, duplicate ) {
             if ( error ) {
                 callback( error, false );
             } else if ( duplicate ) {
@@ -295,7 +325,7 @@ exports.monthly = function( donation, callback ) {
                     if ( error ) {
                         callback( error, false );
                     } else {
-                        stripe.customers.createSubscription(donorID, {
+                        stripe.customers.createSubscription(customerID, {
                             plan: "one",
                             quantity: Math.floor( donation.amount ),
                             metadata: {
@@ -381,7 +411,12 @@ exports.cancel = function( email, postal, callback ) {
                         } else {
                             // Finished
 
-                            database.DonorModel.findOneAndUpdate({ customerID: donorID }, { active: false }, function( error ) {
+                            var donor = {
+                                subscriber: false,
+                                lastAction: Date.now()
+                            };
+
+                            database.DonorModel.findOneAndUpdate({ customerID: donorID }, donor, function( error ) {
                                 callback( false, j );
                             });
                         }

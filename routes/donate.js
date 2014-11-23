@@ -44,11 +44,12 @@ exports.one = function( req, res ) {
 exports.monthly = function( req, res ) {
     var donation = {
         ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+        recurring: true,
         date: Date.now(),
         token: req.body.token,
         name: req.body.name,
         email: req.body.email,
-        amount: req.body.amount,
+        amount: req.body.amount,        
         campaign: req.body.campaign,
         campaignName: req.body.campaignName,
         addressCity: req.body.addressCity,

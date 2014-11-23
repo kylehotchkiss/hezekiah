@@ -8,25 +8,52 @@
 var moment = require("moment");
 var database = require("../library/database.js");
 
+exports.donors = function( req, res ) {
+
+    database.DonorModel.find().sort([ [ 'lastAction', 'descending' ] ]).exec(function( error, donors ) {
+        res.send( JSON.stringify( donors, null, 4 ) );
+    });
+
+};
+
+exports.latest = function( req, res ) {
+
+    database.DonationModel.find({ date: { "$gte": moment().startOf('month') } }).populate('donor').exec(function( error, donations ) {
+        var campaigns = {};
+
+        res.send( JSON.stringify( donations, null, 4 ) );
+    });
+
+};
+
 exports.monthly = function( req, res ) {
 
-    database.DonationModel.find({ date: { "$gte": moment().startOf('month') } }, function( error, donations ) {
+    database.DonorModel.find({ subscriber: true }).exec(function( error, donors ) {
+        res.send( JSON.stringify( donors, null, 4 ) );
+    });
+
+};
+
+exports.campaigns = function( req, res ) {
+
+    database.DonationModel.find().exec(function( error, donations ) {
         var campaigns = {};
 
         for ( var i in donations ) {
             var donation = donations[i];
 
-            if ( typeof campaigns[ donation.campaign ] === "undefined" ) {
+            if ( campaigns[ donation.campaign ] ) {
+                campaigns[ donation.campaign ].quantity++;
+                campaigns[ donation.campaign ].amount += donation.amount;
+            } else {
                 campaigns[ donation.campaign ] = {
-                    donations: 1,
+                    quantity: 1,
                     amount: donation.amount
                 };
-            } else {
-                campaigns[ donation.campaign ].donations += 1;
-                campaigns[ donation.campaign ].amount += donation.amount;
             }
         }
 
         res.send( JSON.stringify( campaigns, null, 4 ) );
     });
+
 };

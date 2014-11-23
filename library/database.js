@@ -17,91 +17,18 @@ mongoose.connect( process.env.MONGO_URL );
 // combination with indivdual donors to grab lists of donations per donor.
 //
 var DonationSchema = mongoose.Schema({
-    /* All Donations */
-    id: {
-        type: mongoose.Schema.Types.ObjectId
-    },
-    date: {
-        type: Date,
-        required: true,
-        default: Date.now
-    },
-    amount: {
-        type: Number,
-        required: true,
-        min: 0
-    },
-    campaign: {
-        type: String,
-        required: true
-    },
-    name: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        validator: function( val ) {
-            return validate.isEmail( val );
-        }
-    },
-    stripeID: {
-        type: String,
-        required: true,
-        validator: function( val ) {
-            return ( validate.contains(val, "ch_") && validate.isLength(27) );
-        }
-    },
-    refunded: {
-        type: Boolean,
-        default: false
-    },
+    date: { type: Date, required: true, default: Date.now() },
+    email: { type: String, required: true },
+    donor: { type: mongoose.Schema.Types.ObjectId, ref: 'Donor', required: true },
+    amount: { type: Number, required: true, min: 0 },
+    stripeID: { type: String, required: true },
+    campaign: { type: String, required: true },
 
-
-    /* Singular Donations */
-    ip: {
-        type: String,
-        validator: function( val ) {
-            return validate.isIP( val );
-        }
-    },
-    source: {
-        type: String
-    },
-    addressCity: {
-        type: String
-    },
-    addressState: {
-        type: String
-    },
-    addressStreet: {
-        type: String
-    },
-    addressPostal: {
-        type: String
-    },
-    addressCountry: {
-        type: String
-    },
-
-
-    /* Monthly Donations */
-    customerID: {
-        type: String,
-        validator: function( val ) {
-            return ( validate.contains(val, "cus_") && validate.isLength(18) );
-        }
-    },
-    recurring: {
-        type: Boolean,
-        default: false
-    },
-
-
-    /* Unused */
-    // subcampaign: String
-    // quickbooksID: String
+    ip: { type: String },
+    source: { type: String },
+    subcampaign: { type: String },
+    refunded: { type: Boolean, default: false },
+    recurring: { type: Boolean, default: false }
 });
 
 
@@ -115,47 +42,18 @@ var DonationSchema = mongoose.Schema({
 // postal shall be used to cancel a monthly donation.
 //
 var DonorSchema = mongoose.Schema({
-    id: {
-        type: mongoose.Schema.Types.ObjectId
-    },
-    name: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        validator: function( val ) {
-            return validate.isEmail( val );
-        }
-    },
-    customerID: {
-        type: String,
-        required: true,
-        validator: function( val ) {
-            return ( validate.contains(val, "cus_") && validate.isLength(18) );
-        }
-    },
-    
-    addressCity: {
-        type: String
-    },
-    addressState: {
-        type: String
-    },
-    addressStreet: {
-        type: String
-    },
-    addressPostal: {
-        type: String
-    },
-    addressCountry: {
-        type: String
-    },
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    customerID: { type: String, required: true },
 
-    active: {
-        type: Boolean
-    }
+    addressCity: { type: String },
+    addressState: { type: String },
+    addressStreet: { type: String },
+    addressPostal: { type: String },
+    addressCountry: { type: String },
+
+    subscriber: { type: Boolean, default: true },
+    lastAction: { type: Date, required: true, default: Date.now() }
 });
 
 exports.DonationModel = mongoose.model("Donation", DonationSchema);

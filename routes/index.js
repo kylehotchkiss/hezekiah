@@ -25,11 +25,13 @@ module.exports = function( app ) {
 	app.post('/donate/monthly', donate.monthly);
 	app.get('/donate/cancel', donate.cancel);
 
+
 	// Reporting
+	app.get('/reporting/donors', reporting.donors);
+	app.get('/reporting/latest', reporting.latest);
 	app.get('/reporting/monthly', reporting.monthly);
-	//app.get('/donate/cancel', donate.cancel);
-	//app.get('/donate/cancel', donate.cancel);
-	//app.get('/donate/cancel', donate.cancel);
+	app.get('/reporting/campaigns', reporting.campaigns);
+
 
 	// 404
 	app.get("*", function( req, res ) {
