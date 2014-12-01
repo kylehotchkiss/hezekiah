@@ -4,6 +4,7 @@ node_modules/
 
 # Local Config
 .env
+.env.testing
 
 # Other
 Procfile

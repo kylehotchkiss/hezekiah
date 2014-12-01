@@ -58,7 +58,9 @@ exports.report = function( donation, charge, callback ) {
         method: "POST"
     }, function( error, response, body ) {
         if ( error || body.status !== 0 ) {
-            callback( true );
+            if ( typeof callback === "function" ) {
+                callback( true );
+            }
         } else {
             if ( typeof callback === "function" ) {
                 callback();

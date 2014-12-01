@@ -45,12 +45,10 @@ exports.campaigns = function( req, res ) {
             if ( campaigns[ donation.campaign ] ) {
                 campaigns[ donation.campaign ].quantity++;
                 campaigns[ donation.campaign ].amount += donation.amount;
-                campaigns[ donation.campaign ].lastDonation = donation.date;
             } else {
                 campaigns[ donation.campaign ] = {
                     quantity: 1,
-                    amount: donation.amount,
-                    firstDonation: donation.date
+                    amount: donation.amount
                 };
             }
         }
