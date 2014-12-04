@@ -303,6 +303,8 @@ exports.single = function( donation, callback ) {
                         callback( false, charge );
                     }
 
+                    console.log( charge );
+
                     siftscience.report( donation, charge );
                 });
             }
