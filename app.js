@@ -11,7 +11,7 @@ if ( environment === "production" ) {
     require('newrelic');
 } else if ( environment === "testing" ) {
     require('node-env-file')(__dirname + '/.env.testing');
-} else {
+} else if ( environment === "development" ) {
     require('node-env-file')(__dirname + '/.env');
 }
 
