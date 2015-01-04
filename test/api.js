@@ -40,8 +40,8 @@ var card = {
 };
 
 describe("Donation Processing", function() {
-    it("successfully processes a donation", function( done ) {
 
+    it("successfully processes a donation", function( done ) {
         stripe.tokens.create({
             card: card
         }, function( error, token ) {
@@ -61,4 +61,6 @@ describe("Donation Processing", function() {
             });
         });
     });
+
+    
 });

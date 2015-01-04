@@ -23,6 +23,7 @@ var raven = require('raven');
 var express = require('express');
 var compress = require('compression');
 var bodyParser = require('body-parser');
+var validator = require('express-validator');
 
 
 //
@@ -48,6 +49,7 @@ if ( environment === "production" ) {
 
 app.use(compress());
 app.use(bodyParser());
+app.use(validator());
 
 
 //

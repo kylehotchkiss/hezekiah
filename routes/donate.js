@@ -10,15 +10,28 @@ var stripe = require("../library/stripe.js");
 var database = require("../library/database.js");
 
 
+
 exports.one = function( req, res ) {
+    req.checkBody("token").notEmpty().len(28);
+    req.checkBody("name").notEmpty();
+    req.checkBody("email").notEmpty().isEmail();
+    req.checkBody("amount").notEmpty().isInt();
+    req.checkBody("campaignSlug").notEmpty();
+    req.checkBody("campaignName").notEmpty();
+    req.checkBody("addressCity").notEmpty();
+    req.checkBody("addressState").notEmpty();
+    req.checkBody("addressPostal").notEmpty();
+    req.checkBody("addressStreet").notEmpty();
+    req.checkBody("addressCountry").notEmpty();
+
     var donation = {
         ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
         date: Date.now(),
         token: req.body.token,
         name: req.body.name,
         email: req.body.email,
-        amount: req.body.amount,
-        campaign: req.body.campaign,
+        amount: req.body.amount, // Amounts are handled by their value in cents
+        campaignSlug: req.body.campaign,
         campaignName: req.body.campaignName,
         addressCity: req.body.addressCity,
         addressState: req.body.addressState,
@@ -27,21 +40,39 @@ exports.one = function( req, res ) {
         addressCountry: req.body.addressCountry,
     };
 
-    stripe.single(donation, function( error, charge ) {
-        if ( error ) {
-            res.json({ status: "error", error: error.code, message: error.message });
-        } else {
-            res.json({ status: "success" });
+    var errors = req.validationErrors();
 
-            donation.stripeID = charge.id;
-            donation.customerID = charge.customer;
+    if ( errors ) {
+        res.send('There have been validation errors: ' + JSON.stringify( errors ), 400);
+    } else {
+        stripe.single(donation, function( error, charge ) {
+            if ( error ) {
+                res.json({ status: "error", error: error.code, message: error.message });
+            } else {
+                res.json({ status: "success" });
 
-            hooks.postDonate( donation );
-        }
-    });
+                donation.stripeID = charge.id;
+                donation.customerID = charge.customer;
+
+                hooks.postDonate( donation );
+            }
+        });
+    }
 };
 
 exports.monthly = function( req, res ) {
+    req.checkBody("token").notEmpty().len(28);
+    req.checkBody("name").notEmpty();
+    req.checkBody("email").notEmpty().isEmail();
+    req.checkBody("amount").notEmpty().isInt();
+    req.checkBody("campaignSlug").notEmpty();
+    req.checkBody("campaignName").notEmpty();
+    req.checkBody("addressCity").notEmpty();
+    req.checkBody("addressState").notEmpty();
+    req.checkBody("addressPostal").notEmpty();
+    req.checkBody("addressStreet").notEmpty();
+    req.checkBody("addressCountry").notEmpty();
+
     var donation = {
         ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
         recurring: true,
@@ -49,8 +80,8 @@ exports.monthly = function( req, res ) {
         token: req.body.token,
         name: req.body.name,
         email: req.body.email,
-        amount: req.body.amount,        
-        campaign: req.body.campaign,
+        amount: req.body.amount, // Amounts are handled by their value in cents
+        campaignSlug: req.body.campaignSlug,
         campaignName: req.body.campaignName,
         addressCity: req.body.addressCity,
         addressState: req.body.addressState,
@@ -59,30 +90,36 @@ exports.monthly = function( req, res ) {
         addressCountry: req.body.addressCountry,
     };
 
-    stripe.monthly(donation, function( error, subscription ) {
-        if ( error ) {
-            // TODO: this is proper error json
-            res.json({ status: "error", error: error.slug, message: error.message });
-        } else {
-            res.json({ status: "success" });
+    var errors = req.validationErrors();
 
-            // TODO: our webhooks will provide a better interface to this than
-            // we can right here (ie we only get subscribtion id and not the
-            // transaction id) so remove this db call.
+    if ( errors ) {
+        res.send('There have been validation errors: ' + JSON.stringify( errors ), 400);
+    } else {
+        stripe.monthly(donation, function( error, subscription ) {
+            if ( error ) {
+                // TODO: this is proper error json
+                res.json({ status: "error", error: error.slug, message: error.message });
+            } else {
+                res.json({ status: "success" });
 
-            donation.recurring = true;
-            donation.stripeID = subscription.id;
-            donation.customerID = subscription.customer;
+                // TODO: our webhooks will provide a better interface to this than
+                // we can right here (ie we only get subscribtion id and not the
+                // transaction id) so remove this db call.
 
-            donationData = new database.DonationModel( donation );
+                donation.recurring = true;
+                donation.stripeID = subscription.id;
+                donation.customerID = subscription.customer;
 
-            donationData.save(function( error ) {
-                if ( error ) {
-                    console.log( error );
-                }
-            });
-        }
-    });
+                donationData = new database.DonationModel( donation );
+
+                donationData.save(function( error ) {
+                    if ( error ) {
+                        console.log( error );
+                    }
+                });
+            }
+        });
+    }
 };
 
 exports.retrieve = function( req, res ) {

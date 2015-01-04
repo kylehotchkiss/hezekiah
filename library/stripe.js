@@ -284,12 +284,11 @@ exports.single = function( donation, callback ) {
             } else {
                 // Fix floating point math issues with Javascript.
                 // CRIES A LITTLE CRIES A LOT.
-                var amount = parseInt( donation.amount * 100 );
 
                 stripe.charges.create({
                     card: donation.token,
                     currency: "usd",
-                    amount: amount,
+                    amount: donation.amount,
                     description: "Donation" + (donation.campaignName ? (" for " + donation.campaignName) : ""),
                     metadata: {
                         ip: donation.ip,
@@ -302,8 +301,6 @@ exports.single = function( donation, callback ) {
                     } else {
                         callback( false, charge );
                     }
-
-                    console.log( charge );
 
                     siftscience.report( donation, charge );
                 });
@@ -329,7 +326,7 @@ exports.monthly = function( donation, callback ) {
                     } else {
                         stripe.customers.createSubscription(customerID, {
                             plan: "one",
-                            quantity: Math.floor( donation.amount ),
+                            quantity: Math.floor( donation.amount * 100 ),
                             metadata: {
                                 ip: donation.ip,
                                 name: donation.name,

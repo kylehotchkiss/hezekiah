@@ -22,7 +22,7 @@ var DonationSchema = mongoose.Schema({
     donor: { type: mongoose.Schema.Types.ObjectId, ref: 'Donor', required: true },
     amount: { type: Number, required: true, min: 0 },
     stripeID: { type: String, required: true },
-    campaign: { type: String, required: true },
+    campaignSlug: { type: String, required: true },
 
     ip: { type: String },
     source: { type: String },

@@ -7,6 +7,7 @@
 
 var meta = require('../package.json');
 
+var swig = require('swig');
 var hook = require("./hook.js");
 var donate = require("./donate.js");
 var reporting = require("./reporting.js");
@@ -14,6 +15,15 @@ var reporting = require("./reporting.js");
 var express = require('express');
 
 module.exports = function( app ) {
+
+	// Templating
+	app.engine('html', swig.renderFile);
+
+	app.set('view engine', 'html');
+	app.set('view cache', false);
+	app.set('views', __dirname + '/../views');
+
+
 	// Hooks
 	app.post('/hook/stripe', hook.dispatcher);
 	app.get('/hook/backup', hook.backup);

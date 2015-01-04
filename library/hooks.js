@@ -18,7 +18,6 @@ var keen = Keen.configure({
 
 /*donation
     send to quickbooks
-    send to slack (XX has made a $XX donation to XX)
 
 refund
     send to db
@@ -59,6 +58,8 @@ var receipt = function( data, subject, template, callback ) {
 };
 
 var notification = function( data, subject, template, callback ) {
+    // todo: set donation amount to dollars, not cents
+
     mandrill.send( "kyle@kylehotchkiss.com", subject, data, template, function() {
         if ( typeof callback === "function" ) {
             callback();
@@ -98,13 +99,15 @@ var slack = function( message, callback ) {
 exports.postDonate = function( donation, callback ) {
     save( donation );
     keenio( donation );
+
+    donation.amount = ( donation.amount / 100 ).toFixed(2);
+
     slack("[donation] A $" + donation.amount + " donation for " + donation.campaignName + " was successfully processed" );
     receipt( donation, "Thank you for your donation!", "donation-receipt" );
     notification( donation, "[donation] A donation has been processed", "donation-notification" );
     subscribe( donation );
 
     // quickbooks
-    // slack?
 };
 
 exports.postRefund = function() {
