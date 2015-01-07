@@ -7,7 +7,7 @@
 
 var hooks = require("../library/hooks.js");
 var stripe = require("stripe")( process.env.HEZ_STRIPE_API );
-var database = require("../library/database.js");
+var database = require("../models");
 
 exports.dispatcher = function( req, res ) {
 	var customer, subscription;
@@ -20,7 +20,7 @@ exports.dispatcher = function( req, res ) {
 		// Refund or dispute successfully processed
 		//
 
-		database.DonationModel.find({ "stripeID": transaction.id }, function( error, donation ) {
+		database.DonationModel.find({ "transactionID": transaction.id }, function( error, donation ) {
 			if ( !error && typeof donation[0] === "object" ) {
 				hooks.postRefund( donation );
 			}
@@ -33,23 +33,31 @@ exports.dispatcher = function( req, res ) {
 		customer = transaction.customer;
 		subscription = transaction.subscription;
 
-        var donation = {
-			recurring: true,
-			customerID: customer,
-			subscription: subscription,
-			stripeID: transaction.charge,
-			amount: ( transaction.amount_due / 100 ),
-			date: transaction.date * 1000,
-		};
+		database.DonorModel.find({ "customerID": customer}, function( error, donor ) {
+			console.log( error )
 
-		stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
-			donation.name = subscription.metadata.name;
-			donation.email = subscription.metadata.email;
-			donation.campaign = subscription.metadata.campaign;
-			donation.campaignName = subscription.metadata.campaignName;
+			if ( !error && typeof donor[0] === "object" ) {
+				var donation = {
+					recurring: true,
+					donor: donor[0]._id,
+					email: donor[0].email,
+					date: transaction.date * 1000,
+					amount: transaction.amount_due,
+					transactionID: transaction.charge,
+					subscriptionID: transaction.lines.data[0].id
+				};
 
-			hooks.postDonate( donation );
+				stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
+					console.log( error )
+
+					donation.campaign = subscription.metadata.campaign;
+
+					hooks.postDonate( donation );
+				});
+			}
 		});
+
+
     } else if ( stripeEvent.type === "customer.subscription.created" ) {
 		//
 		// Monthly donations successfully begun
@@ -60,7 +68,7 @@ exports.dispatcher = function( req, res ) {
 			date: transaction.start * 1000,
 			email: transaction.metadata.email,
 			amount: transaction.quantity, // Stripe tracks quantity for plans
-			campaignName: transaction.metadata.campaignName
+			description: transaction.metadata.description
 		});
 	} else if ( stripeEvent.type === "customer.subscription.deleted" ) {
 		//
@@ -72,7 +80,7 @@ exports.dispatcher = function( req, res ) {
 			date: transaction.canceled_at * 1000,
 			email: transaction.metadata.email,
 			amount: transaction.quantity, // Stripe tracks quantity for plans
-			campaignName: transaction.metadata.campaignName
+			description: transaction.metadata.description
 		});
     }
 

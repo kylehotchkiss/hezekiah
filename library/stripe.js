@@ -6,7 +6,7 @@
 //
 
 var stripe = require("stripe")( process.env.HEZ_STRIPE_API );
-var database = require("./database.js");
+var database = require("../models");
 var siftscience = require("./siftscience.js");
 
 //
@@ -24,14 +24,14 @@ var siftscience = require("./siftscience.js");
 
 // Retrieve or Create a Donor
 var retrieveDonor = function( donor, callback ) {
-    database.DonorModel.findOneAndUpdate({ "email": donor.email }, donor,
-        { upsert: true }, function( error, record ) {
-
-        if ( error ) {
-            callback( error, false );
+    database.Donor.findOrCreate( { where: { email: donor.email }, defaults: donor } ).then(function( donorObj ) {
+        if ( donorObj === null ) {
+            callback( false, false );
         } else {
-            callback( false, record );
+            callback( false, donorObj[0] );
         }
+    }, function( error ) {
+        callback( error, false );
     });
 };
 
@@ -46,14 +46,14 @@ var retrieveCustomer = function( email, postal, callback ) {
         params.addressPostal = postal;
     }
 
-    database.DonorModel.findOne(params, 'customerID', function( error, donor ) {
-        if ( error ) {
-            callback( error, false );
-        } else if ( donor === null ) {
+    database.Donor.find({ where: params }).then(function( donor ) {
+        if ( donor === null ) {
             callback( false, false );
         } else {
             callback( false, donor.customerID);
         }
+    }, function( error ) {
+        callback( error, false );
     });
 };
 
@@ -74,14 +74,22 @@ var createCustomer = function( donation, callback ) {
                 customerID: customer.id
             };
 
-            database.DonorModel.findOneAndUpdate({ "email": donation.email }, donor,
-                { upsert: true }, function( error ) {
-
-                if ( error ) {
-                    callback( error, false );
+            database.Donor.find({ where: { email: donation.email }}).then(function( donorObj ) {
+                if ( donorObj === null ) {
+                    database.Donor.create( donor ).then(function() {
+                        callback( false, customer.id );
+                    }, function( error ) {
+                        callback( error, false );
+                    });
                 } else {
-                    callback( false, customer.id );
+                    donorObj.updateAttributes( donor ).then(function() {
+                        callback( false, customer.id );
+                    }, function( error ) {
+                        callback( error, false );
+                    });
                 }
+            }, function( error ) {
+                callback( error, false );
             });
         }
     });
@@ -95,8 +103,14 @@ var updateCustomer = function( donation, donorID, callback ) {
         if ( error ) {
             callback( error );
         } else {
-            database.DonorModel.findOneAndUpdate({ customerID: donorID }, { subscriber: true, lastAction: Date.now() }, function( error ) {
-                callback( false );
+            database.donor.find({ where: { customerID: donorID }}).then(function( donorObj ) {
+                donorObj.updateAttributes({ subscriber: true }).then(function() {
+                    callback( false );
+                }, function( error ) {
+                    callback( error );
+                });
+            }, function( error ) {
+                callback( error );
             });
         }
     });
@@ -106,23 +120,22 @@ var updateCustomer = function( donation, donorID, callback ) {
 // Takes care of processing for our Donor-Customer interface
 var processDonor = function( donation, callback ) {
     retrieveDonor( donation, function( error, donor ) {
+        console.log("Process ~ Retrieve")
+
         if ( error || !donor ) {
             callback( true, false );
         } else {
             if ( donation.recurring ) {
                 if ( !donor.customerID ) {
-
-                    console.log( "create..." );
-
                     createCustomer( donation, function( error, customerID ) {
                         if ( error ) {
                             callback( error, false );
                         } else {
-                            callback( false, donor._id, customerID );
+                            callback( false, donor.id, customerID );
                         }
                     });
                 } else {
-                    updateCustomer( donation, donor._id, function( error ) {
+                    updateCustomer( donation, donor.id, function( error ) {
                         if ( error ) {
                             if ( error.type === "StripeInvalidRequest" ) {
                                 // Stripe Customer has been deleted, create new one.
@@ -132,19 +145,21 @@ var processDonor = function( donation, callback ) {
                                     if ( error ) {
                                         callback( error, false );
                                     } else {
-                                        callback( false, donor._id, customerID );
+                                        callback( false, donor.id, customerID );
                                     }
                                 });
                             } else {
                                 callback( error, false );
                             }
                         } else {
-                            callback( false, donor._id, customerID );
+                            callback( false, donor.id, customerID );
                         }
                     });
                 }
             } else {
-                callback( false, donor._id );
+                console.log( donor )
+
+                callback( false, donor.id );
             }
         }
     });
@@ -259,22 +274,20 @@ var dedupDonation = function( donation, callback ) {
         email: donation.email,
         amount: donation.amount,
         campaign: donation.campaign,
-        date: { "$gte": fiveMin }
+        createdAt: { gte: fiveMin }
     };
 
-    database.DonationModel.count(params, function( error, count ) {
-        if ( error ) {
-            callback( error, false );
-        } else {
-            callback( false, !!count );
-        }
+    database.Donation.count({ where: params }).then( function( count ) {
+        callback( false, !!count );
+    }, function( error ) {
+        callback( error, false );
     });
 };
 
 
 exports.single = function( donation, callback ) {
     processDonor( donation, function( error, donor ) {
-        donation.donor = donor;
+        donation.DonorId = donor;
 
         dedupDonation( donation, function( error, duplicate ) {
             if ( error ) {
@@ -289,7 +302,7 @@ exports.single = function( donation, callback ) {
                     card: donation.token,
                     currency: "usd",
                     amount: donation.amount,
-                    description: "Donation" + (donation.campaignName ? (" for " + donation.campaignName) : ""),
+                    description: "Donation" + (donation.description ? (" for " + donation.description) : ""),
                     metadata: {
                         ip: donation.ip,
                         campaign: donation.campaign,
@@ -312,7 +325,7 @@ exports.single = function( donation, callback ) {
 
 exports.monthly = function( donation, callback ) {
     processDonor(donation, function( error, donorID, customerID ) {
-        donation.donor = donorID;
+        donation.DonorId = donorID;
 
         dedupSubscription( donation, customerID, function( error, duplicate ) {
             if ( error ) {
@@ -333,7 +346,7 @@ exports.monthly = function( donation, callback ) {
                                 email: donation.email,
                                 postal: donation.addressPostal,
                                 campaign: donation.campaign,
-                                campaignName: donation.campaignName
+                                description: donation.description
                             }
                         }, function( error, subscription ) {
                             if ( error ) {
@@ -410,13 +423,14 @@ exports.cancel = function( email, postal, callback ) {
                         } else {
                             // Finished
 
-                            var donor = {
-                                subscriber: false,
-                                lastAction: Date.now()
-                            };
-
-                            database.DonorModel.findOneAndUpdate({ customerID: donorID }, donor, function( error ) {
-                                callback( false, j );
+                            database.Donor.find({ where: { customerID: donorID }}).then(function( donorObj ) {
+                                donorObj.updateAttributes({ subscriber: false }).then(function() {
+                                    callback( false, j );
+                                }, function( error ) {
+                                    callback( error, j );
+                                });
+                            }, function( error ) {
+                                callback( error, j );
                             });
                         }
                     })();

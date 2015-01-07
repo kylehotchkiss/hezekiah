@@ -7,7 +7,7 @@
 
 var hooks = require("../library/hooks.js");
 var stripe = require("../library/stripe.js");
-var database = require("../library/database.js");
+var database = require("../models");
 
 
 
@@ -16,8 +16,8 @@ exports.one = function( req, res ) {
     req.checkBody("name").notEmpty();
     req.checkBody("email").notEmpty().isEmail();
     req.checkBody("amount").notEmpty().isInt();
-    req.checkBody("campaignSlug").notEmpty();
-    req.checkBody("campaignName").notEmpty();
+    req.checkBody("campaign").notEmpty();
+    req.checkBody("description").notEmpty();
     req.checkBody("addressCity").notEmpty();
     req.checkBody("addressState").notEmpty();
     req.checkBody("addressPostal").notEmpty();
@@ -27,17 +27,18 @@ exports.one = function( req, res ) {
     var donation = {
         ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
         date: Date.now(),
+        source: "stripe",
         token: req.body.token,
         name: req.body.name,
         email: req.body.email,
         amount: req.body.amount, // Amounts are handled by their value in cents
-        campaignSlug: req.body.campaignSlug,
-        campaignName: req.body.campaignName,
+        campaign: req.body.campaign,
+        description: req.body.description,
         addressCity: req.body.addressCity,
         addressState: req.body.addressState,
         addressPostal: req.body.addressPostal,
         addressStreet: req.body.addressStreet,
-        addressCountry: req.body.addressCountry,
+        addressCountry: req.body.addressCountry
     };
 
     var errors = req.validationErrors();
@@ -51,7 +52,7 @@ exports.one = function( req, res ) {
             } else {
                 res.json({ status: "success" });
 
-                donation.stripeID = charge.id;
+                donation.transactionID = charge.id;
                 donation.customerID = charge.customer;
 
                 hooks.postDonate( donation );
@@ -65,8 +66,8 @@ exports.monthly = function( req, res ) {
     req.checkBody("name").notEmpty();
     req.checkBody("email").notEmpty().isEmail();
     req.checkBody("amount").notEmpty().isInt();
-    req.checkBody("campaignSlug").notEmpty();
-    req.checkBody("campaignName").notEmpty();
+    req.checkBody("campaign").notEmpty();
+    req.checkBody("description").notEmpty();
     req.checkBody("addressCity").notEmpty();
     req.checkBody("addressState").notEmpty();
     req.checkBody("addressPostal").notEmpty();
@@ -75,14 +76,15 @@ exports.monthly = function( req, res ) {
 
     var donation = {
         ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+        source: "stripe",
         recurring: true,
         date: Date.now(),
         token: req.body.token,
         name: req.body.name,
         email: req.body.email,
         amount: req.body.amount, // Amounts are handled by their value in cents
-        campaignSlug: req.body.campaignSlug,
-        campaignName: req.body.campaignName,
+        campaign: req.body.campaign,
+        description: req.body.description,
         addressCity: req.body.addressCity,
         addressState: req.body.addressState,
         addressPostal: req.body.addressPostal,
@@ -101,22 +103,6 @@ exports.monthly = function( req, res ) {
                 res.json({ status: "error", error: error.slug, message: error.message });
             } else {
                 res.json({ status: "success" });
-
-                // TODO: our webhooks will provide a better interface to this than
-                // we can right here (ie we only get subscribtion id and not the
-                // transaction id) so remove this db call.
-
-                donation.recurring = true;
-                donation.stripeID = subscription.id;
-                donation.customerID = subscription.customer;
-
-                donationData = new database.DonationModel( donation );
-
-                donationData.save(function( error ) {
-                    if ( error ) {
-                        console.log( error );
-                    }
-                });
             }
         });
     }

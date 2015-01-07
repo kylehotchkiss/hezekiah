@@ -64,7 +64,7 @@
                                     <td>{{ donation.donor.name }}<br />{{ donation.email }}</td>
                                     <td>${{ donation.amount.toFixed(2) }}</td>
                                     <td>{{ donation.campaign }}</td>
-                                    <td><a href="https://dashboard.stripe.com/payments/{{ donation.stripeID }}">Details</a></td>
+                                    <td><a href="https://dashboard.stripe.com/payments/{{ donation.transactionID }}">Details</a></td>
                                 </tr>
                             {% endfor %}
                         </tbody>

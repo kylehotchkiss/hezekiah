@@ -13,7 +13,7 @@ if ( process.env.NODE_ENV === "testing" ) {
 var should = require("should");
 var stripe = require("stripe")( "sk_test_NNOEYfuSLvdLlZrd7jNFRIzg" );
 var request = require("request");
-var database = require("../library/database.js");
+var database = require("../models");
 
 var amount = ( Math.random() * 100 ).toFixed(2);
 
@@ -24,7 +24,7 @@ var donation = {
     email: "kyle@kylehotchkiss.com",
     amount: amount,
     campaign: "mocha",
-    campaignName: "Mocha Testing",
+    description: "Mocha Testing",
     addressCity: "Lynchburg",
     addressState: "Virginia",
     addressStreet: "125 Portico St",

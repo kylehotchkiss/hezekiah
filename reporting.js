@@ -6,7 +6,7 @@
 //
 
 var moment = require("moment");
-var database = require("../library/database.js");
+var database = require("../models");
 
 exports.donors = function( req, res ) {
 

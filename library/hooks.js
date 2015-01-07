@@ -7,7 +7,7 @@
 
 var request = require('request');
 var mandrill = require("../library/mandrill.js");
-var database = require("../library/database.js");
+var database = require("../models");
 var mailchimp = require("../library/mailchimp.js");
 
 /*donation
@@ -21,15 +21,27 @@ refund
 // Helper/Wrapper functions around our various interfaces
 //
 var save = function( donation, callback ) {
-    database.DonationModel.findOneAndUpdate({ "_id": donation._id }, donation,
-    { upsert: true }, function( error, record ) {
-
+    database.Donation.find({ where: { id: donation._id } }).then(function( donationObj ) {
+        if ( donationObj === null ) {
+            database.Donation.create( donation ).then(function() {
+                if ( typeof callback === "function" ) {
+                    callback( false );
+                }
+            });
+        } else {
+            donationObj.updateAttributes( donation ).then(function() {
+                if ( typeof callback === "function" ) {
+                    callback( false );
+                }
+            }, function( error ) {
+                if ( typeof callback === "function" ) {
+                    callback( error );
+                }
+            });
+        }
+    }, function( error ) {
         if ( typeof callback === "function" ) {
-            if ( error ) {
-                callback( error );
-            } else {
-                callback( false );
-            }
+            callback( error );
         }
     });
 };
@@ -69,15 +81,15 @@ var slack = function( message, callback ) {
 };
 
 exports.postDonate = function( donation, callback ) {
-    save( donation );
+    save( donation, function() {
+        donation.amount = ( donation.amount / 100 ).toFixed(2);
 
-    donation.amount = ( donation.amount / 100 ).toFixed(2);
-
-    slack("[donation] A $" + donation.amount + " donation for " + donation.campaignName + " was successfully processed" );
-    receipt( donation, "Thank you for your donation!", "donation-receipt" );
-    notification( donation, "[donation] A donation has been processed", "donation-notification" );
-    subscribe( donation );
-
+        slack("[donation] A $" + donation.amount + " donation for " + donation.description + " was successfully processed" );
+        receipt( donation, "Thank you for your donation!", "donation-receipt" );
+        notification( donation, "[donation] A donation has been processed", "donation-notification" );
+        subscribe( donation );
+    });
+    
     // quickbooks
 };
 
@@ -88,19 +100,19 @@ exports.postRefund = function( donation, callback ) {
 
     donation.amount = ( donation.amount / 100 ).toFixed(2);
 
-    slack("[refund] A $" + donation.amount + " donation for " + donation.campaignName + " was successfully refunded" );
+    slack("[refund] A $" + donation.amount + " donation for " + donation.description + " was successfully refunded" );
     receipt( donation, "Your donation has been refunded", "refund-receipt" );
     notification( donation, "[refund] A donation has been refunded", "refund-notification" );
 };
 
 exports.postSubscribe = function( subscription, callback ) {
-    slack("[subscriptions] A $" + donation.amount + " subscription for " + donation.campaignName + " was successfully started" );
+    slack("[subscriptions] A $" + donation.amount + " subscription for " + donation.description + " was successfully started" );
     receipt( subscription, "You now make monthly donations!", "subscription-receipt" );
     notification( subscription, "[subscriptions] A donor has enabled automatic donations", "subscription-notification" );
 };
 
 exports.postUnsubscribe = function( subscription, callback ) {
-    slack("[subscriptions] A $" + donation.amount + " subscription for " + donation.campaignName + " was canceled" );
+    slack("[subscriptions] A $" + donation.amount + " subscription for " + donation.description + " was canceled" );
     receipt( subscription, "You have disabled monthly donations", "unsubscription-receipt" );
     notification( subscription, "[subscriptions] A donor has disabled automatic donations", "unsubscription-notification" );
 };
