@@ -31,7 +31,7 @@ exports.one = function( req, res ) {
         name: req.body.name,
         email: req.body.email,
         amount: req.body.amount, // Amounts are handled by their value in cents
-        campaignSlug: req.body.campaign,
+        campaignSlug: req.body.campaignSlug,
         campaignName: req.body.campaignName,
         addressCity: req.body.addressCity,
         addressState: req.body.addressState,
@@ -87,7 +87,7 @@ exports.monthly = function( req, res ) {
         addressState: req.body.addressState,
         addressPostal: req.body.addressPostal,
         addressStreet: req.body.addressStreet,
-        addressCountry: req.body.addressCountry,
+        addressCountry: req.body.addressCountry
     };
 
     var errors = req.validationErrors();

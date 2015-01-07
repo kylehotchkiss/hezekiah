@@ -5,44 +5,29 @@
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
-var Keen = require('keen.io');
 var request = require('request');
 var mandrill = require("../library/mandrill.js");
 var database = require("../library/database.js");
 var mailchimp = require("../library/mailchimp.js");
-
-var keen = Keen.configure({
-    projectId: process.env.HEZ_KEEN_PROJECT,
-    writeKey: process.env.HEZ_KEEN_WRITE
-});
 
 /*donation
     send to quickbooks
 
 refund
     send to db
-    send email
-    send to keenio (?)
-    send to quickbooks (?)
-    send to slack */
+    send to quickbooks (?) */
 
 //
 // Helper/Wrapper functions around our various interfaces
 //
 var save = function( donation, callback ) {
-    donationData = new database.DonationModel( donation );
+    database.DonationModel.findOneAndUpdate({ "_id": donation._id }, donation,
+    { upsert: true }, function( error, record ) {
 
-    donationData.save(function( error ) {
-        if ( error ) {
-            // Log DB Error
-
-            console.log( error );
-
-            if ( typeof callback === "function" ) {
+        if ( typeof callback === "function" ) {
+            if ( error ) {
                 callback( error );
-            }
-        } else {
-            if ( typeof callback === "function" ) {
+            } else {
                 callback( false );
             }
         }
@@ -67,19 +52,6 @@ var notification = function( data, subject, template, callback ) {
     });
 };
 
-var keenio = function( donation, callback ) {
-    // Weird scope leaks keep happening here, so lock the scope of any edits
-    // to the donation object.
-    var thisDonation = donation;
-    thisDonation.amount = parseFloat( thisDonation.amount );
-
-    keen.addEvent( "Donations", thisDonation, function() {
-        if ( typeof callback === "function" ) {
-            callback();
-        }
-    });
-};
-
 var subscribe = function( donation, callback ) {
      mailchimp.subscribeEmail( donation.name, donation.email, [ donation.campaign, "donor" ], donation.ip, function() {
         if ( typeof callback === "function" ) {
@@ -98,7 +70,6 @@ var slack = function( message, callback ) {
 
 exports.postDonate = function( donation, callback ) {
     save( donation );
-    keenio( donation );
 
     donation.amount = ( donation.amount / 100 ).toFixed(2);
 
@@ -110,8 +81,16 @@ exports.postDonate = function( donation, callback ) {
     // quickbooks
 };
 
-exports.postRefund = function() {
+exports.postRefund = function( donation, callback ) {
+    donation.refunded = true;
 
+    save( donation );
+
+    donation.amount = ( donation.amount / 100 ).toFixed(2);
+
+    slack("[refund] A $" + donation.amount + " donation for " + donation.campaignName + " was successfully refunded" );
+    receipt( donation, "Your donation has been refunded", "refund-receipt" );
+    notification( donation, "[refund] A donation has been refunded", "refund-notification" );
 };
 
 exports.postSubscribe = function( subscription, callback ) {

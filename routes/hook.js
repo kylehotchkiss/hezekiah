@@ -7,6 +7,7 @@
 
 var hooks = require("../library/hooks.js");
 var stripe = require("stripe")( process.env.HEZ_STRIPE_API );
+var database = require("../library/database.js");
 
 exports.dispatcher = function( req, res ) {
 	var customer, subscription;
@@ -18,9 +19,12 @@ exports.dispatcher = function( req, res ) {
 		//
 		// Refund or dispute successfully processed
 		//
-        console.log( stripeEvent );
 
-        // Set transactions to "refunded"
+		database.DonationModel.find({ "stripeID": transaction.id }, function( error, donation ) {
+			if ( !error && typeof donation[0] === "object" ) {
+				hooks.postRefund( donation );
+			}
+		});
     } else if ( stripeEvent.type === "invoice.payment_succeeded" ) {
 		//
 		// Recurring Donations successfully made

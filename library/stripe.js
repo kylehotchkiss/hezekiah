@@ -326,7 +326,7 @@ exports.monthly = function( donation, callback ) {
                     } else {
                         stripe.customers.createSubscription(customerID, {
                             plan: "one",
-                            quantity: Math.floor( donation.amount * 100 ),
+                            quantity: Math.floor( donation.amount / 100 ),
                             metadata: {
                                 ip: donation.ip,
                                 name: donation.name,
