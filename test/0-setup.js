@@ -10,6 +10,7 @@ require("node-env-file")(__dirname + "/../.env.testing");
 
 var should = require("should");
 var request = require("request");
+var database = require("../models");
 
 describe("Setup Tests", function() {
     it("successfully resets the database", function( done ) {
@@ -25,7 +26,7 @@ describe("Setup Tests", function() {
         }, function( error, response, body ) {
             should( error ).not.be.ok
 
-            done();            
+            done();
         });
     });
 });
