@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "test": "export NODE_ENV=testing && (node app.js &) && mocha -t 10000"
+    "test": "mocha -t 10000"
   },
   "engines": {
     "node": "0.10.x"

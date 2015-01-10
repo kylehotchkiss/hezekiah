@@ -1,5 +1,5 @@
 //
-// Illuminate Nations - DonateServ v0.2.0
+// Illuminate Nations - Hezekiah v.0.3.0
 // Copyright 2013-2014 Illuminate Nations
 // Released under the General Public Licence
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
@@ -16,7 +16,7 @@ if ( environment === "production" ) {
 }
 
 var meta = require('./package.json');
-var config = require('./config.json');
+var config = require('./config.json'); // TODO: Load sequalize settings into .env
 
 var cors = require('cors');
 var raven = require('raven');

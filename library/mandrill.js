@@ -45,7 +45,7 @@ exports.send = function( email, subject, content, template, callback ) {
             method: "post",
             body: {
                 key: mandrillAPI,
-                async: true,
+                //async: true,
                 template_name: config.email.template,
                 template_content: [{
                     "name": "std_content00",
@@ -68,7 +68,11 @@ exports.send = function( email, subject, content, template, callback ) {
             }
         }, function( error, response, body ) {
             if ( typeof callback === "function" ) {
-                callback();
+                if ( error ) {
+                    callback( error, false );
+                } else {
+                    callback( false, body[0]._id );
+                }
             }
         });
     } else {

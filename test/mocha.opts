@@ -1,0 +1,6 @@
+--reporter spec
+--ui tdd
+--slow 5000
+--timeout 10000
+--no-exit
+--bail
