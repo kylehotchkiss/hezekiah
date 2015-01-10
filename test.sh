@@ -1,7 +1,9 @@
-git checkout testing
-git add --all .
-git commit -m "Update testing instance..."
-git push -f origin three
+echo "Pushing latest code to testing instance..."
+
+git checkout testing >/dev/null
+git add --all . >/dev/null
+git commit -m "Update testing instance..." >/dev/null
+git push -f origin three >/dev/null
 
 
-git checkout three
+git checkout three >/dev/null
