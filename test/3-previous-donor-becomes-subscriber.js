@@ -13,7 +13,6 @@ var stripe = require("stripe")( "sk_test_NNOEYfuSLvdLlZrd7jNFRIzg" );
 var request = require("request");
 var database = require("../models");
 
-var API = "http://localhost:5000";
 var data = require("./data.json");
 var subscription = "";
 data.single.donation.amount = (( Math.random() * 100 ).toFixed(2)) * 100;
@@ -27,7 +26,7 @@ describe("Starting Monthly Donations", function() {
             data.single.donation.token = token.id;
 
             request({
-                url: API + "/donate/monthly",
+                url: process.env.HEZ_TESTING_SERVER + "/donate/monthly",
                 method: "POST",
                 form: data.single.donation,
                 json: true

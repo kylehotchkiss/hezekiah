@@ -14,7 +14,6 @@ var request = require("request");
 var database = require("../models");
 var mandrill = require("../library/mandrill");
 
-var API = "http://localhost:5000";
 var data = require("./data.json");
 var receiptID = "";
 var transaction = "";
@@ -29,11 +28,14 @@ describe("One Time Donation", function() {
             data.single.donation.token = token.id;
 
             request({
-                url: API + "/donate/one",
+                url: process.env.HEZ_TESTING_SERVER + "/donate/one",
                 method: "POST",
                 form: data.single.donation,
                 json: true
             }, function( error, response, body ) {
+
+                console.log( error )
+                console.log( body )
 
                 should( body.status ).equal("success");
                 should( body.transaction ).match(/ch_(.*)$/);

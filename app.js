@@ -9,8 +9,6 @@ var environment = process.env.NODE_ENV || 'development';
 
 if ( environment === "production" ) {
     require('newrelic');
-} else if ( environment === "testing" ) {
-    require('node-env-file')(__dirname + '/.env.testing');
 } else if ( environment === "development" ) {
     require('node-env-file')(__dirname + '/.env');
 }

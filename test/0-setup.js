@@ -14,17 +14,17 @@ var database = require("../models");
 
 describe("Setup Tests", function() {
     it("successfully resets the database", function( done ) {
-        database.sequelize.sync({ force:true });
+        database.sequelize.sync({ force: true });
 
         done();
     });
 
     it("successfully wakes up the testing server", function( done ) {
         request({
-            url: prcoess.env.HEZEKIAH_TESTING_SERVER + "/health",
+            url: process.env.HEZ_TESTING_SERVER + "/health",
             json: true
         }, function( error, response, body ) {
-            should( error ).not.be.ok
+            should( error ).not.be.ok;
 
             done();
         });
