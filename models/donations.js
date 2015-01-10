@@ -21,6 +21,7 @@ module.exports = function( sequelize, type ) {
 
         transactionID: { type: type.STRING, unique: true },
         subscriptionID: { type: type.STRING },
+        receiptID: { type: type.STRING },
         refunded: { type: type.BOOLEAN, default: false },
         recurring: { type: type.BOOLEAN, default: false }
     }, {

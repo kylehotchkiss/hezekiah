@@ -1,5 +1,0 @@
-# Stripe Scenerios
-    - Donation with deleted stripe customer
-    - Donations with same customer, different cards
-    - Donations with subscription, user using new card afterwards
-    - 

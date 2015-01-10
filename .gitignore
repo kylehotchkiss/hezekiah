@@ -1,10 +1,13 @@
 # Folders
 node_modules/
 .sass-cache/
+fixtures/
+
 
 # Local Config
 .env
 .env.testing
+
 
 # Other
 Procfile

@@ -50,7 +50,7 @@ exports.one = function( req, res ) {
             if ( error ) {
                 res.json({ status: "error", error: error.code, message: error.message });
             } else {
-                res.json({ status: "success" });
+                res.json({ status: "success", transaction: charge.id });
 
                 donation.transactionID = charge.id;
                 donation.customerID = charge.customer;
@@ -102,7 +102,7 @@ exports.monthly = function( req, res ) {
                 // TODO: this is proper error json
                 res.json({ status: "error", error: error.slug, message: error.message });
             } else {
-                res.json({ status: "success" });
+                res.json({ status: "success", subscription: subscription.id });
             }
         });
     }

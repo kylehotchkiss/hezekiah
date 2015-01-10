@@ -47,9 +47,13 @@ var save = function( donation, callback ) {
 };
 
 var receipt = function( data, subject, template, callback ) {
-    mandrill.send( data.email, subject, data, template, function() {
+    mandrill.send( data.email, subject, data, template, function( error, id ) {
         if ( typeof callback === "function" ) {
-            callback();
+            if ( error ) {
+                callback( error, false );
+            } else {
+                callback( false, id );
+            }
         }
     });
 };
@@ -57,9 +61,13 @@ var receipt = function( data, subject, template, callback ) {
 var notification = function( data, subject, template, callback ) {
     // todo: set donation amount to dollars, not cents
 
-    mandrill.send( "kyle@kylehotchkiss.com", subject, data, template, function() {
+    mandrill.send( "kyle@kylehotchkiss.com", subject, data, template, function( error, id ) {
         if ( typeof callback === "function" ) {
-            callback();
+            if ( error ) {
+                callback( error, false );
+            } else {
+                callback( false, id );
+            }
         }
     });
 };
@@ -81,15 +89,17 @@ var slack = function( message, callback ) {
 };
 
 exports.postDonate = function( donation, callback ) {
-    save( donation, function() {
-        donation.amount = ( donation.amount / 100 ).toFixed(2);
+    receipt( donation, "Thank you for your donation!", "donation-receipt", function( error, receipt ) {
+        donation.receiptID = receipt;
 
-        slack("[donation] A $" + donation.amount + " donation for " + donation.description + " was successfully processed" );
-        receipt( donation, "Thank you for your donation!", "donation-receipt" );
-        notification( donation, "[donation] A donation has been processed", "donation-notification" );
-        subscribe( donation );
+        save( donation, function() {
+            donation.amount = ( donation.amount / 100 ).toFixed(2);
+            slack("[donation] A $" + donation.amount + " donation for " + donation.description + " was successfully processed" );
+            notification( donation, "[donation] A donation has been processed", "donation-notification" );
+            subscribe( donation );
+        });
     });
-    
+
     // quickbooks
 };
 

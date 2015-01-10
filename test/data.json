@@ -1,0 +1,40 @@
+{
+    "single": {
+        "donation": {
+            "name": "Just Mocha",
+            "email": "testing@illuminatenations.org",
+            "campaign": "mocha",
+            "description": "Mocha Test Suite",
+            "addressCity": "Lynchburg",
+            "addressState": "Virginia",
+            "addressStreet": "125 Portico Street",
+            "addressPostal": "24502",
+            "addressCountry": "US",
+            "session": "HEZEKIAH-TEST-SUITE"
+        },
+        "card": {
+            "number": "4242 4242 4242 4242",
+            "exp_year": 2020,
+            "exp_month": 6
+        }
+    },
+    "monthly": {
+        "donation": {
+            "name": "Just Mocha",
+            "email": "testing@illuminatenations.org",
+            "campaign": "mocha",
+            "description": "Mocha Test Suite",
+            "addressCity": "Lynchburg",
+            "addressState": "Virginia",
+            "addressStreet": "125 Portico Street",
+            "addressPostal": "24502",
+            "addressCountry": "US",
+            "session": "HEZEKIAH-TEST-SUITE"
+        },
+        "card": {
+            "number": "4012 8888 8888 1881",
+            "exp_year": 2020,
+            "exp_month": 6
+        }
+    }
+}

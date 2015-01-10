@@ -11,7 +11,6 @@ var environment = process.env.NODE_ENV || 'development';
 var sequelize, Sequelize = require('sequelize');
 
 /* Try to load database or complain */
-
 if ( process.env.DATABASE_URL ) {
     var connection = process.env.DATABASE_URL.match(/postgres:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)/);
 
@@ -20,7 +19,7 @@ if ( process.env.DATABASE_URL ) {
         protocol: 'postgres',
         port: connection[4],
         host: connection[3],
-        logging: console.log
+        logging: false //console.log
     };
 
     sequelize = new Sequelize(connection[5], connection[1], connection[2], options);

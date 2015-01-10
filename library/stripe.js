@@ -120,8 +120,6 @@ var updateCustomer = function( donation, donorID, callback ) {
 // Takes care of processing for our Donor-Customer interface
 var processDonor = function( donation, callback ) {
     retrieveDonor( donation, function( error, donor ) {
-        console.log("Process ~ Retrieve")
-
         if ( error || !donor ) {
             callback( true, false );
         } else {
@@ -157,8 +155,6 @@ var processDonor = function( donation, callback ) {
                     });
                 }
             } else {
-                console.log( donor )
-
                 callback( false, donor.id );
             }
         }
