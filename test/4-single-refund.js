@@ -43,6 +43,6 @@ describe("Single Refund", function() {
 
                 done();
             });
-        }, 10000);
+        }, 30000);
     });
 });

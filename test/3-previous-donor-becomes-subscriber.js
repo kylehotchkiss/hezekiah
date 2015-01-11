@@ -86,6 +86,6 @@ describe("Begin Subscriptions - Previous Donor", function() {
 
                 done();
             });
-        }, 10000);
+        }, 30000);
     });
 });

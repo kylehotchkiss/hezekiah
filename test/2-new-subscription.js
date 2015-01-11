@@ -81,6 +81,6 @@ describe("Begin Subscriptions - New Donor", function() {
 
                 done();
             });
-        }, 10000);
+        }, 30000);
     });
 });
