@@ -28,8 +28,6 @@ exports.dispatcher = function( req, res ) {
 			id = transaction.charge;
 		}
 
-		console.log("Refund ID: " + id)
-
 		database.Donation.find({ where: { "transactionID": id } }).then(function( donationObj ) {
 			if ( donationObj !== null ) {
 				hooks.postRefund( donationObj.toJSON() );

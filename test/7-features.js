@@ -65,4 +65,42 @@ describe("Special Features", function() {
             });
         });
     });
+
+    it("successfully rejects a duplicate subscription [api]", function( done ) {
+        data.monthly.donation.campaign = "duplicate";
+
+        tokenize(data.single.card, function( token ) {
+            data.monthly.donation.token = token;
+
+            request({
+                url: process.env.HEZ_TESTING_SERVER + "/donate/monthly",
+                method: "POST",
+                form: data.monthly.donation,
+                json: true
+            }, function( error, response, body ) {
+                console.log( error )
+                console.log( body )
+
+                should( body.status ).equal("success");
+
+                tokenize(data.single.card, function( token ) {
+                    data.monthly.donation.token = token;
+
+                    request({
+                        url: process.env.HEZ_TESTING_SERVER + "/donate/monthly",
+                        method: "POST",
+                        form: data.monthly.donation,
+                        json: true
+                    }, function( error, response, body ) {
+                        console.log( error )
+                        console.log( body )
+
+                        should( body.status ).equal("error");
+
+                        done();
+                    });
+                });
+            });
+        });
+    });
 });

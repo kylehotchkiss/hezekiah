@@ -241,6 +241,10 @@ var dedupSubscription = function( donation, donorID, callback ) {
                     for ( var i in subscriptions.data ) {
                         var subscription = subscriptions.data[i];
 
+                        console.log( "MATCHING SUBSCRIPTIONS: ")
+                        console.log( donation.campaign )
+                        console.log( subscription.metadata.campaign )
+
                         if ( subscription.metadata.campaign === donation.campaign ) {
                             match = true;
                         }
@@ -341,7 +345,7 @@ exports.monthly = function( donation, callback ) {
                                 email: donation.email,
                                 campaign: donation.campaign,
                                 description: donation.description,
-                                subcampaign: donation.subcampaign                                
+                                subcampaign: donation.subcampaign
                             }
                         }, function( error, subscription ) {
                             if ( error ) {
