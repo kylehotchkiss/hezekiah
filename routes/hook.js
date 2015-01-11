@@ -20,9 +20,9 @@ exports.dispatcher = function( req, res ) {
 		// Refund or dispute successfully processed
 		//
 
-		database.Donation.find({ where: { transactionID: transaction.id } }).then(function( donationObj ) {
-			if ( donationObj !== null ) {
-				hooks.postRefund( donationObj );
+		database.Don.find({ "transactionID": transaction.id }, function( error, donation ) {
+			if ( !error && typeof donation[0] === "object" ) {
+				hooks.postRefund( donation );
 			}
 		});
     } else if ( stripeEvent.type === "invoice.payment_succeeded" ) {
@@ -33,14 +33,12 @@ exports.dispatcher = function( req, res ) {
 		customer = transaction.customer;
 		subscription = transaction.subscription;
 
-		database.DonorModel.find({ "customerID": customer}, function( error, donor ) {
-			console.log( error )
-
-			if ( !error && typeof donor[0] === "object" ) {
+		database.Donor.find({ where: { "customerID": customer } }).then(function( donorObj ) {
+			if ( donorObj !== null ) {
 				var donation = {
 					recurring: true,
-					donor: donor[0]._id,
-					email: donor[0].email,
+					donor: donorObj[0]._id,
+					email: donorObj[0].email,
 					date: transaction.date * 1000,
 					amount: transaction.amount_due,
 					transactionID: transaction.charge,
@@ -48,8 +46,6 @@ exports.dispatcher = function( req, res ) {
 				};
 
 				stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
-					console.log( error )
-
 					donation.campaign = subscription.metadata.campaign;
 
 					hooks.postDonate( donation );

@@ -36,11 +36,15 @@ describe("Single Refund", function() {
     });
 
     it("successfully saved the refund [database]", function( done ) {
-        database.Donation.find({ where: { transactionID: transaction } }).then(function( donationObj ) {            
-            should( donationObj ).be.ok;
-            should( donationObj.refunded ).equal(true);
+        setTimeout(function() {
+            database.Donation.find({ where: { transactionID: transaction } }).then(function( donationObj ) {
+                console.log( donationObj );
 
-            done();
-        });
+                should( donationObj ).be.ok;
+                should( donationObj.refunded ).equal(true);
+
+                done();
+            });
+        }, 2500);
     });
 });
