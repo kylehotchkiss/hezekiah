@@ -238,7 +238,7 @@ var dedupSubscription = function( donation, donorID, callback ) {
                 callback( error, false );
             } else {
                 console.log("Subscriptions")
-                console.log( subscriptions.data.length )
+                console.log( subscriptions )
 
                 if ( subscriptions.data.length ) {
                     var match = false;
