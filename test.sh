@@ -5,8 +5,9 @@ else
     git checkout testing > /dev/null 2>&1
     git merge -X theirs three > /dev/null 2>&1
     git commit -m "Update testing instance..." > /dev/null 2>&1
+    echo "Uploading to Heroku..."
     git push -f testing testing:master > /dev/null 2>&1
     git checkout three > /dev/null 2>&1
-
+    echo "Running Mocha tests..."
     mocha
 fi
