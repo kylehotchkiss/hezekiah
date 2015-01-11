@@ -231,10 +231,15 @@ var retrieveSubscriptions = function( donorID, callback ) {
 //
 var dedupSubscription = function( donation, donorID, callback ) {
     if ( donorID ) {
+        console.log("Donor ID: " + donorID);
+
         retrieveSubscriptions( donorID, function( error, subscriptions ) {
             if ( error ) {
                 callback( error, false );
             } else {
+                console.log("Subscriptions")
+                console.log( subscriptions.data.length )
+
                 if ( subscriptions.data.length ) {
                     var match = false;
 
