@@ -28,8 +28,6 @@ var retrieveDonor = function( donor, callback ) {
         if ( donorObj === null ) {
             callback( false, false );
         } else {
-            console.log( donorObj[0].toJSON() )
-
             callback( false, donorObj[0].toJSON() );
         }
     }, function( error ) {
@@ -40,10 +38,6 @@ var retrieveDonor = function( donor, callback ) {
 
 // Grab ID for Stripe Customer given an email address
 var retrieveCustomer = function( email, postal, callback ) {
-    console.log("Retrieving...")
-    console.log( email )
-    console.log( postal )
-
     var params = { "email": email };
 
     if ( typeof postal === "function" ) {
@@ -53,15 +47,9 @@ var retrieveCustomer = function( email, postal, callback ) {
     }
 
     database.Donor.find({ where: params }).then(function( donorObj ) {
-        console.log("Returning");
-
         if ( donorObj === null ) {
-            console.log("No Donor object found")
-
             callback( false, false );
         } else {
-            console.log( donorObj.customerID );
-
             callback( false, donorObj.customerID );
         }
     }, function( error ) {
@@ -85,31 +73,17 @@ var createCustomer = function( donation, callback ) {
                 customerID: customer.id
             };
 
-            console.log("Creating Customer");
-            console.log( customer.id )
-
             database.Donor.find({ where: { email: donation.email }}).then(function( donorObj ) {
                 if ( donorObj === null ) {
-                    console.log("Brand New");
-
                     database.Donor.create( donor ).then(function() {
                         callback( false, customer.id );
                     }, function( error ) {
-                        console.log( error )
-
                         callback( error, false );
                     });
                 } else {
-                    console.log("Updating...")
-
-                    console.log( donation.email )
-                    console.log( donor )
-
                     donorObj.updateAttributes( donor ).then(function() {
                         callback( false, customer.id );
                     }, function( error ) {
-                        console.log( error )
-
                         callback( error, false );
                     });
                 }
@@ -122,17 +96,9 @@ var createCustomer = function( donation, callback ) {
 
 
 var updateCustomer = function( donation, donorID, callback ) {
-    console.log("Update Customer")
-
-    console.log( donorID )
-
     stripe.customers.update(donorID, {
         card: donation.token
     }, function( error, customer ) {
-
-        console.log( error )
-        console.log( customer )
-
         if ( error ) {
             callback( error );
         } else {
@@ -156,14 +122,8 @@ var processDonor = function( donation, callback ) {
         if ( error || !donor ) {
             callback( true, false );
         } else {
-            console.log("Processed Donor:")
-
-            console.log( donor );
-
             if ( donation.recurring ) {
                 if ( !donor.customerID ) {
-                    console.log("Creating Customer because it did not formally exist")
-
                     createCustomer( donation, function( error, customerID ) {
                         if ( error ) {
                             callback( error, false );
@@ -174,8 +134,6 @@ var processDonor = function( donation, callback ) {
                 } else {
                     updateCustomer( donation, donor.customerID, function( error ) {
                         if ( error ) {
-                            console.log( error )
-
                             if ( error.type === "StripeInvalidRequest" ) {
                                 // Stripe Customer has been deleted, create new one.
                                 // Also, flag this. Huge data management issue.
@@ -272,24 +230,15 @@ var retrieveSubscriptions = function( donorID, callback ) {
 //
 var dedupSubscription = function( donation, donorID, callback ) {
     if ( donorID ) {
-        console.log("Donor ID: " + donorID);
-
         retrieveSubscriptions( donorID, function( error, subscriptions ) {
             if ( error ) {
                 callback( error, false );
             } else {
-                console.log("Subscriptions")
-                console.log( subscriptions )
-
                 if ( subscriptions.data.length ) {
                     var match = false;
 
                     for ( var i in subscriptions.data ) {
                         var subscription = subscriptions.data[i];
-
-                        console.log( "MATCHING SUBSCRIPTIONS: ")
-                        console.log( donation.campaign )
-                        console.log( subscription.metadata.campaign )
 
                         if ( subscription.metadata.campaign === donation.campaign ) {
                             match = true;

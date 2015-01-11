@@ -92,9 +92,6 @@ describe("Special Features", function() {
                         form: data.monthly.donation,
                         json: true
                     }, function( error, response, body ) {
-                        console.log( error )
-                        console.log( body )
-
                         should( body.status ).equal("error");
 
                         done();
