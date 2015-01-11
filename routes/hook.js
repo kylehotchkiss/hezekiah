@@ -22,7 +22,7 @@ exports.dispatcher = function( req, res ) {
 
 		database.Donation.find({ where: { "transactionID": transaction.id } }).then(function( donationObj ) {
 			if ( donationObj !== null ) {
-				hooks.postRefund( donationObj );
+				hooks.postRefund( donationObj.toJSON() );
 			}
 		});
     } else if ( stripeEvent.type === "invoice.payment_succeeded" ) {

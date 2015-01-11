@@ -20,8 +20,8 @@
     },
     "monthly": {
         "donation": {
-            "name": "Just Mocha",
-            "email": "testing@illuminatenations.org",
+            "name": "Monthly Mocha",
+            "email": "testing+number2@illuminatenations.org",
             "campaign": "mocha",
             "description": "Mocha Test Suite",
             "addressCity": "Lynchburg",

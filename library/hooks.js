@@ -21,14 +21,18 @@ refund
 // Helper/Wrapper functions around our various interfaces
 //
 var save = function( donation, callback ) {
-    database.Donation.find({ where: { id: donation._id } }).then(function( donationObj ) {
+    database.Donation.find({ where: { id: donation.id } }).then(function( donationObj ) {
         if ( donationObj === null ) {
+            console.log("New Donation Object")
+
             database.Donation.create( donation ).then(function() {
                 if ( typeof callback === "function" ) {
                     callback( false );
                 }
             });
         } else {
+            console.log("Updating Donation Object")
+
             donationObj.updateAttributes( donation ).then(function() {
                 if ( typeof callback === "function" ) {
                     callback( false );
