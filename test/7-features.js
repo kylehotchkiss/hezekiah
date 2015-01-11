@@ -35,6 +35,8 @@ var tokenize = function( card, callback ) {
 
 describe("Special Features", function() {
     it("successfully rejects a duplicate donation [api]", function( done ) {
+        data.single.donation.campaign = "duplicate";
+
         tokenize(data.single.card, function( token ) {
             data.single.donation.token = token;
 

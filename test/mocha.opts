@@ -2,5 +2,4 @@
 --ui tdd
 --slow 30000
 --timeout 60000
---no-exit
 --bail
