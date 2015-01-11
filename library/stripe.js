@@ -28,9 +28,9 @@ var retrieveDonor = function( donor, callback ) {
         if ( donorObj === null ) {
             callback( false, false );
         } else {
-            console.log( donorObj )
+            console.log( donorObj[0] )
 
-            callback( false, donorObj[0] );
+            callback( false, donorObj[0].toJSON() );
         }
     }, function( error ) {
         callback( error, false );
