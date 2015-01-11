@@ -28,7 +28,7 @@ var retrieveDonor = function( donor, callback ) {
         if ( donorObj === null ) {
             callback( false, false );
         } else {
-            console.log( donorObj[0] )
+            console.log( donorObj[0].toJSON() )
 
             callback( false, donorObj[0].toJSON() );
         }
@@ -148,6 +148,10 @@ var processDonor = function( donation, callback ) {
         if ( error || !donor ) {
             callback( true, false );
         } else {
+            console.log("Processed Donor:")
+
+            console.log( donor );
+
             if ( donation.recurring ) {
                 if ( !donor.customerID ) {
                     createCustomer( donation, function( error, customerID ) {
