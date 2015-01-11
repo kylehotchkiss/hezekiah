@@ -25,14 +25,14 @@ var save = function( donation, callback ) {
         if ( donationObj === null ) {
             console.log("New Donation Object")
 
+            console.log( donationObj )
+
             database.Donation.create( donation ).then(function() {
                 if ( typeof callback === "function" ) {
                     callback( false );
                 }
             });
         } else {
-            console.log("Updating Donation Object")
-
             donationObj.updateAttributes( donation ).then(function() {
                 if ( typeof callback === "function" ) {
                     callback( false );
