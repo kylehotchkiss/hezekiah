@@ -47,7 +47,7 @@ exports.dispatcher = function( req, res ) {
 				};
 
 				stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
-					donation.ip = subscription.metadata.campaign;
+					donation.ip = subscription.metadata.ip;
 					donation.campaign = subscription.metadata.campaign;
 					donation.description = subscription.metadata.description;
 

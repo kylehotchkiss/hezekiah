@@ -23,10 +23,6 @@ refund
 var save = function( donation, callback ) {
     database.Donation.find({ where: { id: donation.id } }).then(function( donationObj ) {
         if ( donationObj === null ) {
-            console.log("New Donation Object")
-
-            console.log( donationObj )
-
             database.Donation.create( donation ).then(function() {
                 if ( typeof callback === "function" ) {
                     callback( false );
@@ -109,8 +105,6 @@ exports.postRefund = function( donation, callback ) {
     donation.refunded = true;
 
     save( donation );
-
-    donation.amount = ( donation.amount / 100 ).toFixed(2);
 
     slack("[refund] A $" + donation.amount + " donation for " + donation.description + " was successfully refunded" );
     receipt( donation, "Your donation has been refunded", "refund-receipt" );

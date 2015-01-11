@@ -15,7 +15,7 @@ var database = require("../models");
 
 var data = require("./data.json");
 var subscription = "";
-data.monthly.donation.amount =  ((( Math.random() * 100 )) * 100).toFixed(0);
+data.monthly.donation.amount = ((( Math.random() * 100 )) * 100).toFixed(0);
 
 
 describe("Begin Subscriptions - New Donor", function() {
@@ -68,5 +68,13 @@ describe("Begin Subscriptions - New Donor", function() {
         });
     });
 
-
+    it("successfully saved the first transaction [database]", function( done ) {
+        database.Donation.find({ where: { subscriptionID: subscription } }).then(function( donationObj ) {
+            should( donationObj ).be.ok;
+            should( donationObj.amount ).equal( data.monthly.donation.amount );
+            should( donationObj.campaign ).equal( data.monthly.donation.campaign );
+                        
+            done();
+        });
+    });
 });
