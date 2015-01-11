@@ -3,9 +3,9 @@ if [[ -n $(git status --porcelain) ]]; then
 else
     echo "Update testing instance..."
     git checkout testing > /dev/null 2>&1
-    git add --all . > /dev/null 2>&1
+    git merge -X theirs three > /dev/null 2>&1
     git commit -m "Update testing instance..." > /dev/null 2>&1
-    git push -f testing three:master > /dev/null 2>&1
+    git push -f testing testing:master > /dev/null 2>&1
     git checkout three > /dev/null 2>&1
 
     mocha
