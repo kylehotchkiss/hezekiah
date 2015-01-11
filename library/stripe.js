@@ -28,6 +28,8 @@ var retrieveDonor = function( donor, callback ) {
         if ( donorObj === null ) {
             callback( false, false );
         } else {
+            console.log( donorObj )
+
             callback( false, donorObj[0] );
         }
     }, function( error ) {
@@ -52,7 +54,7 @@ var retrieveCustomer = function( email, postal, callback ) {
 
     database.Donor.find({ where: params }).then(function( donorObj ) {
         console.log("Returning");
-        
+
         if ( donorObj === null ) {
             console.log("No Donor object found")
 
