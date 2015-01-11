@@ -184,14 +184,14 @@ var processDonor = function( donation, callback ) {
                                     if ( error ) {
                                         callback( error, false );
                                     } else {
-                                        callback( false, donor.id, customerID );
+                                        callback( false, donor.id, donor.customerID );
                                     }
                                 });
                             } else {
                                 callback( error, false );
                             }
                         } else {
-                            callback( false, donor.id, customerID );
+                            callback( false, donor.id, donor.customerID );
                         }
                     });
                 }
