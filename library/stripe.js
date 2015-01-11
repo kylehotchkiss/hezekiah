@@ -122,10 +122,14 @@ var createCustomer = function( donation, callback ) {
 
 
 var updateCustomer = function( donation, donorID, callback ) {
+    console.log("Update Customer")
+
+    console.log( donorID )
+
     stripe.customers.update(donorID, {
         card: donation.token
     }, function( error, customer ) {
-        console.log("Update Customer")
+
         console.log( error )
         console.log( customer )
 
@@ -168,7 +172,7 @@ var processDonor = function( donation, callback ) {
                         }
                     });
                 } else {
-                    updateCustomer( donation, donor.id, function( error ) {
+                    updateCustomer( donation, donor.customerID, function( error ) {
                         if ( error ) {
                             console.log( error )
 
