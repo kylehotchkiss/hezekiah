@@ -15,7 +15,7 @@ exports.dispatcher = function( req, res ) {
 	var stripeEvent = req.body;
 	var transaction = stripeEvent.data.object;
 
-	if ( stripeEvent.type === "charge.refunded" || stripeEvent.type === "charge.dispute.funds_withdrawn" ) {
+	if ( stripeEvent.type === "charge.refunded" || stripeEvent.type === "charge.dispute.closed" ) {
 		//
 		// Refund or dispute successfully processed
 		//

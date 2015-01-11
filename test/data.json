@@ -2,7 +2,7 @@
     "single": {
         "donation": {
             "name": "Just Mocha",
-            "email": "testing@illuminatenations.org",
+            "email": "testing+single@illuminatenations.org",
             "campaign": "mocha",
             "description": "Mocha Test Suite",
             "addressCity": "Lynchburg",
@@ -21,7 +21,7 @@
     "monthly": {
         "donation": {
             "name": "Monthly Mocha",
-            "email": "testing+number2@illuminatenations.org",
+            "email": "testing+monthly@illuminatenations.org",
             "campaign": "mocha",
             "description": "Mocha Test Suite",
             "addressCity": "Lynchburg",
@@ -33,6 +33,25 @@
         },
         "card": {
             "number": "4012 8888 8888 1881",
+            "exp_year": 2020,
+            "exp_month": 6
+        }
+    },
+    "stolen": {
+        "donation": {
+            "name": "Chargeback Charlie",
+            "email": "testing+chargeback@illuminatenations.org",
+            "campaign": "mocha",
+            "description": "Mocha Test Suite",
+            "addressCity": "Lynchburg",
+            "addressState": "Virginia",
+            "addressStreet": "125 Portico Street",
+            "addressPostal": "24502",
+            "addressCountry": "US",
+            "session": "HEZEKIAH-TEST-SUITE"
+        },
+        "card": {
+            "number": "4000 0000 0000 0259",
             "exp_year": 2020,
             "exp_month": 6
         }
