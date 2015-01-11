@@ -38,6 +38,10 @@ var retrieveDonor = function( donor, callback ) {
 
 // Grab ID for Stripe Customer given an email address
 var retrieveCustomer = function( email, postal, callback ) {
+    console.log("Retrieving...")
+    console.log( email )
+    console.log( postal )
+
     var params = { "email": email };
 
     if ( typeof postal === "function" ) {
@@ -46,11 +50,17 @@ var retrieveCustomer = function( email, postal, callback ) {
         params.addressPostal = postal;
     }
 
-    database.Donor.find({ where: params }).then(function( donor ) {
-        if ( donor === null ) {
+    database.Donor.find({ where: params }).then(function( donorObj ) {
+        console.log("Returning");
+        
+        if ( donorObj === null ) {
+            console.log("No Donor object found")
+
             callback( false, false );
         } else {
-            callback( false, donor.customerID);
+            console.log( donorObj.customerID );
+
+            callback( false, donorObj.customerID );
         }
     }, function( error ) {
         callback( error, false );
@@ -89,6 +99,9 @@ var createCustomer = function( donation, callback ) {
                     });
                 } else {
                     console.log("Updating...")
+
+                    console.log( donation.email )
+                    console.log( donor )
 
                     donorObj.updateAttributes( donor ).then(function() {
                         callback( false, customer.id );
