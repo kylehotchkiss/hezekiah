@@ -15,7 +15,7 @@ var database = require("../models");
 
 var data = require("./data.json");
 var subscription = "";
-data.single.donation.amount = (( Math.random() * 100 ).toFixed(2)) * 100;
+data.single.donation.amount =  ((( Math.random() * 100 )) * 100).toFixed(0);
 
 
 describe("Starting Monthly Donations", function() {

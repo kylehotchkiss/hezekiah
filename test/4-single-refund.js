@@ -1,0 +1,49 @@
+//
+// Illuminate Nations - Hezekiah v.0.3.0
+// Copyright 2013-2014 Illuminate Nations
+// Released under the General Public Licence
+// Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
+//
+
+// Localhost Testing
+require("node-env-file")(__dirname + "/../.env.testing");
+
+var should = require("should");
+var stripe = require("stripe")( "sk_test_NNOEYfuSLvdLlZrd7jNFRIzg" );
+var request = require("request");
+var database = require("../models");
+var mandrill = require("../library/mandrill");
+
+var data = require("./data.json");
+var transaction = "";
+data.single.donation.amount = ((( Math.random() * 100 )) * 100).toFixed(0);
+
+
+describe("Single Refund", function() {
+    it("successfully processed the refund [stripe]", function( done ) {
+        // We're running in a sterilized test environment, so we can assume
+        // that ID 0 is our first single donation from earlier. We don't want
+        // to query it and risk tainted data later on.
+
+        database.Donation.find( 0 ).then(function( donationObj ) {
+            should( donationObj ).be.ok();
+
+            var transaction = donationObj.transactionID;
+
+            stripe.charges.createRefund( transaction, {}, function( error, refund ) {
+                should( error ).not.be.ok();
+
+                done();
+            });
+        });
+    });
+
+    it("successfully saved the refund [database]", function( done ) {
+        database.Donation.find({ where: { transactionID: transaction }}).then(function( donationObj ) {
+            should( donationObj ).be.ok();
+            should( donationObj.refunded ).equal(true);
+
+            done();
+        });
+    });
+});

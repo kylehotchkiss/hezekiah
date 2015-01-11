@@ -17,10 +17,10 @@ var mandrill = require("../library/mandrill");
 var data = require("./data.json");
 var receiptID = "";
 var transaction = "";
-data.single.donation.amount = (( Math.random() * 100 ).toFixed(2)) * 100;
+data.single.donation.amount = ((( Math.random() * 100 )) * 100).toFixed(0);
 
 
-describe("One Time Donation", function() {
+describe("Single Donation", function() {
     it("successfully processed the donation [api]", function( done ) {
         stripe.tokens.create({
             card: data.single.card
@@ -33,9 +33,6 @@ describe("One Time Donation", function() {
                 form: data.single.donation,
                 json: true
             }, function( error, response, body ) {
-
-                console.log( error )
-                console.log( body )
 
                 should( body.status ).equal("success");
                 should( body.transaction ).match(/ch_(.*)$/);
