@@ -1,5 +1,5 @@
 --reporter spec
 --ui tdd
---slow 30000
+--slow 45000
 --timeout 60000
 --bail

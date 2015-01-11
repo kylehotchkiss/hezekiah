@@ -36,13 +36,23 @@ describe("Single Refund", function() {
     });
 
     it("successfully saved the refund [webhooks]", function( done ) {
-        setTimeout(function() {
-            database.Donation.find({ where: { transactionID: transaction } }).then(function( donationObj ) {
-                should( donationObj ).be.ok;
-                should( donationObj.refunded ).equal(true);
+        var counter = 0;
 
-                done();
+        var findTransaction = (function findTransaction() {
+            counter++;
+
+            database.Donation.find({ where: { transactionID: transaction } }).then(function( donationObj ) {
+                if ( donationObj === null || donationObj.refunded !== true ) {
+                    setTimeout(function() {
+                        findTransaction();
+                    }, 5000);
+                } else {
+                    should( donationObj ).be.ok;
+                    should( donationObj.refunded ).equal(true);
+
+                    done();
+                }
             });
-        }, 30000);
+        })();
     });
 });

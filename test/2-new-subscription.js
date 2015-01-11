@@ -69,18 +69,28 @@ describe("Begin Subscriptions - New Donor", function() {
     });
 
     it("successfully saved the first transaction [webhooks]", function( done ) {
-        setTimeout(function() {
+        var counter = 0;
+
+        var findTransaction = (function findTransaction() {
+            counter++;
+
             database.Donation.find({ where: { subscriptionID: subscription } }).then(function( donationObj ) {
-                // We need to round the amount the same way that the backend will - converting to a dollar
-                // amount and rounding via toFixed();
-                var roundedAmount = (Math.floor( data.monthly.donation.amount / 100 )  * 100).toString();
+                if ( donationObj === null ) {
+                    setTimeout(function() {
+                        findTransaction();
+                    }, 5000);
+                } else {
+                    // We need to round the amount the same way that the backend will - converting to a dollar
+                    // amount and rounding via toFixed();
+                    var roundedAmount = (Math.floor( data.monthly.donation.amount / 100 )  * 100).toString();
 
-                should( donationObj ).be.ok;
-                should( donationObj.amount ).equal( roundedAmount );
-                should( donationObj.campaign ).equal( data.monthly.donation.campaign );
+                    should( donationObj ).be.ok;
+                    should( donationObj.amount ).equal( roundedAmount );
+                    should( donationObj.campaign ).equal( data.monthly.donation.campaign );
 
-                done();
+                    done();
+                }
             });
-        }, 30000);
+        })();
     });
 });
