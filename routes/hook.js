@@ -20,7 +20,7 @@ exports.dispatcher = function( req, res ) {
 		// Refund or dispute successfully processed
 		//
 
-		console.log( trsnaction );
+		console.log( transaction );
 
 		database.Donation.find({ where: { "transactionID": transaction.id } }).then(function( donationObj ) {
 			if ( donationObj !== null ) {
