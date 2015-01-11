@@ -49,6 +49,8 @@ describe("Single Donation", function() {
         stripe.charges.retrieve(transaction, function( error, charge ) {
             charge.should.have.property("amount");
 
+            // TODO: Check transaction amount
+
             done();
         });
     });

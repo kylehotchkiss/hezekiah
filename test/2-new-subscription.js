@@ -51,6 +51,8 @@ describe("Begin Subscriptions - New Donor", function() {
                 function( error, subscription ) {
                     should( subscription.status ).equal("active");
 
+                    // TODO: Check transaction amount
+
                     done();
                 });
 

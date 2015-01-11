@@ -40,7 +40,7 @@ exports.dispatcher = function( req, res ) {
 					DonorId: donorObj.id,
 					email: donorObj.email,
 					date: transaction.date * 1000,
-					amount: transaction.amount_due,
+					amount: transaction.amount_due.toFixed(0),
 					transactionID: transaction.charge,
 					subscriptionID: transaction.lines.data.id
 				};
