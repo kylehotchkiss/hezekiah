@@ -35,7 +35,7 @@ describe("Single Refund", function() {
         });
     });
 
-    it("successfully saved the refund [database]", function( done ) {
+    it("successfully saved the refund [webhooks]", function( done ) {
         setTimeout(function() {
             database.Donation.find({ where: { transactionID: transaction } }).then(function( donationObj ) {
                 should( donationObj ).be.ok;

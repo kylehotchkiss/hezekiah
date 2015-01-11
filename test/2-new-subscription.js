@@ -68,7 +68,7 @@ describe("Begin Subscriptions - New Donor", function() {
         });
     });
 
-    it("successfully saved the first transaction [database]", function( done ) {
+    it("successfully saved the first transaction [webhooks]", function( done ) {
         setTimeout(function() {
             database.Donation.find({ where: { subscriptionID: subscription } }).then(function( donationObj ) {
                 // We need to round the amount the same way that the backend will - converting to a dollar

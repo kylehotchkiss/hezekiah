@@ -14,9 +14,9 @@ var database = require("../models");
 
 describe("Setup Tests", function() {
     it("successfully resets the database", function( done ) {
-        database.sequelize.sync({ force: true });
-
-        done();
+        database.sequelize.sync({ force: true }).then(function() {
+            done();
+        });
     });
 
     it("successfully wakes up the testing server", function( done ) {
