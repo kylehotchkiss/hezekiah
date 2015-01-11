@@ -38,8 +38,6 @@ describe("Single Refund", function() {
     it("successfully saved the refund [database]", function( done ) {
         setTimeout(function() {
             database.Donation.find({ where: { transactionID: transaction } }).then(function( donationObj ) {
-                console.log( donationObj );
-
                 should( donationObj ).be.ok;
                 should( donationObj.refunded ).equal(true);
 

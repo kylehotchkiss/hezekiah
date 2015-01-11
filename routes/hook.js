@@ -37,16 +37,19 @@ exports.dispatcher = function( req, res ) {
 			if ( donorObj !== null ) {
 				var donation = {
 					recurring: true,
+					source: "stripe",
 					DonorId: donorObj.id,
 					email: donorObj.email,
 					date: transaction.date * 1000,
-					amount: transaction.amount_due.toFixed(0),
 					transactionID: transaction.charge,
-					subscriptionID: transaction.lines.data.id
+					amount: transaction.amount_due.toFixed(0),
+					subscriptionID: transaction.lines.data[0].id
 				};
 
 				stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
+					donation.ip = subscription.metadata.campaign;
 					donation.campaign = subscription.metadata.campaign;
+					donation.description = subscription.metadata.description;
 
 					hooks.postDonate( donation );
 				});

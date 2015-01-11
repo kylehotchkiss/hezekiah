@@ -96,12 +96,10 @@ exports.postDonate = function( donation, callback ) {
     receipt( donation, "Thank you for your donation!", "donation-receipt", function( error, receipt ) {
         donation.receiptID = receipt;
 
-        save( donation, function() {
-            donation.amount = ( donation.amount / 100 ).toFixed(2);
-            slack("[donation] A $" + donation.amount + " donation for " + donation.description + " was successfully processed" );
-            notification( donation, "[donation] A donation has been processed", "donation-notification" );
-            subscribe( donation );
-        });
+        save( donation );
+        slack("[donation] A $" + donation.amount + " donation for " + donation.description + " was successfully processed" );
+        notification( donation, "[donation] A donation has been processed", "donation-notification" );
+        subscribe( donation );
     });
 
     // quickbooks

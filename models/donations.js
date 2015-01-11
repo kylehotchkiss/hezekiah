@@ -9,9 +9,8 @@ module.exports = function( sequelize, type ) {
     var Donation = sequelize.define('Donation', {
         id: { type: type.INTEGER, primaryKey: true, autoIncrement: true, unique: true },
 
-        ip: { type: type.STRING },
-        email: { type: type.STRING },
 
+        email: { type: type.STRING },
         amount: { type: type.DECIMAL },
         campaign: { type: type.STRING },
         description: { type: type.STRING },
@@ -19,6 +18,7 @@ module.exports = function( sequelize, type ) {
         source: { type: type.STRING },
         subcampaign: { type: type.STRING },
 
+        ip: { type: type.STRING },
         transactionID: { type: type.STRING, unique: true },
         subscriptionID: { type: type.STRING },
         receiptID: { type: type.STRING },

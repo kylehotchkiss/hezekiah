@@ -338,11 +338,10 @@ exports.monthly = function( donation, callback ) {
                             quantity: Math.floor( donation.amount / 100 ),
                             metadata: {
                                 ip: donation.ip,
-                                name: donation.name,
                                 email: donation.email,
-                                postal: donation.addressPostal,
                                 campaign: donation.campaign,
-                                description: donation.description
+                                description: donation.description,
+                                subcampaign: donation.subcampaign                                
                             }
                         }, function( error, subscription ) {
                             if ( error ) {
