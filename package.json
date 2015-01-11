@@ -28,7 +28,7 @@
     "raven": "^0.7.2",
     "request": "~2.34.0",
     "sequelize": "^2.0.0-rc6",
-    "stripe": "~2.4.4",
+    "stripe": "~3.0.3",
     "swig": "^1.4.2",
     "validator": "^3.19.1",
     "with-env": "^0.1.0"

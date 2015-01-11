@@ -20,9 +20,9 @@ exports.dispatcher = function( req, res ) {
 		// Refund or dispute successfully processed
 		//
 
-		database.DonationModel.find({ "transactionID": transaction.id }, function( error, donation ) {
-			if ( !error && typeof donation[0] === "object" ) {
-				hooks.postRefund( donation );
+		database.Donation.find({ where: { transactionID: transaction.id } }).then(function( donationObj ) {
+			if ( donationObj !== null ) {
+				hooks.postRefund( donationObj );
 			}
 		});
     } else if ( stripeEvent.type === "invoice.payment_succeeded" ) {

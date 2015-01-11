@@ -116,7 +116,7 @@ exports.postRefund = function( donation, callback ) {
 };
 
 exports.postSubscribe = function( subscription, callback ) {
-    slack("[subscriptions] A $" + donation.amount + " subscription for " + donation.description + " was successfully started" );
+    slack("[subscriptions] A $" + subscription.amount + " subscription for " + subscription.description + " was successfully started" );
     receipt( subscription, "You now make monthly donations!", "subscription-receipt" );
     notification( subscription, "[subscriptions] A donor has enabled automatic donations", "subscription-notification" );
 };

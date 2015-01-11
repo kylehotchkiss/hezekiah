@@ -18,7 +18,7 @@ var subscription = "";
 data.single.donation.amount =  ((( Math.random() * 100 )) * 100).toFixed(0);
 
 
-describe("Starting Monthly Donations", function() {
+describe("Begin Subscriptions - Previous Donor", function() {
     it("successfully processed the subscription [api]", function( done ) {
         stripe.tokens.create({
             card: data.single.card
