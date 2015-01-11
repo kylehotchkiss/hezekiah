@@ -136,7 +136,7 @@ var updateCustomer = function( donation, donorID, callback ) {
         if ( error ) {
             callback( error );
         } else {
-            database.donor.find({ where: { customerID: donorID }}).then(function( donorObj ) {
+            database.Donor.find({ where: { customerID: donorID }}).then(function( donorObj ) {
                 donorObj.updateAttributes({ subscriber: true }).then(function() {
                     callback( false );
                 }, function( error ) {
