@@ -20,7 +20,13 @@ exports.dispatcher = function( req, res ) {
 		// Refund or dispute successfully processed
 		//
 
-		console.log( transaction );
+		var id;
+
+		if ( stripeEvent.type === "charge.refunded" ){
+			id = transaction.id;
+		} else {
+			id = transaction.charge;
+		}
 
 		database.Donation.find({ where: { "transactionID": transaction.id } }).then(function( donationObj ) {
 			if ( donationObj !== null ) {
