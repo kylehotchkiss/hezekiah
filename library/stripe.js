@@ -125,6 +125,10 @@ var updateCustomer = function( donation, donorID, callback ) {
     stripe.customers.update(donorID, {
         card: donation.token
     }, function( error, customer ) {
+        console.log("Update Customer")
+        console.log( error )
+        console.log( customer )
+
         if ( error ) {
             callback( error );
         } else {
@@ -154,6 +158,8 @@ var processDonor = function( donation, callback ) {
 
             if ( donation.recurring ) {
                 if ( !donor.customerID ) {
+                    console.log("Creating Customer because it did not formally exist")
+
                     createCustomer( donation, function( error, customerID ) {
                         if ( error ) {
                             callback( error, false );
@@ -164,6 +170,8 @@ var processDonor = function( donation, callback ) {
                 } else {
                     updateCustomer( donation, donor.id, function( error ) {
                         if ( error ) {
+                            console.log( error )
+
                             if ( error.type === "StripeInvalidRequest" ) {
                                 // Stripe Customer has been deleted, create new one.
                                 // Also, flag this. Huge data management issue.
