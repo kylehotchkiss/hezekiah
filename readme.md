@@ -1,5 +1,6 @@
 # Hezekiah Fundraising Platform
 *You worked hard to show passionate people your cause.*
+
 *Hezekiah make it easier for donors to get involved and donate*
 
 ## Features
@@ -12,8 +13,9 @@
 * Refunds, chargebacks, etc? We'll make sure those are taken care of in your records so you don't have to.
 * Want to do-it-yourself? Build your own donation forms; with your own styling, validation, and techniques, then `POST` the donation to us&Dagger;.
 
-** &dagger; De-duplication runs on a 5-minute basis for single donations and campaign basis for monthly donations. **
-** &Dagger; Hezekiah will only store documented donor data - not additional fields specific to your campaign. HTTPS is required on your custom donation page. **
+*&dagger; De-duplication runs on a 5-minute basis for single donations and campaign basis for monthly donations.*
+
+*&Dagger; Hezekiah will only store documented donor data - not additional fields specific to your campaign. HTTPS is required on your custom donation page.*
 
 ## Integrations
 

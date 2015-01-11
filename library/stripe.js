@@ -70,21 +70,31 @@ var createCustomer = function( donation, callback ) {
         } else {
             var donor = {
                 subscriber: true,
-                lastAction: Date.now(),
                 customerID: customer.id
             };
 
+            console.log("Creating Customer");
+            console.log( customer.id )
+
             database.Donor.find({ where: { email: donation.email }}).then(function( donorObj ) {
                 if ( donorObj === null ) {
+                    console.log("Brand New");
+
                     database.Donor.create( donor ).then(function() {
                         callback( false, customer.id );
                     }, function( error ) {
+                        console.log( error )
+
                         callback( error, false );
                     });
                 } else {
+                    console.log("Updating...")
+
                     donorObj.updateAttributes( donor ).then(function() {
                         callback( false, customer.id );
                     }, function( error ) {
+                        console.log( error )
+
                         callback( error, false );
                     });
                 }
