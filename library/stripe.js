@@ -359,6 +359,10 @@ exports.monthly = function( donation, callback ) {
 
 exports.retrieve = function( email, postal, callback ) {
     retrieveCustomer( email, postal, function( error, donorID ) {
+        console.log( email )
+        console.log( postal )
+        console.log( donorID )
+
         if ( error ) {
             callback( error, false );
         } else {

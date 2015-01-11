@@ -10,7 +10,7 @@ var environment = process.env.NODE_ENV || 'development';
 if ( environment === "production" ) {
     require('newrelic');
 } else if ( environment === "development" ) {
-    require('node-env-file')(__dirname + '/.env');
+    require('node-env-file')(__dirname + '/.env.testing');
 }
 
 var meta = require('./package.json');
