@@ -72,4 +72,20 @@ describe("Begin Subscriptions - Previous Donor", function() {
             done();
         });
     });
+
+    it("successfully saved the first transaction [database]", function( done ) {
+        setTimeout(function() {
+            database.Donation.find({ where: { subscriptionID: subscription } }).then(function( donationObj ) {
+                // We need to round the amount the same way that the backend will - converting to a dollar
+                // amount and rounding via toFixed();
+                var roundedAmount = (Math.floor( data.single.donation.amount / 100 )  * 100).toString();
+
+                should( donationObj ).be.ok;
+                should( donationObj.amount ).equal( roundedAmount );
+                should( donationObj.campaign ).equal( data.single.donation.campaign );
+
+                done();
+            });
+        }, 10000);
+    });
 });
