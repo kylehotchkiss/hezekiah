@@ -57,6 +57,8 @@ describe("Cancel Subscription", function() {
     it("successfully removes the subscriber flag from the donor [database]", function( done ) {
         database.Donor.find({ where: { email: data.monthly.donation.email }}).then(function( donorObj ) {
             should( donorObj.subscriber ).equal( false );
+
+            done();
         });
     });
 

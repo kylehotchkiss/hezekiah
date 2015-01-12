@@ -5,6 +5,7 @@
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
+var api = require("../library/api.js");
 var hooks = require("../library/hooks.js");
 var stripe = require("../library/stripe.js");
 var database = require("../models");
@@ -44,11 +45,11 @@ exports.one = function( req, res ) {
     var errors = req.validationErrors();
 
     if ( errors ) {
-        res.send('There have been validation errors: ' + JSON.stringify( errors ), 400);
+        api.error( req, res, "validation", "Please correct the following fields", req.validationErrors(true) );
     } else {
         stripe.single(donation, function( error, charge ) {
             if ( error ) {
-                res.json({ status: "error", error: error.code, message: error.message });
+                api.error( req, res, error.code, error.message );
             } else {
                 res.json({ status: "success", transaction: charge.id });
 
@@ -95,12 +96,11 @@ exports.monthly = function( req, res ) {
     var errors = req.validationErrors();
 
     if ( errors ) {
-        res.send('There have been validation errors: ' + JSON.stringify( errors ), 400);
+        api.error( req, res, "validation", "Please correct the following fields", req.validationErrors(true) );
     } else {
         stripe.monthly(donation, function( error, subscription ) {
             if ( error ) {
-                // TODO: this is proper error json
-                res.json({ status: "error", error: error.slug, message: error.message });
+                api.error( req, res, error.code, error.message );
             } else {
                 res.json({ status: "success", subscription: subscription.id });
             }
@@ -115,13 +115,13 @@ exports.retrieve = function( req, res ) {
     if ( email && postal ) { // TODO FILTER
         stripe.retrieve(email, postal, function( error, total ) {
             if ( error ) {
-                res.json({ status: "error", error: error });
+                api.error( req, res, error );
             } else {
                 res.json({ status: "success", total: total });
             }
         });
     } else {
-        res.json({ status: "error", error: "validation", message: "You must provide your email and postal code" });
+        api.error( req, res, "validation", "You must provide your email and postal code" );
     }
 };
 
@@ -138,6 +138,6 @@ exports.cancel = function( req, res ) {
             }
         });
     } else {
-        res.json({ status: "error", error: "validation", message: "You must provide your email and postal code" });
+        api.error( req, res, "validation", "You must provide your email and postal code" );
     }
 };

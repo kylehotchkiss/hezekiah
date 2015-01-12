@@ -14,7 +14,6 @@ var mailchimp = require("../library/mailchimp.js");
     send to quickbooks
 
 refund
-    send to db
     send to quickbooks (?) */
 
 //

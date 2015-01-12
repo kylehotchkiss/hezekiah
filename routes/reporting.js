@@ -89,8 +89,9 @@ exports.annual = function( req, res ) {
 
 exports.donors = function( req, res ) {
 
-    database.DonationModel.find().sort([ [ "lastAction", "descending" ] ]).exec(function( error, donors ) {
-        res.render("reporting/report.html", { report: donors });
+    database.Donation.findAll({ include: [ database.Donor ] }).then(function( donorsObj ) {
+        console.log( donorsObj )
+        res.render("reporting/report.html", { report: donorsObj });
     });
 
 };

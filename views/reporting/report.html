@@ -60,9 +60,9 @@
                         <tbody>
                             {% for donation in report %}
                                 <tr>
-                                    <td>{{ donation.date.toISOString() }}</td>
-                                    <td>{{ donation.donor.name }}<br />{{ donation.email }}</td>
-                                    <td>${{ donation.amount.toFixed(2) }}</td>
+                                    <td>{{ donation.createdAt.toISOString() }}</td>
+                                    <td>{{ donation.Donor.name }}<br />{{ donation.email }}</td>
+                                    <td>${{ donation.amount / 100 }}</td>
                                     <td>{{ donation.campaign }}</td>
                                     <td><a href="https://dashboard.stripe.com/payments/{{ donation.transactionID }}">Details</a></td>
                                 </tr>
