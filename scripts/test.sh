@@ -18,6 +18,5 @@ else
 
     echo "Running Mocha tests..."
     export XUNIT_FILE=$CIRCLE_TEST_REPORTS/xunit.xml
-    echo $XUNIT_FILE
     mocha -R xunit-file
 fi
