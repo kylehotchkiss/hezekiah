@@ -1,4 +1,8 @@
 machine:
   timezone:
     America/New_York
-    
+
+general:
+  branches:
+    only:
+      - three

@@ -13,12 +13,6 @@ var request = require("request");
 var database = require("../models");
 
 describe("Setup Tests", function() {
-    it("successfully resets the database", function( done ) {
-        database.sequelize.sync({ force: true }).then(function() {
-            done();
-        });
-    });
-
     it("successfully wakes up the testing server", function( done ) {
         request({
             url: process.env.HEZ_TESTING_SERVER + "/health",
