@@ -1,6 +1,6 @@
 git status --porcelain
 
-if [ -z $(git status --porcelain) ]; then
+if [[ -n $(git status --porcelain) ]]; then
     echo "There are uncommited changes -- please commit before proceeding with testing"
 else
     echo "Update testing instance..."
