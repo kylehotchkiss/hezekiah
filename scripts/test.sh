@@ -11,7 +11,7 @@ else
     git push -f testing testing:master > /dev/null 2>&1
     git checkout three > /dev/null 2>&1
     echo "Resetting Database..."
-    node database.create.testing.js > /dev/null 2>&1
+    node database.create.testing.js 
     echo "Running Mocha tests..."
     mocha
 fi
