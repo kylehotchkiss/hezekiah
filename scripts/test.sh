@@ -14,5 +14,7 @@ else
     echo "Resetting Database..."
     node scripts/database.create.testing.js > /dev/null 2>&1
     echo "Running Mocha tests..."
+    echo $CIRCLE_TEST_REPORTS
+    echo $CIRCLE_TEST_REPORTS/xunit.xml
     UNIT_FILE=$CIRCLE_TEST_REPORTS/xunit.xml mocha -R xunit-file
 fi
