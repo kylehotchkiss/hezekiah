@@ -17,7 +17,7 @@ else
     node scripts/database.create.testing.js > /dev/null 2>&1
 
     echo "Running Mocha tests..."
-    export UNIT_FILE=$CIRCLE_TEST_REPORTS/xunit.xml
-    echo $UNIT_FILE
+    export XUNIT_FILE=$CIRCLE_TEST_REPORTS/xunit.xml
+    echo $XUNIT_FILE
     mocha -R xunit-file
 fi
