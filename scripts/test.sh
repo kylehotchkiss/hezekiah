@@ -4,7 +4,7 @@ if [ ! -d ".git" ]; then
     git commit -m "CircleCI Git Init" > /dev/null 2>&1
 fi
 
-git status
+git status --porcelain
 
 if [ -n $(git status --porcelain) ]; then
     echo "There are uncommited changes -- please commit before proceeding with testing"
