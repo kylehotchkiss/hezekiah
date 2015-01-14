@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "test": "node scripts/database.create.testing.js && mocha"
+    "test": "sh scripts/test.sh"
   },
   "engines": {
     "node": "0.10.x"
