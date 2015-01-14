@@ -117,7 +117,7 @@ exports.postSubscribe = function( subscription, callback ) {
 };
 
 exports.postUnsubscribe = function( subscription, callback ) {
-    slack("[subscriptions] A $" + donation.amount + " subscription for " + donation.description + " was canceled" );
+    slack("[subscriptions] A $" + subscription.amount + " subscription for " + subscription.description + " was canceled" );
     receipt( subscription, "You have disabled monthly donations", "unsubscription-receipt" );
     notification( subscription, "[subscriptions] A donor has disabled automatic donations", "unsubscription-notification" );
 };
