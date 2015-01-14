@@ -1,12 +1,6 @@
-if [ ! -d ".git" ]; then
-    git init > /dev/null 2>&1
-    git add . > /dev/null 2>&1
-    git commit -m "CircleCI Git Init" > /dev/null 2>&1
-fi
-
 git status --porcelain
 
-if [ -n $(git status --porcelain) ]; then
+if [ -z $(git status --porcelain) ]; then
     echo "There are uncommited changes -- please commit before proceeding with testing"
 else
     echo "Update testing instance..."
