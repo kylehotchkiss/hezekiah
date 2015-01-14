@@ -6,3 +6,9 @@ general:
   branches:
     only:
       - three
+
+deployment:
+  staging:
+    branch: three
+    heroku:
+      appname: hezekiah-staging

@@ -8,7 +8,8 @@ else
     git merge -X theirs three > /dev/null 2>&1
     git commit -m "Update testing instance..." > /dev/null 2>&1
     echo "Uploading to Heroku..."
-    git push -f testing testing:master > /dev/null 2>&1
+    git remote add testing git@heroku.com:hezekiah-testing.git
+    git push -f testing testing:master 
     git checkout three > /dev/null 2>&1
     echo "Resetting Database..."
     node scripts/database.create.testing.js > /dev/null 2>&1
