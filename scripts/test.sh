@@ -2,6 +2,8 @@ if [ ! -d ".git" ]; then
     git init > /dev/null 2>&1
     git add . > /dev/null 2>&1
     git commit -m "CircleCI Git Init" > /dev/null 2>&1
+
+    git status
 fi
 
 if [ -n $(git status --porcelain) ]; then
