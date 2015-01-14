@@ -6,7 +6,9 @@
 //
 
 // Localhost Testing
-require("node-env-file")(__dirname + "/../.env.testing");
+if ( process.env.NODE_ENV !== "testing" ) {
+    require("node-env-file")(__dirname + "/../.env.testing");
+}
 
 var should = require("should");
 var stripe = require("stripe")( "sk_test_NNOEYfuSLvdLlZrd7jNFRIzg" );

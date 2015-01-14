@@ -1,7 +1,3 @@
-// dedup single donations
-// dedup monthly donations
-// stripe
-
 //
 // Illuminate Nations - Hezekiah v.0.3.0
 // Copyright 2013-2014 Illuminate Nations
@@ -10,7 +6,9 @@
 //
 
 // Localhost Testing
-require("node-env-file")(__dirname + "/../.env.testing");
+if ( process.env.NODE_ENV !== "testing" ) {
+    require("node-env-file")(__dirname + "/../.env.testing");
+}
 
 var should = require("should");
 var stripe = require("stripe")( "sk_test_NNOEYfuSLvdLlZrd7jNFRIzg" );
