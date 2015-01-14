@@ -14,9 +14,9 @@
   "config": {
     "blanket": {
       "pattern": [
-          "test/",
-          "library",
-          "routes"
+        "test/",
+        "library",
+        "routes"
       ]
     }
   },
@@ -40,10 +40,10 @@
     "stripe": "~3.0.3",
     "swig": "^1.4.2",
     "validator": "^3.19.1",
-    "with-env": "^0.1.0"
+    "with-env": "^0.1.0",
+    "xunit-file": "0.0.6"
   },
   "devDependencies": {
-    "blanket": "^1.1.6",
     "mocha": "^2.0.1",
     "node-env-file": "^0.1.4",
     "should": "^4.3.0"
