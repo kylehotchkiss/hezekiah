@@ -34,9 +34,6 @@ describe("Monthly Subscriptions - New Donor", function() {
                 json: true
             }, function( error, response, body ) {
 
-                console.log( error );
-                console.log( body );
-
                 should( body.status ).equal("success");
                 should( body.subscription ).match(/sub_(.*)$/);
 
