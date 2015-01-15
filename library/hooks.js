@@ -20,6 +20,8 @@ refund
 // Helper/Wrapper functions around our various interfaces
 //
 var save = function( donation, callback ) {
+    console.log( save );
+
     database.Donation.find({ where: { id: donation.id } }).then(function( donationObj ) {
         if ( donationObj === null ) {
             database.Donation.create( donation ).then(function() {
