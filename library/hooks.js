@@ -72,19 +72,23 @@ var notification = function( data, subject, template, callback ) {
 };
 
 var subscribe = function( donation, callback ) {
-     mailchimp.subscribeEmail( donation.name, donation.email, [ donation.campaign, "donor" ], donation.ip, function() {
-        if ( typeof callback === "function" ) {
-            callback();
-        }
-     });
+    if ( process.env.HEZ_MAILCHIMP_LIST && process.env.HEZ_MAILCHIMP_API ) {
+        mailchimp.subscribeEmail( donation.name, donation.email, [ donation.campaign, "donor" ], donation.ip, function() {
+            if ( typeof callback === "function" ) {
+                callback();
+            }
+        });
+    }
 };
 
 var slack = function( message, callback ) {
-    request({
-        json: true,
-        body: { text: message },
-        url: process.env.HEZ_SLACK_URL
-    });
+    if ( process.env.HEZ_SLACK_URL ) {
+        request({
+            json: true,
+            body: { text: message },
+            url: process.env.HEZ_SLACK_URL
+        });
+    }
 };
 
 exports.postDonate = function( donation, callback ) {
