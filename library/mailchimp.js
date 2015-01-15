@@ -129,47 +129,51 @@ var campaignValue = function( campaignSlug, callback ) {
 };
 
 exports.subscribeEmail = function( name, email, lists, ip, callback ) {
-    campaignField(function( error ) {
-        if ( typeof lists === "string" ) {
-            lists = [ lists ];
-        }
+    if ( process.env.HEZ_MAILCHIMP_LIST && process.env.HEZ_MAILCHIMP_API ) {
+        campaignField(function( error ) {
+            if ( typeof lists === "string" ) {
+                lists = [ lists ];
+            }
 
-        async.eachSeries(lists, function( list, callback ) {
-            campaignValue(list, function( error ) {
-                callback( error );
-            });
-        }, function( error ) {
-            request({
-                url: mailchimpBase + "/lists/subscribe.json",
-                json: true,
-                method: "post",
-                body: {
-                    id: mailchimpList,
-                    apikey: mailchimpAPI,
-                    double_optin: false,
-                    update_existing: true,
-                    replace_interests: false,
-                    email: { email: email },
-                    merge_vars: {
-                        name: name,
-                        optin_ip: ip,
-                        groupings: [{
-                            name: "Campaigns",
-                            groups: lists
-                        }]
+            async.eachSeries(lists, function( list, callback ) {
+                campaignValue(list, function( error ) {
+                    callback( error );
+                });
+            }, function( error ) {
+                request({
+                    url: mailchimpBase + "/lists/subscribe.json",
+                    json: true,
+                    method: "post",
+                    body: {
+                        id: mailchimpList,
+                        apikey: mailchimpAPI,
+                        double_optin: false,
+                        update_existing: true,
+                        replace_interests: false,
+                        email: { email: email },
+                        merge_vars: {
+                            name: name,
+                            optin_ip: ip,
+                            groupings: [{
+                                name: "Campaigns",
+                                groups: lists
+                            }]
+                        }
                     }
-                }
-            }, function( error, response, body ) {
-                if ( typeof callback === "function" ) {
-                    if ( error ) {
-                        callback( error, false );
-                    } else if ( typeof body.status === "string" ) {
-                        callback( body, false );
-                    } else {
-                        callback( false, body );
+                }, function( error, response, body ) {
+                    if ( typeof callback === "function" ) {
+                        if ( error ) {
+                            callback( error, false );
+                        } else if ( typeof body.status === "string" ) {
+                            callback( body, false );
+                        } else {
+                            callback( false, body );
+                        }
                     }
-                }
+                });
             });
         });
-    });
+    } else {
+        callback( true, false );
+    }
 };
