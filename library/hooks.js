@@ -91,10 +91,11 @@ exports.postDonate = function( donation, callback ) {
     receipt( donation, "Thank you for your donation!", "donation-receipt", function( error, receipt ) {
         donation.receiptID = receipt;
 
-        save( donation );
-        slack("[donation] A $" + donation.amount + " donation for " + donation.description + " was successfully processed" );
-        notification( donation, "[donation] A donation has been processed", "donation-notification" );
-        subscribe( donation );
+        save( donation, function() {
+            slack("[donation] A $" + donation.amount + " donation for " + donation.description + " was successfully processed" );
+            notification( donation, "[donation] A donation has been processed", "donation-notification" );
+            subscribe( donation );
+        });
     });
 
     // quickbooks
@@ -103,11 +104,11 @@ exports.postDonate = function( donation, callback ) {
 exports.postRefund = function( donation, callback ) {
     donation.refunded = true;
 
-    save( donation );
-
-    slack("[refund] A $" + donation.amount + " donation for " + donation.description + " was successfully refunded" );
-    receipt( donation, "Your donation has been refunded", "refund-receipt" );
-    notification( donation, "[refund] A donation has been refunded", "refund-notification" );
+    save( donation, function() {
+        slack("[refund] A $" + donation.amount + " donation for " + donation.description + " was successfully refunded" );
+        receipt( donation, "Your donation has been refunded", "refund-receipt" );
+        notification( donation, "[refund] A donation has been refunded", "refund-notification" );
+    });
 };
 
 exports.postSubscribe = function( subscription, callback ) {
