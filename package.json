@@ -41,7 +41,7 @@
     "stripe": "~3.0.3",
     "swig": "^1.4.2",
     "validator": "^3.19.1",
-    "with-env": "^0.1.0",
+    "with-env": "^0.1.0"
   },
   "devDependencies": {
     "mocha": "^2.0.1",
