@@ -10,7 +10,7 @@ else
 
     echo "Uploading to Heroku..."
     git remote add testing git@heroku.com:hezekiah-testing.git > /dev/null 2>&1
-    git push -f testing testing:master > /dev/null 2>&1
+    git push -f testing testing:master 
     git checkout three > /dev/null 2>&1
 
     echo "Resetting Database..."
