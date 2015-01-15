@@ -6,6 +6,7 @@
 //
 
 var swig = require("swig");
+var _ = require("underscore");
 var moment = require("moment");
 var numeral = require("numeral");
 var request = require("request");
@@ -14,7 +15,8 @@ var config = require("../config.json");
 var mandrillBase = "https://mandrillapp.com/api/1.0/";
 var mandrillAPI = process.env.HEZ_MANDRILL_API;
 
-exports.send = function( email, subject, content, template, callback ) {
+exports.send = function( email, subject, incoming, template, callback ) {
+    var content = _.clone( incoming );
     var loadedTemplate;
     var send = true;
 

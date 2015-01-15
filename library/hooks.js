@@ -20,8 +20,6 @@ refund
 // Helper/Wrapper functions around our various interfaces
 //
 var save = function( donation, callback ) {
-    console.log( donation );
-
     database.Donation.find({ where: { id: donation.id } }).then(function( donationObj ) {
         if ( donationObj === null ) {
             database.Donation.create( donation ).then(function() {
@@ -93,11 +91,10 @@ exports.postDonate = function( donation, callback ) {
     receipt( donation, "Thank you for your donation!", "donation-receipt", function( error, receipt ) {
         donation.receiptID = receipt;
 
-        save( donation, function() {
-            slack("[donation] A $" + donation.amount + " donation for " + donation.description + " was successfully processed" );
-            notification( donation, "[donation] A donation has been processed", "donation-notification" );
-            subscribe( donation );
-        });
+        save( donation );
+        slack("[donation] A $" + donation.amount + " donation for " + donation.description + " was successfully processed" );
+        notification( donation, "[donation] A donation has been processed", "donation-notification" );
+        subscribe( donation );
     });
 
     // quickbooks
@@ -106,11 +103,10 @@ exports.postDonate = function( donation, callback ) {
 exports.postRefund = function( donation, callback ) {
     donation.refunded = true;
 
-    save( donation, function() {
-        slack("[refund] A $" + donation.amount + " donation for " + donation.description + " was successfully refunded" );
-        receipt( donation, "Your donation has been refunded", "refund-receipt" );
-        notification( donation, "[refund] A donation has been refunded", "refund-notification" );
-    });
+    save( donation );
+    slack("[refund] A $" + donation.amount + " donation for " + donation.description + " was successfully refunded" );
+    receipt( donation, "Your donation has been refunded", "refund-receipt" );
+    notification( donation, "[refund] A donation has been refunded", "refund-notification" );
 };
 
 exports.postSubscribe = function( subscription, callback ) {
