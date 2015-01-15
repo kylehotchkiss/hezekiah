@@ -72,13 +72,11 @@ var notification = function( data, subject, template, callback ) {
 };
 
 var subscribe = function( donation, callback ) {
-    if ( process.env.HEZ_MAILCHIMP_LIST && process.env.HEZ_MAILCHIMP_API ) {
-        mailchimp.subscribeEmail( donation.name, donation.email, [ donation.campaign, "donor" ], donation.ip, function() {
-            if ( typeof callback === "function" ) {
-                callback();
-            }
-        });
-    }
+    mailchimp.subscribeEmail( donation.name, donation.email, [ donation.campaign, "donor" ], donation.ip, function() {
+        if ( typeof callback === "function" ) {
+            callback();
+        }
+    });
 };
 
 var slack = function( message, callback ) {
