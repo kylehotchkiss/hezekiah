@@ -73,7 +73,11 @@ exports.send = function( email, subject, incoming, template, callback ) {
                 if ( error ) {
                     callback( error, false );
                 } else {
-                    callback( false, body[0]._id );
+                    if ( body[0] ) {
+                        callback( false, body[0]._id );
+                    } else {
+                        callback( false, null );
+                    }
                 }
             }
         });
