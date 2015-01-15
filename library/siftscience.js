@@ -69,7 +69,9 @@ exports.report = function( donation, charge, callback ) {
             }
         });
     } else {
-        callback( true );
+        if ( typeof callback === "function" ) {
+            callback( true );
+        }
     }
 };
 
