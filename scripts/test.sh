@@ -10,13 +10,13 @@ else
 
     echo "Uploading to Heroku..."
     git remote add testing git@heroku.com:hezekiah-testing.git > /dev/null 2>&1
-    git push -f testing testing:master 
+    git push -f testing testing:master > /dev/null 2>&1
     git checkout three > /dev/null 2>&1
 
     echo "Resetting Database..."
     node scripts/database.create.testing.js > /dev/null 2>&1
 
     echo "Running Mocha tests..."
-    export XUNIT_FILE=$CIRCLE_TEST_REPORTS/xunit.xml
+    export XUNIT_FILE=$CIRCLE_TEST_REPORTS/mocha/xunit.xml
     mocha -R xunit-file
 fi
