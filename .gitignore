@@ -1,8 +1,9 @@
 # Folders
-node_modules/
-.sass-cache/
 fixtures/
 coverage/
+.sass-cache/
+node_modules/
+
 
 # Local Config
 .env
