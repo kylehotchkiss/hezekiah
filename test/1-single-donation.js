@@ -61,7 +61,7 @@ describe("Single Donation", function() {
         database.Donation.find({ where: { transactionID: transaction }}).then(function( donationObj ) {
             should( donationObj ).be.ok;
             should( donationObj.donorID ).be.ok;
-            should( donationObj.transactionID ).be.ok;
+            should( donationObj.transactionID ).be.ok
 
             receiptID = donationObj.receiptID;
 

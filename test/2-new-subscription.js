@@ -88,7 +88,6 @@ describe("Monthly Subscriptions - New Donor", function() {
 
                     should( donationObj ).be.ok;
                     should( donationObj.donorID ).be.ok;
-                    should( donationObj.transactionID ).be.ok;
                     should( donationObj.amount ).equal( roundedAmount );
                     should( donationObj.campaign ).equal( data.monthly.donation.campaign );
 
