@@ -183,15 +183,13 @@ exports.latest = function( req, res ) {
 
             for ( var i in donationsObj ) {
                 var donation = donationsObj[i];
-                var dateString = moment( donation.date ).format("MM-DD-YYYY");
+                var dateString = moment( donation.createdAt ).format("MM-DD-YYYY");
 
-                if ( typeof dates[dateString] !== "undefined" ) {
+                if ( typeof dates[dateString] === "undefined" ) {
                     dates[dateString] = 0;
                 }
 
-                console.log( donation )
-
-                dates[dateString] += donation.amount;
+                dates[dateString] += parseInt( ( donation.amount / 100 ).toFixed(0) );
             }
 
             for ( var j in dates ) {
@@ -200,6 +198,8 @@ exports.latest = function( req, res ) {
                 graph.labels.push( j );
                 graph.series.push( col );
             }
+
+            console.log( graph.series )
 
             res.render("reporting/report.html", { graph: graph, report: donations, sidebar: sidebar });
         });
