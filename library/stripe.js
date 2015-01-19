@@ -282,7 +282,7 @@ var dedupDonation = function( donation, callback ) {
 
 exports.single = function( donation, callback ) {
     processDonor( donation, function( error, donor ) {
-        donation.DonorId = donor;
+        donation.donorID = donor;
 
         dedupDonation( donation, function( error, duplicate ) {
             if ( error ) {
@@ -320,7 +320,7 @@ exports.single = function( donation, callback ) {
 
 exports.monthly = function( donation, callback ) {
     processDonor(donation, function( error, donorID, customerID ) {
-        donation.DonorId = donorID;
+        donation.donorId = donorID;
 
         dedupSubscription( donation, customerID, function( error, duplicate ) {
             if ( error ) {

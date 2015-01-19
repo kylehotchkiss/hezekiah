@@ -46,7 +46,7 @@ exports.dispatcher = function( req, res ) {
 				var donation = {
 					recurring: true,
 					source: "stripe",
-					DonorId: donorObj.id,
+					donorID: donorObj.id,
 					email: donorObj.email,
 					date: transaction.date * 1000,
 					transactionID: transaction.charge,

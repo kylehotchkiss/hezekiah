@@ -17,16 +17,18 @@ module.exports = function( sequelize, type ) {
         source: { type: type.STRING },
         subcampaign: { type: type.STRING },
 
-        ip: { type: type.STRING },
-        transactionID: { type: type.STRING, unique: true, allowNull: false },
-        subscriptionID: { type: type.STRING },
-        receiptID: { type: type.STRING },
         refunded: { type: type.BOOLEAN, default: false },
-        recurring: { type: type.BOOLEAN, default: false }
+        recurring: { type: type.BOOLEAN, default: false },
+
+        ip: { type: type.STRING },
+        donorID: { type: type.INTEGER, references: 'Donors', referencesKey: 'id' },
+        transactionID: { type: type.STRING, unique: true },
+        subscriptionID: { type: type.STRING },
+        receiptID: { type: type.STRING }
     }, {
         classMethods: {
             associate: function( models ) {
-                Donation.belongsTo( models.Donor, { foreignKey: "donorID" } );
+                //Donation.belongsTo( models.Donor, { foreignKey: "donorID", foreignKeyConstraint: true } );
             }
         }
     });

@@ -4,7 +4,7 @@ var moment = require("moment");
 var database = require("../models");
 var fixtures = require("sequelize-fixtures");
 
-fixtures.loadFile("fixtures/*.json", database, {
+var opts = {
     transformFixtureDataFn: function( data ) {
         var hours = ( Math.random() * 1000 ).toFixed(0);
         var now = moment().subtract( hours, "hours" ).format();
@@ -16,12 +16,12 @@ fixtures.loadFile("fixtures/*.json", database, {
             data.addressPostal = String( data.addressPostal );
         }
 
-        if ( data.DonorId ) {
-            data.DonorId = String( data.DonorId );
-        }
-
         return data;
     }
-}, function( error ) {
-    console.log("Imported Data");
+}
+
+fixtures.loadFile("fixtures/donor.json", database, opts, function( error ) {
+    fixtures.loadFile("fixtures/donation.json", database, opts, function( error ) {
+        console.log("Imported Data");
+    });
 });
