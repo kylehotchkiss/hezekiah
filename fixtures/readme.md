@@ -15,7 +15,6 @@ Use [JSON Generator](http://www.json-generator.com/) with the following template
                 },
                 description: "Just Testing",
                 donorID: "{{ integer(1, 10) }}",
-                transactionID: "xxx",
             },
             "model": "Donation"
         },

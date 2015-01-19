@@ -92,6 +92,8 @@ describe("Monthly Subscriptions - Previous Donor", function() {
                     var roundedAmount = (Math.floor( data.single.donation.amount / 100 ) * 100);
 
                     should( donationObj ).be.ok;
+                    should( donationObj.donorID ).be.ok;
+                    should( donationObj.transactionID ).be.ok;
                     should( donationObj.amount ).equal( roundedAmount );
                     should( donationObj.campaign ).equal( data.single.donation.campaign );
 

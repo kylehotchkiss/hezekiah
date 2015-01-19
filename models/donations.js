@@ -28,7 +28,7 @@ module.exports = function( sequelize, type ) {
     }, {
         classMethods: {
             associate: function( models ) {
-                //Donation.belongsTo( models.Donor, { foreignKey: "donorID", foreignKeyConstraint: true } );
+                Donation.belongsTo( models.Donor, { foreignKey: "donorID", foreignKeyConstraint: true } );
             }
         }
     });
