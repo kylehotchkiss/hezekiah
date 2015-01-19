@@ -89,7 +89,7 @@ describe("Monthly Subscriptions - Previous Donor", function() {
                 } else {
                     // We need to round the amount the same way that the backend will - converting to a dollar
                     // amount and rounding via toFixed();
-                    var roundedAmount = (Math.floor( data.single.donation.amount / 100 )  * 100).toString();
+                    var roundedAmount = (Math.floor( data.single.donation.amount / 100 ) * 100);
 
                     should( donationObj ).be.ok;
                     should( donationObj.amount ).equal( roundedAmount );

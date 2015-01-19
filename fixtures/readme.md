@@ -14,8 +14,8 @@ Use [JSON Generator](http://www.json-generator.com/) with the following template
                     return list[tags.integer( 0, list.length - 1 )];
                 },
                 description: "Just Testing",
-                DonorId: "{{ integer(1, 10) }}"
-                transactionID: "xxx"
+                donorID: "{{ integer(1, 10) }}",
+                transactionID: "xxx",
             },
             "model": "Donation"
         },

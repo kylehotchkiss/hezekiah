@@ -10,11 +10,17 @@ var path = require("path");
 var environment = process.env.NODE_ENV || 'development';
 var sequelize, Sequelize = require('sequelize');
 
+var log = function( text ) {
+    if ( environment === "development" ) {
+        console.log( text );
+    }
+};
+
 
 /* Try to load database or complain */
 if ( process.env.DATABASE_URL ) {
     var options = {
-        logging: console.log
+        logging: log
     };
 
     if ( process.env.NODE_ENV === "testing" ) {
