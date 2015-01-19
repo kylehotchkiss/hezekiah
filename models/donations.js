@@ -9,17 +9,16 @@ module.exports = function( sequelize, type ) {
     var Donation = sequelize.define('Donation', {
         id: { type: type.INTEGER, primaryKey: true, autoIncrement: true, unique: true },
 
-
-        email: { type: type.STRING },
-        amount: { type: type.DECIMAL },
-        campaign: { type: type.STRING },
-        description: { type: type.STRING },
+        email: { type: type.STRING, allowNull: false },
+        amount: { type: type.INTEGER, allowNull: false },
+        campaign: { type: type.STRING, allowNull: false },
+        description: { type: type.STRING, allowNull: false },
 
         source: { type: type.STRING },
         subcampaign: { type: type.STRING },
 
         ip: { type: type.STRING },
-        transactionID: { type: type.STRING, unique: true },
+        transactionID: { type: type.STRING, unique: true, allowNull: false },
         subscriptionID: { type: type.STRING },
         receiptID: { type: type.STRING },
         refunded: { type: type.BOOLEAN, default: false },
@@ -27,7 +26,7 @@ module.exports = function( sequelize, type ) {
     }, {
         classMethods: {
             associate: function( models ) {
-                Donation.belongsTo( models.Donor );
+                Donation.belongsTo( models.Donor, { foreignKey: "donorID" } );
             }
         }
     });

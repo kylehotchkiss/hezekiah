@@ -18,10 +18,12 @@ exports.donors = function( req, res ) {
 
 exports.latest = function( req, res ) {
 
-    database.DonationModel.find({ date: { "$gte": moment().startOf('month') } }).populate('donor').exec(function( error, donations ) {
+    database.Donation.findAll().then(function( donationsObj ) {
         var campaigns = {};
 
-        res.send( JSON.stringify( donations, null, 4 ) );
+        res.send( JSON.stringify( donationsObj, null, 4 ) );
+    }, function( error ) {
+
     });
 
 };

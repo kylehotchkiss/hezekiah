@@ -5,16 +5,27 @@
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
+var environment = process.env.NODE_ENV || 'development';
+
 var meta = require('../package.json');
 
 var swig = require('swig');
+var moment = require("moment");
 var hook = require("./hook.js");
+var express = require('express');
 var donate = require("./donate.js");
 var reporting = require("./reporting.js");
 
-var express = require('express');
-
 module.exports = function( app ) {
+
+	swig.setFilter("date", function( input ) {
+		return moment( input ).format("MM.D.YYYY @ h:mma");
+	});
+
+	swig.setFilter("amount", function( input ) {
+		var actual = (parseInt( input ) / 100).toFixed(2);
+		return "$" + actual.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	});
 
 	// Templating
 	app.engine('html', swig.renderFile);
@@ -23,6 +34,10 @@ module.exports = function( app ) {
 	app.set('view cache', false);
 	app.set('views', __dirname + '/../views');
 
+	if ( environment !== "production" ) {
+		app.set('view cache', false);
+		swig.setDefaults({ cache: false, locals: { "environment": "development" } });
+	}
 
 	// Hooks
 	app.post('/hook/stripe', hook.dispatcher);

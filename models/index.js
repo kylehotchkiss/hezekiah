@@ -14,12 +14,12 @@ var sequelize, Sequelize = require('sequelize');
 /* Try to load database or complain */
 if ( process.env.DATABASE_URL ) {
     var options = {
-        logging: false
+        logging: console.log
     };
 
     if ( process.env.NODE_ENV === "testing" ) {
         options.ssl = true;
-        options.native = true;        
+        options.native = true;
     }
 
     sequelize = new Sequelize(process.env.DATABASE_URL, options);

@@ -1,13 +1,12 @@
 # Folders
-fixtures/
 coverage/
 .sass-cache/
 node_modules/
 
-
 # Local Config
 .env
 .env.testing
+fixtures/*.json
 
 
 # Other

@@ -1,76 +1,52 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Hezekiah Reporting</title>
+{% extends "../layout.html" %}
 
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.0/css/foundation.min.css" rel="stylesheet" />
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.4.1/chartist.min.css" rel="stylesheet" />
+{% block content %}
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+            <div class="ct-chart"></div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.4.1/chartist.min.js"></script>
-    </head>
-    <body>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Donor / Email</th>
+                        <th>Amount</th>
+                        <th>Campaign</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for donation in report %}
+                    <tr>
+                        <td>{{ donation.createdAt|date }}</td>
+                        <td>{{ donation.Donor.name }}<br />{{ donation.email }}</td>
+                        <td>{{ donation.amount|amount }}</td>
+                        <td>{{ donation.campaign }}</td>
+                        <td><a href="https://dashboard.stripe.com/payments/{{ donation.transactionID }}">Details</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
 
-        <header>
-            <ul class="nav">
-                <li><a href="/reporting/monthly">Monthly</a></li>
-                <li><a href="/reporting/annual">Annual</a></li>
-                <li><a href="/reporting/donors">Donors</a></li>
-                <li><a href="/reporting/latest">Latest</a></li>
-                <li><a href="/reporting/campaigns">Campaigns</a></li>
-            </ul>
-        </header>
+{% block scripts %}
+    <script>
+        var data = {
+            labels: {{ JSON.stringify( graph.labels ) }},
+            series: [ {{ JSON.stringify( graph.series ) }} ]
+        };
 
-        <article>
-            <div class="row">
-                <div class="columns medium-10 medium-centered">
-                    <div class="ct-chart"></div>
+        var options = {
+            width: '750px',
+            height: '335px',
+            showArea: true,
+            showPoint: false,
+            axisX: { showLabel: false, showGrid: false },
+            axisY: { offset: 50, scaleMinSpace: 100, labelInterpolationFnc: function ( value ) { return "$" + value.toFixed(2) } }
+        };
 
-                    <script>
-                        var data = {
-                            labels: {{ JSON.stringify( graph.labels ) }},
-                            series: [ {{ JSON.stringify( graph.series ) }} ]
-                        };
-
-                        var options = {
-                            width: '750px',
-                            height: '335px',
-                            showArea: true,
-                            showPoint: false,
-                            axisX: { showLabel: false, showGrid: false },
-                            axisY: { offset: 50, scaleMinSpace: 100, labelInterpolationFnc: function ( value ) { return "$" + value.toFixed(2) } }
-                        };
-
-                        new Chartist.Line( '.ct-chart', data, options );
-                    </script>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="columns medium-10 medium-centered">
-                    <table role="grid" width="100%">
-                        <thead>
-                            <tr>
-                                <td>Date</td>
-                                <td>Donor / Email</td>
-                                <td>Amount</td>
-                                <td>Campaign</td>
-                                <td>Details</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for donation in report %}
-                                <tr>
-                                    <td>{{ donation.createdAt.toISOString() }}</td>
-                                    <td>{{ donation.Donor.name }}<br />{{ donation.email }}</td>
-                                    <td>${{ donation.amount / 100 }}</td>
-                                    <td>{{ donation.campaign }}</td>
-                                    <td><a href="https://dashboard.stripe.com/payments/{{ donation.transactionID }}">Details</a></td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </article>
-    </body>
-</html>
+        new Chartist.Line( '.ct-chart', data, options );
+    </script>
+{% endblock %}

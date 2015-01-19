@@ -8,6 +8,75 @@
 var moment = require("moment");
 var database = require("../models");
 
+var sidebarContent = function( callback ) {
+    //
+    // TODO: Why are we getting strings for the amounts here and not integers?
+    //
+    database.Donation.findAll({ where: { createdAt: { gte: moment().subtract(1, "month").format() }}}).then(function( donations ) {
+        if ( donations === null ) {
+            callback( false, false );
+        } else {
+            var now = moment();
+            var campaigns = {};
+            var campaignsArray = [];
+
+            // Read all data from the donations table
+            for ( var i in donations ) {
+                var donation = donations[i];
+
+                if ( typeof campaigns[ donation.campaign ] === "undefined" ) {
+                    campaigns[ donation.campaign ] = {
+                        campaign: donation.campaign,
+                        total: 0,
+                        donations: []
+                    };
+                }
+
+                campaigns[ donation.campaign ].total += parseInt(donation.amount);
+                campaigns[ donation.campaign ].donations.push({
+                    amount: parseInt(donation.amount),
+                    offset: moment().diff(moment(donation.createdAt), 'days')
+                });
+            }
+
+            // Run some data conversions specifc to the sidebar
+            for ( var j in campaigns ) {
+                var sparkline = [];
+                var campaign = campaigns[j];
+
+                for ( var k = 0; k < 31; k++ ) {
+                    sparkline[k] = 0;
+                }
+
+                for ( var l in campaign.donations ) {
+                    var day = campaign.donations[l];
+
+                    sparkline[ day.offset ] += day.amount;
+                }
+
+                campaign.sparkline = sparkline.toString();
+                delete campaign.donations;
+
+                campaignsArray.push( campaign );
+            }
+
+            campaignsArray.sort(function( a, b ) {
+                if ( a.total < b.total ) {
+                    return 1;
+                } else if ( a.total > b.total ) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            });
+
+            callback( false, campaignsArray );
+        }
+    }, function( error ) {
+        callback( error, false );
+    });
+};
+
 var filter = function( input ) {
     var start = new Date().getTime();
     output = input;
@@ -98,24 +167,29 @@ exports.donors = function( req, res ) {
 
 exports.latest = function( req, res ) {
 
-    database.DonationModel
-        .find({ date: { "$gte": moment().startOf("month") } })
-        .sort({ date: "desc" })
-        .populate( "donor" )
-        .exec(function( error, donations ) {
+    sidebarContent( function( error, content ) {
+        var sidebar = false;
+
+        if ( !error ) {
+            sidebar = content;
+        }
+
+        database.Donation.findAll({ include: [ database.Donor ] }).then(function( donationsObj ) {
             var campaigns = {};
             var dates = {};
             var graph = { labels: [], series: [] };
 
-            donations = filter( donations );
+            donations = filter( donationsObj );
 
-            for ( var i in donations ) {
-                var donation = donations[i];
+            for ( var i in donationsObj ) {
+                var donation = donationsObj[i];
                 var dateString = moment( donation.date ).format("MM-DD-YYYY");
 
                 if ( typeof dates[dateString] !== "undefined" ) {
                     dates[dateString] = 0;
                 }
+
+                console.log( donation )
 
                 dates[dateString] += donation.amount;
             }
@@ -127,8 +201,9 @@ exports.latest = function( req, res ) {
                 graph.series.push( col );
             }
 
-            res.render("reporting/report.html", { graph: graph, report: donations });
+            res.render("reporting/report.html", { graph: graph, report: donations, sidebar: sidebar });
         });
+    });
 
 };
 
