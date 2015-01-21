@@ -38,7 +38,7 @@ gulp.task('watch', function() {
 });
 
 gulp.task('copy-images', function() {
-    gulp.src( config.assets + '/images/**', { base: '' } )
+    return gulp.src( config.assets + '/images/**', { base: '' } )
         .pipe(gulp.dest( config.public + '/images' ));
 });
 

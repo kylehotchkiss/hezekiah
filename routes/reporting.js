@@ -174,7 +174,7 @@ exports.latest = function( req, res ) {
             sidebar = content;
         }
 
-        database.Donation.findAll({ include: [ database.Donor ] }).then(function( donationsObj ) {
+        database.Donation.findAll({ include: [ database.Donor ], order: '"updatedAt" DESC' }).then(function( donationsObj ) {
             var campaigns = {};
             var dates = {};
             var graph = { labels: [], series: [] };
@@ -198,8 +198,6 @@ exports.latest = function( req, res ) {
                 graph.labels.push( j );
                 graph.series.push( col );
             }
-
-            console.log( graph.series )
 
             res.render("reporting/report.html", { graph: graph, report: donations, sidebar: sidebar });
         });

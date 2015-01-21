@@ -1,15 +1,22 @@
 {% extends "../layout.html" %}
 
 {% block content %}
-    <div class="row">
+    <div class="row page-report">
         <div class="col-sm-10 col-sm-offset-1">
             <div class="ct-chart"></div>
+
+            <div class="row text-center stats">
+                <div class="col-sm-4">stat 1</div>
+                <div class="col-sm-4">stat 2</div>
+                <div class="col-sm-4">stat 3</div>
+            </div>
 
             <table class="table">
                 <thead>
                     <tr>
                         <th>Date</th>
-                        <th>Donor / Email</th>
+                        <th>Time</th>
+                        <th>Donor</th>
                         <th>Amount</th>
                         <th>Campaign</th>
                         <th>Details</th>
@@ -19,7 +26,8 @@
                     {% for donation in report %}
                     <tr>
                         <td>{{ donation.createdAt|date }}</td>
-                        <td>{{ donation.Donor.name }}<br />{{ donation.email }}</td>
+                        <td>{{ donation.createdAt|time }}</td>
+                        <td>{{ donation.Donor.name }}</td>
                         <td>{{ donation.amount|amount }}</td>
                         <td>{{ donation.campaign }}</td>
                         <td><a href="https://dashboard.stripe.com/payments/{{ donation.transactionID }}">Details</a></td>

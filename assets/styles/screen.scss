@@ -60,6 +60,24 @@ a, a:hover {
     }
 }
 
+.ct-chart {
+    .ct-series.ct-series-a {
+        .ct-line {
+            stroke: #9BBCAB;
+        }
+
+        .ct-area {
+            fill: #9BBCAB;
+        }
+    }
+}
+
+.page-report {
+    .stats {
+        margin: 60px 0;
+    }
+}
+
 .body-content {
     height: 100vh;
     overflow: scroll;

@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "test": "sh scripts/test.sh"
+    "test": "sh _build/test.sh"
   },
   "engines": {
     "node": "0.10.x"

@@ -19,7 +19,11 @@ var reporting = require("./reporting.js");
 module.exports = function( app ) {
 
 	swig.setFilter("date", function( input ) {
-		return moment( input ).format("MM.D.YYYY @ h:mma");
+		return moment( input ).format("MM.D.YYYY");
+	});
+
+	swig.setFilter("time", function( input ) {
+		return moment( input ).format("h:mma");
 	});
 
 	swig.setFilter("amount", function( input ) {

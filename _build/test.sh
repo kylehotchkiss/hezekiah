@@ -1,5 +1,3 @@
-git status --porcelain
-
 if [[ -n $(git status --porcelain) ]]; then
     echo "There are uncommited changes -- please commit before proceeding with testing"
 else
