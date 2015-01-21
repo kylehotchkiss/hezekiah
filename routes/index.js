@@ -35,7 +35,6 @@ module.exports = function( app ) {
 	app.engine('html', swig.renderFile);
 
 	app.set('view engine', 'html');
-	app.set('view cache', false);
 	app.set('views', __dirname + '/../views');
 
 	if ( environment !== "production" ) {
@@ -59,7 +58,7 @@ module.exports = function( app ) {
 	app.get('/reporting/latest', reporting.latest);
 	app.get('/reporting/monthly', reporting.monthly);
 	app.get('/reporting/annual', reporting.annual);
-	app.get('/reporting/donors', reporting.donors);	
+	app.get('/reporting/donors', reporting.donors);
 	app.get('/reporting/campaigns', reporting.campaigns);
 
 
