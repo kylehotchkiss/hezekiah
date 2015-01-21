@@ -48,7 +48,7 @@ if ( environment === "production" ) {
 app.use(compress());
 app.use(bodyParser());
 app.use(validator());
-app.use(express.static('public'));
+app.use(express.static('public',  { maxAge: '1w' }));
 
 
 //
