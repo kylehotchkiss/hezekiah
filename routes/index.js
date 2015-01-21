@@ -56,9 +56,10 @@ module.exports = function( app ) {
 
 
 	// Reporting
-	app.get('/reporting/donors', reporting.donors);
 	app.get('/reporting/latest', reporting.latest);
 	app.get('/reporting/monthly', reporting.monthly);
+	app.get('/reporting/annual', reporting.annual);
+	app.get('/reporting/donors', reporting.donors);	
 	app.get('/reporting/campaigns', reporting.campaigns);
 
 

@@ -77,6 +77,7 @@ var sidebarContent = function( callback ) {
     });
 };
 
+
 var filter = function( input ) {
     var start = new Date().getTime();
     output = input;
@@ -116,6 +117,38 @@ var filter = function( input ) {
     return output;
 };
 
+
+var processDonations = function( donationsObj ) {
+    var campaigns = {};
+    var dates = {};
+    var graph = { labels: [], series: [] };
+
+    donations = filter( donationsObj );
+
+    for ( var i in donationsObj ) {
+        var donation = donationsObj[i];
+        var dateString = moment( donation.createdAt ).format("MM-DD-YYYY");
+
+        if ( typeof dates[dateString] === "undefined" ) {
+            dates[dateString] = 0;
+        }
+
+        dates[dateString] += parseInt( ( donation.amount / 100 ).toFixed(0) );
+    }
+
+    for ( var j in dates ) {
+        var col = dates[j];
+
+        graph.labels.push( j );
+        graph.series.push( col );
+    }
+
+    return {
+        graph: graph,
+        donations: donations
+    };
+};
+
 // Monthly * Annual * Donors * Latest * Campaigns
 
 // Monthly
@@ -140,20 +173,40 @@ var filter = function( input ) {
 // Latest
 // Table of
 
-exports.monthly = function( req, res ) {
+exports.latest = function( req, res ) {
+    sidebarContent( function( error, content ) {
+        var sidebar = !error ? content : false;
 
-    database.DonationModel.find({ date: { "$gte": moment().startOf("month") } }).populate("donor").exec(function( error, donations ) {
-        res.send( JSON.stringify( filter( donations ) , null, 4 ) );
+        database.Donation.findAll({ include: [ database.Donor ], order: '"updatedAt" DESC' }).then(function( donationsObj ) {
+            var output = processDonations( donationsObj );
+
+            res.render("reporting/report.html", { graph: output.graph, report: output.donations, sidebar: sidebar, slug: "latest" });
+        });
     });
+};
 
+exports.monthly = function( req, res ) {
+    sidebarContent( function( error, content ) {
+        var sidebar = !error ? content : false;
+
+        database.Donation.findAll({ where: { createdAt: { "gte": moment().startOf("month").format() } }, include: [ database.Donor ], order: '"updatedAt" DESC' }).then(function( donationsObj ) {
+            var output = processDonations( donationsObj );
+
+            res.render("reporting/report.html", { graph: output.graph, report: output.donations, sidebar: sidebar, slug: "monthly" });
+        });
+    });
 };
 
 exports.annual = function( req, res ) {
+    sidebarContent( function( error, content ) {
+        var sidebar = !error ? content : false;
 
-    database.DonationModel.find({ subscriber: true }).exec(function( error, donors ) {
-        res.send( JSON.stringify( donors, null, 4 ) );
+        database.Donation.findAll({ where: { createdAt: { "gte": moment().startOf("year").format() } }, include: [ database.Donor ], order: '"updatedAt" DESC' }).then(function( donationsObj ) {
+            var output = processDonations( donationsObj );
+
+            res.render("reporting/report.html", { graph: output.graph, report: output.donations, sidebar: sidebar, slug: "annual" });
+        });
     });
-
 };
 
 exports.donors = function( req, res ) {
@@ -161,46 +214,6 @@ exports.donors = function( req, res ) {
     database.Donation.findAll({ include: [ database.Donor ] }).then(function( donorsObj ) {
         console.log( donorsObj )
         res.render("reporting/report.html", { report: donorsObj });
-    });
-
-};
-
-exports.latest = function( req, res ) {
-
-    sidebarContent( function( error, content ) {
-        var sidebar = false;
-
-        if ( !error ) {
-            sidebar = content;
-        }
-
-        database.Donation.findAll({ include: [ database.Donor ], order: '"updatedAt" DESC' }).then(function( donationsObj ) {
-            var campaigns = {};
-            var dates = {};
-            var graph = { labels: [], series: [] };
-
-            donations = filter( donationsObj );
-
-            for ( var i in donationsObj ) {
-                var donation = donationsObj[i];
-                var dateString = moment( donation.createdAt ).format("MM-DD-YYYY");
-
-                if ( typeof dates[dateString] === "undefined" ) {
-                    dates[dateString] = 0;
-                }
-
-                dates[dateString] += parseInt( ( donation.amount / 100 ).toFixed(0) );
-            }
-
-            for ( var j in dates ) {
-                var col = dates[j];
-
-                graph.labels.push( j );
-                graph.series.push( col );
-            }
-
-            res.render("reporting/report.html", { graph: graph, report: donations, sidebar: sidebar });
-        });
     });
 
 };
