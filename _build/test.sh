@@ -12,7 +12,7 @@ else
     git checkout three > /dev/null 2>&1
 
     echo "Resetting Database..."
-    node scripts/database.create.testing.js > /dev/null 2>&1
+    node _build/database.create.testing.js > /dev/null 2>&1
 
     echo "Running Mocha tests..."
     mocha
