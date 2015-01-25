@@ -1,7 +1,7 @@
 //
 // Illuminate Nations - Hezekiah v.0.3.0
-// Copyright 2013-2014 Illuminate Nations
-// Released under the General Public Licence
+// Copyright 2013-2015 Illuminate Nations
+// All Rights Reserved
 // Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
@@ -15,12 +15,6 @@ var siftscience = require("./siftscience.js");
 // a match is found. If everything checks out, initiate the transfer immediately.
 // Otherwise, leave funds alone for stripe to transfer all by itself.
 //
-
-// Create a processDonor function that replaces processCustomer
-// always check/create donor
-// check/create customer if donation is recurring
-// return donorID
-
 
 // Retrieve or Create a Donor
 var retrieveDonor = function( donor, callback ) {
