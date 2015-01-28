@@ -121,6 +121,8 @@ var processDonations = function( donationsObj ) {
     var campaigns = {};
     var dates = {};
     var graph = { labels: [], series: [] };
+    var fees = 0;
+    var total = 0;
 
     donations = filter( donationsObj );
 
@@ -133,6 +135,9 @@ var processDonations = function( donationsObj ) {
         }
 
         dates[dateString] += parseInt( ( donation.amount / 100 ).toFixed(0) );
+
+        total += donation.amount;
+        fees += donation.transactionFee;
     }
 
     for ( var j in dates ) {
@@ -144,7 +149,12 @@ var processDonations = function( donationsObj ) {
 
     return {
         graph: graph,
-        donations: donations
+        donations: donations,
+        summaries: {
+            fees: fees,
+            total: total,
+            donors: 0
+        }
     };
 };
 
@@ -179,7 +189,13 @@ exports.latest = function( req, res ) {
         database.Donation.findAll({ include: [ database.Donor ], order: '"updatedAt" DESC' }).then(function( donationsObj ) {
             var output = processDonations( donationsObj );
 
-            res.render("reporting/report.html", { graph: output.graph, report: output.donations, sidebar: sidebar, slug: "latest" });
+            res.render("reporting/report.html", {
+                slug: "latest",
+                sidebar: sidebar,
+                graph: output.graph,
+                report: output.donations,
+                summaries: output.summaries
+            });
         });
     });
 };
@@ -211,7 +227,6 @@ exports.annual = function( req, res ) {
 exports.donors = function( req, res ) {
 
     database.Donation.findAll({ include: [ database.Donor ] }).then(function( donorsObj ) {
-        console.log( donorsObj )
         res.render("reporting/report.html", { report: donorsObj });
     });
 

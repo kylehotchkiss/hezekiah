@@ -17,7 +17,11 @@ var opts = {
 
         data.createdAt = now;
         data.updatedAt = now;
-        data.transactionFee = (data.amount * 0.029).toFixed(0) + 30;
+        data.transactionFee = ((data.amount * 0.029) + 30).toFixed(0);
+
+        console.log("AMOUNT: "  + data.amount);
+        console.log("FEE: " + data.transactionFee);
+
 
         if ( data.addressPostal ) {
             data.addressPostal = String( data.addressPostal );
