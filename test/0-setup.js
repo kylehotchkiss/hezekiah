@@ -22,7 +22,10 @@ describe("Setup Tests", function() {
         }, function( error, response, body ) {
             should( error ).not.be.ok;
 
-            done();
+            // *Yawn*, our server is groggy when he first wakes up
+            setTimeout(function() {
+                done();
+            }, 5000);
         });
     });
 });
