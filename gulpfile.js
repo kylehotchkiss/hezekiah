@@ -1,3 +1,9 @@
+//
+// Hezekiah v.0.3.0
+// Copyright 2013-2015 Kyle Hotchkiss
+// All Rights Reserved
+//
+
 var del = require('del');
 var gulp = require("gulp");
 var run = require('run-sequence');

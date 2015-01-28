@@ -1,3 +1,9 @@
+//
+// Hezekiah v.0.3.0
+// Copyright 2013-2015 Kyle Hotchkiss
+// All Rights Reserved
+//
+
 require("node-env-file")(__dirname + "/../.env");
 
 var moment = require("moment");
@@ -11,7 +17,7 @@ var opts = {
 
         data.createdAt = now;
         data.updatedAt = now;
-        data.fee = ( data.amount * .029 ) + 30;
+        data.transactionFee = (data.amount * 0.029).toFixed(0) + 30;
 
         if ( data.addressPostal ) {
             data.addressPostal = String( data.addressPostal );

@@ -1,8 +1,7 @@
 //
-// Illuminate Nations - Hezekiah v.0.3.0
-// Copyright 2013-2015 Illuminate Nations
+// Hezekiah v.0.3.0
+// Copyright 2013-2015 Kyle Hotchkiss
 // All Rights Reserved
-// Maintained by Kyle Hotchkiss <kyle@illuminatenations.org>
 //
 
 var request = require('request');
@@ -22,7 +21,7 @@ refund
 var save = function( donation, callback ) {
     database.Donation.find({ where: { id: donation.id } }).then(function( donationObj ) {
         if ( !donation.transactionFee ) { // TODO: Stripe doesn't return fee, but it may change?
-            donation.transactionFee = (donation.amount * 0.029) + 30;
+            donation.transactionFee = (donation.amount * 0.029).toFixed(0) + 30;
         }
 
         if ( donationObj === null ) {
