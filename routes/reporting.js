@@ -121,8 +121,10 @@ var processDonations = function( donationsObj ) {
     var campaigns = {};
     var dates = {};
     var graph = { labels: [], series: [] };
+    var donors = {};
     var fees = 0;
     var total = 0;
+    var donorCount = 0;
 
     donations = filter( donationsObj );
 
@@ -135,9 +137,14 @@ var processDonations = function( donationsObj ) {
         }
 
         dates[dateString] += parseInt( ( donation.amount / 100 ).toFixed(0) );
-
         total += donation.amount;
         fees += donation.transactionFee;
+
+        if ( typeof donors[ donation.email ] === "undefined" ) {
+            donors[ donation.email ] = true;
+
+            donorCount++;
+        }
     }
 
     for ( var j in dates ) {
@@ -153,7 +160,7 @@ var processDonations = function( donationsObj ) {
         summaries: {
             fees: fees,
             total: total,
-            donors: 0
+            donors: donorCount
         }
     };
 };
