@@ -284,14 +284,11 @@ exports.single = function( donation, callback ) {
             } else if ( duplicate ) {
                 callback( { slug: "duplicate", message: "You made this donation within the past five minutes. <br /> Please wait a few minutes to try again." }, false );
             } else {
-                // Fix floating point math issues with Javascript.
-                // CRIES A LITTLE CRIES A LOT.
-
                 stripe.charges.create({
                     card: donation.token,
                     currency: "usd",
                     amount: donation.amount,
-                    description: "Donation" + (donation.description ? (" for " + donation.description) : ""),
+                    description: "Donation" + ( donation.description ? ( " for " + donation.description ) : "" ),
                     metadata: {
                         ip: donation.ip,
                         campaign: donation.campaign,

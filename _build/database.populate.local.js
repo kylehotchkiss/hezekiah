@@ -11,6 +11,7 @@ var opts = {
 
         data.createdAt = now;
         data.updatedAt = now;
+        data.fee = ( data.amount * .029 ) + 30;
 
         if ( data.addressPostal ) {
             data.addressPostal = String( data.addressPostal );
@@ -18,7 +19,7 @@ var opts = {
 
         return data;
     }
-}
+};
 
 fixtures.loadFile("fixtures/donor.json", database, opts, function( error ) {
     fixtures.loadFile("fixtures/donation.json", database, opts, function( error ) {

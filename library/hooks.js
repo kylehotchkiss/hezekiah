@@ -21,6 +21,10 @@ refund
 //
 var save = function( donation, callback ) {
     database.Donation.find({ where: { id: donation.id } }).then(function( donationObj ) {
+        if ( !donationObj.transactionFee ) { // TODO: Stripe doesn't return fee, but it may change?
+            donationObj.transactionFee = (donationObj.amount * 0.029) + 30;
+        }
+
         if ( donationObj === null ) {
             database.Donation.create( donation ).then(function() {
                 if ( typeof callback === "function" ) {

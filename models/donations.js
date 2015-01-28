@@ -23,6 +23,7 @@ module.exports = function( sequelize, type ) {
         ip: { type: type.STRING },
         donorID: { type: type.INTEGER, references: 'Donors', referencesKey: 'id' },
         transactionID: { type: type.STRING, unique: true },
+        transactionFee: { type: type.INTEGER, allowNull: false },
         subscriptionID: { type: type.STRING },
         receiptID: { type: type.STRING }
     }, {
