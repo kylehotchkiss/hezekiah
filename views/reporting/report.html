@@ -6,9 +6,30 @@
             <div class="ct-chart"></div>
 
             <div class="row text-center stats">
-                <div class="col-sm-4">{{ summaries.total|amount }}</div>
-                <div class="col-sm-4">{{ summaries.donors }}</div>
-                <div class="col-sm-4">{{ summaries.fees|amount }}</div>
+                <div class="col-sm-4">
+                    <div class="stat">
+                        <div class="number">
+                            {{ summaries.donors }}
+                        </div>
+                        <div class="label">Donors</div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="stat">
+                        <div class="number">
+                            {{ summaries.total|amount }}
+                        </div>
+                        <div class="label">Total Raised</div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="stat">
+                        <div class="number">
+                            {{ summaries.fees|amount }}
+                        </div>
+                        <div class="label">Transaction Fees</div>
+                    </div>
+                </div>
             </div>
 
             <table class="table">
