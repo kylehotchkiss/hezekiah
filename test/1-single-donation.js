@@ -4,16 +4,18 @@
 // All Rights Reserved
 //
 
+
 // Localhost Testing
 if ( process.env.NODE_ENV !== "testing" ) {
     require("node-env-file")(__dirname + "/../.env.testing");
 }
 
 var should = require("should");
-var stripe = require("stripe")( "sk_test_NNOEYfuSLvdLlZrd7jNFRIzg" );
-var request = require("request");
+var request = require('supertest');
 var database = require("../models");
+var hezekiah = require('../app.js');
 var mandrill = require("../library/mandrill");
+var stripe = require("stripe")( process.env.HEZ_STRIPE_API );
 
 var data = require("./data.json");
 var receiptID = "";
@@ -28,21 +30,20 @@ describe("Single Donation", function() {
         }, function( error, token ) {
             data.single.donation.token = token.id;
 
-            request({
-                url: process.env.HEZ_TESTING_SERVER + "/donate/one",
-                method: "POST",
-                form: data.single.donation,
-                json: true
-            }, function( error, response, body ) {
+            request( hezekiah )
+                .post( "/donate/one" )
+                .type( 'form' )
+                .send( data.single.donation )
+                .end(function( error, response ) {
+                    var body = response.body;
 
-                should( body.status ).equal("success");
-                should( body.transaction ).match(/ch_(.*)$/);
+                    should( body.status ).equal("success");
+                    should( body.transaction ).match(/ch_(.*)$/);
 
-                transaction = body.transaction;
+                    transaction = body.transaction;
 
-                done();
-
-            });
+                    done();
+                });
         });
     });
 
@@ -57,15 +58,16 @@ describe("Single Donation", function() {
     });
 
     it("successfully saved the donation [database]", function( done ) {
-        database.Donation.find({ where: { transactionID: transaction }}).then(function( donationObj ) {
-            should( donationObj ).be.ok;
-            should( donationObj.donorID ).be.ok;
-            should( donationObj.transactionID ).be.ok
+        setTimeout(function() {
+            database.Donation.find({ where: { transactionID: transaction }}).then(function( donationObj ) {
+                should( donationObj ).be.ok;
+                should( donationObj.donorID ).be.ok;
+                should( donationObj.transactionID ).be.ok;
 
-            receiptID = donationObj.receiptID;
+                receiptID = donationObj.receiptID;
 
-            done();
-        });
+                done();
+            });
+        }, 1000);
     });
-
 });

@@ -57,9 +57,16 @@ app = require('./routes')( app );
 
 
 //
+// Return app for Supertest
+//
+module.exports = app;
+
+
+//
 // Start it UP!
 //
 app.listen( process.env.PORT || 5000 );
+
 
 if ( environment === "development" ) {
     console.log( "\n " + meta.name + " v" + meta.version);

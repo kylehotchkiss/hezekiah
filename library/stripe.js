@@ -162,7 +162,7 @@ var verifyPlan = function( callback ) {
         amount: 100,
         currency: "usd",
         interval: "month",
-        statement_description: "Monthly"
+        statement_descriptor: "Monthly"
     };
 
     stripe.plans.retrieve("one", function( error, plan ) {
@@ -173,7 +173,7 @@ var verifyPlan = function( callback ) {
 
             stripe.plans.create(params, function( error, plan ) {
                 if ( error ) {
-                    callback( true );
+                    callback( error );
                 } else {
                     callback( false );
                 }
@@ -185,7 +185,7 @@ var verifyPlan = function( callback ) {
 
                 stripe.plans.update("one", params, function( error, plan ) {
                     if ( error ) {
-                        callback( true );
+                        callback( error );
                     } else {
                         callback( false );
                     }
@@ -300,7 +300,8 @@ exports.single = function( donation, callback ) {
                         callback( false, charge );
                     }
 
-                    siftscience.report( donation, charge );
+                    // Stripe has built-in fraud detection
+                    // siftscience.report( donation, charge );
                 });
             }
         });

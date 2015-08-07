@@ -19,7 +19,7 @@ module.exports = function( sequelize, type ) {
         recurring: { type: type.BOOLEAN, default: false },
 
         ip: { type: type.STRING },
-        donorID: { type: type.INTEGER, references: 'Donors', referencesKey: 'id' },
+        donorID: { type: type.INTEGER, references: { model: 'Donors', key: 'id' } },
         transactionID: { type: type.STRING, unique: true },
         transactionFee: { type: type.INTEGER, allowNull: false },
         subscriptionID: { type: type.STRING },
@@ -30,7 +30,7 @@ module.exports = function( sequelize, type ) {
                 Donation.belongsTo( models.Donor, { foreignKey: "donorID", foreignKeyConstraint: true } );
             }
         }
-    });
+    });    
 
     return Donation;
 };

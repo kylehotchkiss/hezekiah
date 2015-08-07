@@ -10,10 +10,10 @@ if ( process.env.NODE_ENV !== "testing" ) {
 }
 
 var should = require("should");
-var stripe = require("stripe")( "sk_test_NNOEYfuSLvdLlZrd7jNFRIzg" );
-var request = require("request");
+var request = require('supertest');
+var hezekiah = require('../app.js');
 var database = require("../models");
-var mandrill = require("../library/mandrill");
+var stripe = require("stripe")( process.env.HEZ_STRIPE_API );
 
 var transaction = "";
 
@@ -36,7 +36,7 @@ describe("Single Refund", function() {
         });
     });
 
-    it("successfully saved the refund [webhooks]", function( done ) {
+    /*it("successfully saved the refund [webhooks]", function( done ) {
         var counter = 0;
 
         var findTransaction = (function findTransaction() {
@@ -55,5 +55,5 @@ describe("Single Refund", function() {
                 }
             });
         })();
-    });
+    });*/
 });

@@ -9,22 +9,16 @@ if ( process.env.NODE_ENV !== "testing" ) {
     require("node-env-file")(__dirname + "/../.env.testing");
 }
 
-var should = require("should");
-var request = require("request");
 var database = require("../models");
 
 describe("Setup Tests", function() {
-    it("successfully wakes up the testing server", function( done ) {
-        request({
-            url: process.env.HEZ_TESTING_SERVER + "/health",
-            json: true
-        }, function( error, response, body ) {
-            should( error ).not.be.ok;
+    it('successfully create the database structure', function( done ) {
+        var database = require('../models');
 
-            // *Yawn*, our server is groggy when he first wakes up
-            setTimeout(function() {
-                done();
-            }, 5000);
+        database.sequelize.sync({ force: true }).then(function() {
+            done();
+        }, function( error ) {
+            done( error );
         });
     });
 });

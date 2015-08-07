@@ -10,10 +10,10 @@ if ( process.env.NODE_ENV !== "testing" ) {
 }
 
 var should = require("should");
-var stripe = require("stripe")( "sk_test_NNOEYfuSLvdLlZrd7jNFRIzg" );
-var request = require("request");
+var request = require('supertest');
+var hezekiah = require('../app.js');
 var database = require("../models");
-var mandrill = require("../library/mandrill");
+var stripe = require("stripe")( process.env.HEZ_STRIPE_API );
 
 var data = require("./data.json");
 var receiptID = "";
@@ -37,28 +37,29 @@ describe("Special Features", function() {
         tokenize(data.single.card, function( token ) {
             data.single.donation.token = token;
 
-            request({
-                url: process.env.HEZ_TESTING_SERVER + "/donate/one",
-                method: "POST",
-                form: data.single.donation,
-                json: true
-            }, function( error, response, body ) {
-                should( body.status ).equal("success");
+            request( hezekiah )
+                .post( "/donate/one" )
+                .type( "form" )
+                .send( data.single.donation )
+                .end(function( error, response ) {
+                    var body = response.body;
 
-                tokenize(data.single.card, function( token ) {
-                    data.single.donation.token = token;
+                    should( body.status ).equal("success");
 
-                    request({
-                        url: process.env.HEZ_TESTING_SERVER + "/donate/one",
-                        method: "POST",
-                        form: data.single.donation,
-                        json: true
-                    }, function( error, response, body ) {
-                        should( body.status ).equal("error");
+                    tokenize(data.single.card, function( token ) {
+                        data.single.donation.token = token;
 
-                        done();
+                        request( hezekiah )
+                            .post( "/donate/one" )
+                            .type( "form" )
+                            .send( data.single.donation )
+                            .end(function( error, response ) {
+                                var body = response.body;
+                                should( body.status ).equal("error");
+
+                                done();
+                            });
                     });
-                });
             });
         });
     });
@@ -69,28 +70,30 @@ describe("Special Features", function() {
         tokenize(data.single.card, function( token ) {
             data.monthly.donation.token = token;
 
-            request({
-                url: process.env.HEZ_TESTING_SERVER + "/donate/monthly",
-                method: "POST",
-                form: data.monthly.donation,
-                json: true
-            }, function( error, response, body ) {
-                should( body.status ).equal("success");
+            request( hezekiah )
+                .post( "/donate/monthly" )
+                .type( "form" )
+                .send( data.monthly.donation )
+                .end(function( error, response ) {
+                    var body = response.body;
 
-                tokenize(data.single.card, function( token ) {
-                    data.monthly.donation.token = token;
+                    should( body.status ).equal("success");
 
-                    request({
-                        url: process.env.HEZ_TESTING_SERVER + "/donate/monthly",
-                        method: "POST",
-                        form: data.monthly.donation,
-                        json: true
-                    }, function( error, response, body ) {
-                        should( body.status ).equal("error");
+                    tokenize(data.single.card, function( token ) {
+                        data.monthly.donation.token = token;
 
-                        done();
+                        request( hezekiah )
+                            .post( "/donate/monthly" )
+                            .type( "form" )
+                            .send( data.monthly.donation )
+                            .end(function( error, response ) {
+                                var body = response.body;
+
+                                should( body.status ).equal("error");
+
+                                done();
+                            });
                     });
-                });
             });
         });
     });
