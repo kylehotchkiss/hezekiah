@@ -10,7 +10,6 @@ general:
 dependencies:
   pre:
     - gem install ultrahook
-    - echo "api_key: mgvaQWY46Tc2zou3t0ZbYfL1psLThMsW" > ~/.ultrahook
 
 deployment:
   staging:
