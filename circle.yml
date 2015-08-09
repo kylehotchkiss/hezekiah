@@ -5,7 +5,8 @@ machine:
 general:
   branches:
     only:
-      - three
+      - master
+      - staging
 
 dependencies:
   pre:
