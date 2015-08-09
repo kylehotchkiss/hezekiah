@@ -36,7 +36,7 @@ describe("Single Refund", function() {
         });
     });
 
-    /*it("successfully saved the refund [webhooks]", function( done ) {
+    it("successfully saved the refund [webhooks]", function( done ) {
         var counter = 0;
 
         var findTransaction = (function findTransaction() {
@@ -55,5 +55,5 @@ describe("Single Refund", function() {
                 }
             });
         })();
-    });*/
+    });
 });

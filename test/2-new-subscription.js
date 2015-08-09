@@ -73,7 +73,7 @@ describe("Monthly Subscriptions - New Donor", function() {
         }, 1000);
     });
 
-    /*it("successfully saved the first transaction [webhooks]", function( done ) {
+    it("successfully saved the first transaction [webhooks]", function( done ) {
         var counter = 0;
 
         var findTransaction = (function findTransaction() {
@@ -83,7 +83,7 @@ describe("Monthly Subscriptions - New Donor", function() {
                 if ( donationObj === null ) {
                     setTimeout(function() {
                         findTransaction();
-                    }, 5000);
+                    }, 1000);
                 } else {
                     // We need to round the amount the same way that the backend will - converting to a dollar
                     // amount and rounding via toFixed();
@@ -98,5 +98,5 @@ describe("Monthly Subscriptions - New Donor", function() {
                 }
             });
         })();
-    });*/
+    });
 });

@@ -21,7 +21,7 @@ var transaction = "";
 data.stolen.donation.amount = ((( Math.random() * 100 )) * 100).toFixed(0);
 
 describe("Single Donation - Chargeback", function() {
-    /*it("successfully processed the donation [api]", function( done ) {
+    it("successfully processed the donation [api]", function( done ) {
         stripe.tokens.create({
             card: data.stolen.card
         }, function( error, token ) {
@@ -41,7 +41,7 @@ describe("Single Donation - Chargeback", function() {
 
                     var updateDispute = (function updateDispute() {
                         stripe.charges.updateDispute(transaction, {
-                            evidence: "losing_evidence"
+                            evidence: {"uncategorized_text": "losing_evidence" }
                         }, function( error, dispute ) {
                             if ( error ) {
                                 setTimeout(function() {
@@ -54,9 +54,9 @@ describe("Single Donation - Chargeback", function() {
                     })();
                 });
         });
-    });*/
+    });
 
-    /*it("successfully saved the refund [webhooks]", function( done ) {
+    it("successfully saved the refund [webhooks]", function( done ) {
         var counter = 0;
 
         var findTransaction = (function findTransaction() {
@@ -75,5 +75,5 @@ describe("Single Donation - Chargeback", function() {
                 }
             });
         })();
-    });*/
+    });
 });

@@ -80,7 +80,7 @@ describe("Monthly Subscriptions - Previous Donor", function() {
         }, 1000);
     });
 
-    /*it("successfully saved the first transaction [webhooks]", function( done ) {
+    it("successfully saved the first transaction [webhooks]", function( done ) {
         var counter = 0;
 
         var findTransaction = (function findTransaction() {
@@ -105,5 +105,5 @@ describe("Monthly Subscriptions - Previous Donor", function() {
                 }
             });
         })();
-    });*/
+    });
 });
