@@ -18,6 +18,8 @@ var log = function( text ) {
 
 /* Try to load database or complain */
 if ( process.env.DATABASE_URL ) {
+    console.log( process.env.DATABASE_URL );
+
     var options = {
         logging: log
     };
