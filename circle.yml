@@ -14,10 +14,14 @@ dependencies:
 
 test:
   override:
-    - ultrahook hezekiah 5000 & ./node_modules/mocha/bin/mocha
+    - ultrahook circleci 5000 & ./node_modules/mocha/bin/mocha
 
 deployment:
+  production:
+    branch: master
+    heroku:
+      appname: hezekiah-illuminatenations
   staging:
-    branch: three
+    branch: staging
     heroku:
       appname: hezekiah-staging
