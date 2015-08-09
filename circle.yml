@@ -14,7 +14,7 @@ dependencies:
 
 test:
   override:
-    -  killall ultrahook & ultrahook hezekiah 5000 & ./node_modules/mocha/bin/mocha
+    - ultrahook hezekiah 5000 & ./node_modules/mocha/bin/mocha
 
 deployment:
   staging:
