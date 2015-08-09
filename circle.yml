@@ -11,6 +11,10 @@ dependencies:
   pre:
     - gem install ultrahook
 
+test:
+  override:
+    -  killall ultrahook & ultrahook hezekiah 5000 & ./node_modules/mocha/bin/mocha
+
 deployment:
   staging:
     branch: three
