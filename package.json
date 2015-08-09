@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "test": "( killall ultrahook &> /dev/null ) & ( ultrahook hezekiah 5000 &> /dev/null ) & ./node_modules/mocha/bin/mocha"
+    "test": "( killall ultrahook &> /dev/null ) & ( ultrahook testing 5000 &> /dev/null ) & ./node_modules/mocha/bin/mocha"
   },
   "engines": {
     "node": "0.10.x"

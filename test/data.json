@@ -22,7 +22,7 @@
         "donation": {
             "name": "Monthly Mocha",
             "email": "testing+monthly@illuminatenations.org",
-            "campaign": "mocha",
+            "campaign": "latte",
             "description": "Mocha Test Suite",
             "addressCity": "Lynchburg",
             "addressState": "Virginia",
@@ -41,7 +41,7 @@
         "donation": {
             "name": "Chargeback Charlie",
             "email": "testing+chargeback@illuminatenations.org",
-            "campaign": "mocha",
+            "campaign": "chai",
             "description": "Mocha Test Suite",
             "addressCity": "Lynchburg",
             "addressState": "Virginia",

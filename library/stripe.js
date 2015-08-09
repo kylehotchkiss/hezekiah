@@ -15,6 +15,23 @@ var siftscience = require("./siftscience.js");
 // Otherwise, leave funds alone for stripe to transfer all by itself.
 //
 
+// Retrieve or Create a Campaign
+var retrieveCampaign = function( donation, callback ) {
+    var campaign = {
+        slug: donation.campaign
+    };
+
+    database.Campaign.findOrCreate( { where: campaign, defaults: campaign } ).then(function( campaignObj ) {
+        if ( campaignObj === null ) {
+            callback( false, false );
+        } else {
+            callback( false, campaignObj[0].toJSON() );
+        }
+    }, function( error ) {
+        callback( error, false );
+    });
+};
+
 // Retrieve or Create a Donor
 var retrieveDonor = function( donor, callback ) {
     database.Donor.findOrCreate( { where: { email: donor.email }, defaults: donor } ).then(function( donorObj ) {
@@ -275,35 +292,37 @@ var dedupDonation = function( donation, callback ) {
 
 exports.single = function( donation, callback ) {
     processDonor( donation, function( error, donor ) {
-        donation.donorID = donor;
+        retrieveCampaign( donation, function( error, campaign ) {
+            donation.donorID = donor;
 
-        dedupDonation( donation, function( error, duplicate ) {
-            if ( error ) {
-                callback( error, false );
-            } else if ( duplicate ) {
-                callback( { slug: "duplicate", message: "You made this donation within the past five minutes. <br /> Please wait a few minutes to try again." }, false );
-            } else {
-                stripe.charges.create({
-                    card: donation.token,
-                    currency: "usd",
-                    amount: donation.amount,
-                    description: "Donation" + ( donation.description ? ( " for " + donation.description ) : "" ),
-                    metadata: {
-                        ip: donation.ip,
-                        campaign: donation.campaign,
-                        email: donation.email
-                    }
-                }, function( error, charge ) {
-                    if ( error ) {
-                        callback( error, false );
-                    } else {
-                        callback( false, charge );
-                    }
+            dedupDonation( donation, function( error, duplicate ) {
+                if ( error ) {
+                    callback( error, false );
+                } else if ( duplicate ) {
+                    callback( { slug: "duplicate", message: "You made this donation within the past five minutes. <br /> Please wait a few minutes to try again." }, false );
+                } else {
+                    stripe.charges.create({
+                        card: donation.token,
+                        currency: "usd",
+                        amount: donation.amount,
+                        description: "Donation" + ( donation.description ? ( " for " + donation.description ) : "" ),
+                        metadata: {
+                            ip: donation.ip,
+                            campaign: donation.campaign,
+                            email: donation.email
+                        }
+                    }, function( error, charge ) {
+                        if ( error ) {
+                            callback( error, false );
+                        } else {
+                            callback( false, charge );
+                        }
 
-                    // Stripe has built-in fraud detection
-                    // siftscience.report( donation, charge );
-                });
-            }
+                        // Stripe has built-in fraud detection
+                        // siftscience.report( donation, charge );
+                    });
+                }
+            });
         });
     });
 };
@@ -311,38 +330,40 @@ exports.single = function( donation, callback ) {
 
 exports.monthly = function( donation, callback ) {
     processDonor(donation, function( error, donorID, customerID ) {
-        donation.donorId = donorID;
+        retrieveCampaign( donation, function( error, campaign ) {
+            donation.donorId = donorID;
 
-        dedupSubscription( donation, customerID, function( error, duplicate ) {
-            if ( error ) {
-                callback( error, false );
-            } else if ( duplicate ) {
-                callback( { slug: "duplicate", message: "You already make monthly donations to this cause." }, false );
-            } else {
-                verifyPlan(function( error ) {
-                    if ( error ) {
-                        callback( error, false );
-                    } else {
-                        stripe.customers.createSubscription(customerID, {
-                            plan: "one",
-                            quantity: Math.floor( donation.amount / 100 ),
-                            metadata: {
-                                ip: donation.ip,
-                                email: donation.email,
-                                campaign: donation.campaign,
-                                description: donation.description,
-                                subcampaign: donation.subcampaign
-                            }
-                        }, function( error, subscription ) {
-                            if ( error ) {
-                                callback( error, false );
-                            } else {
-                                callback( false, subscription );
-                            }
-                        });
-                    }
-                });
-            }
+            dedupSubscription( donation, customerID, function( error, duplicate ) {
+                if ( error ) {
+                    callback( error, false );
+                } else if ( duplicate ) {
+                    callback( { slug: "duplicate", message: "You already make monthly donations to this cause." }, false );
+                } else {
+                    verifyPlan(function( error ) {
+                        if ( error ) {
+                            callback( error, false );
+                        } else {
+                            stripe.customers.createSubscription(customerID, {
+                                plan: "one",
+                                quantity: Math.floor( donation.amount / 100 ),
+                                metadata: {
+                                    ip: donation.ip,
+                                    email: donation.email,
+                                    campaign: donation.campaign,
+                                    description: donation.description,
+                                    subcampaign: donation.subcampaign
+                                }
+                            }, function( error, subscription ) {
+                                if ( error ) {
+                                    callback( error, false );
+                                } else {
+                                    callback( false, subscription );
+                                }
+                            });
+                        }
+                    });
+                }
+            });
         });
     });
 };
