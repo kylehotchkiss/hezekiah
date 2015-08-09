@@ -8,12 +8,11 @@ module.exports = function( sequelize, type ) {
     var User = sequelize.define('User', {
         id: { type: type.INTEGER, primaryKey: true, autoIncrement: true, unique: true },
 
-        //username
-        //password
-        //firstname
-        //lastname
-        //role enum admin reports campaign
-        //campaigns
+        username: { type: type.STRING, allowNull: false, unique: true },
+        password: { type: type.STRING, allowNull: false, },
+        firstname: { type: type.STRING },
+        lastname: { type: type.STRING },
+        role: { type: type.ENUM, values: ['admin', 'campaigns', 'reporting'], allowNull: false, defaultValue: 'reporting' },
     }, {
         classMethods: {
             associate: function( models ) { }

@@ -8,7 +8,7 @@ module.exports = function( sequelize, type ) {
         id: { type: type.INTEGER, primaryKey: true, autoIncrement: true, unique: true },
 
         email: { type: type.STRING, allowNull: false },
-        amount: { type: type.INTEGER, allowNull: false },
+        amount: { type: type.DECIMAL, allowNull: false },
         campaign: { type: type.STRING, allowNull: false },
         description: { type: type.STRING, allowNull: false },
 
@@ -21,7 +21,7 @@ module.exports = function( sequelize, type ) {
         ip: { type: type.STRING },
         donorID: { type: type.INTEGER, references: { model: 'Donors', key: 'id' } },
         transactionID: { type: type.STRING, unique: true },
-        transactionFee: { type: type.INTEGER, allowNull: false },
+        transactionFee: { type: type.DECIMAL, allowNull: false },
         subscriptionID: { type: type.STRING },
         receiptID: { type: type.STRING }
     }, {
@@ -30,7 +30,7 @@ module.exports = function( sequelize, type ) {
                 Donation.belongsTo( models.Donor, { foreignKey: "donorID", foreignKeyConstraint: true } );
             }
         }
-    });    
+    });
 
     return Donation;
 };
