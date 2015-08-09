@@ -1,3 +1,9 @@
 test/
+_build/
 scripts/
 fixtures/
+
+.editorconfig
+circle.yml
+gulpfile.js
+readme.md
