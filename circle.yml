@@ -10,6 +10,7 @@ general:
 dependencies:
   pre:
     - gem install ultrahook
+    - "echo api_key: 0pMcxt1yJrTjUBrGabXrezCRzGRjPsig > ~/.ultrahook"
 
 test:
   override:
