@@ -10,14 +10,15 @@ module.exports = function( sequelize, type ) {
 
         slug: { type: type.STRING, allowNull: false, unique: true },
         name: { type: type.STRING },
+        mode: { type: type.ENUM, values: ['flexible', 'designated', 'sponsorship', 'ticketed'], allowNull: false, defaultValue: 'flexible' },
 
         direct: { type: type.STRING, unique: true }, // Unused
         expose: { type: type.BOOLEAN, defaultValue: false },
-        subcampaign: { type: type.ENUM, values: ['flexible', 'designated', 'sponsorship', 'ticketed'], allowNull: false, defaultValue: 'flexible' },
     }, {
         classMethods: {
             associate: function( models ) {
-                Campaign.hasMany( models.Donation );
+                Campaign.hasMany( models.Donation, { foreignKey: 'campaign' } );
+                Campaign.hasMany( models.Subcampaign, { foreignKey: 'campaign' } );
             }
         }
     });

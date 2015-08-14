@@ -22,7 +22,7 @@ module.exports = function( sequelize, type ) {
     }, {
         classMethods: {
             associate: function( models ) {
-                Donor.hasMany( models.Donation, { foreignKey: "donorID", foreignKeyConstraint: true } );
+                Donor.hasMany( models.Donation, { foreignKey: "donorID" } );
             }
         }
     });

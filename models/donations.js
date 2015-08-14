@@ -14,7 +14,7 @@ module.exports = function( sequelize, type ) {
         description: { type: type.STRING, allowNull: false },
 
         source: { type: type.STRING },
-        subcampaign: { type: type.STRING },
+        subcampaign: { type: type.STRING, references: { model: 'Subcampaigns', key: 'slug' } },
 
         refunded: { type: type.BOOLEAN, default: false },
         recurring: { type: type.BOOLEAN, default: false },
@@ -27,8 +27,9 @@ module.exports = function( sequelize, type ) {
     }, {
         classMethods: {
             associate: function( models ) {
-                Donation.belongsTo( models.Donor );
-                Donation.belongsTo( models.Campaign );
+                Donation.belongsTo( models.Donor, { foreignKey: "donorID" } );
+                Donation.belongsTo( models.Campaign, { foreignKey: "campaign" } );
+                Donation.belongsTo( models.Subcampaign, { foreignKey: "subcampaign" } );
             }
         }
     });
