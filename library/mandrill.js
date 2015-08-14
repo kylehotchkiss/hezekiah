@@ -30,7 +30,7 @@ exports.send = function( email, subject, incoming, template, callback ) {
     }
 
     if ( send ) {
-        if ( typeof content.date === "number" ) {
+        if ( typeof content.date === "number" || content.date instanceof Date ) {
             content.date = moment( content.date ).format('M/D/YYYY [at] h:mm a');
         }
 

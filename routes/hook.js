@@ -21,7 +21,7 @@ exports.dispatcher = function( req, res ) {
 
         var id;
 
-        if ( stripeEvent.type === "charge.refunded" ){
+        if ( stripeEvent.type === "charge.refunded" ) {
             id = transaction.id;
         } else {
             id = transaction.charge;
@@ -29,7 +29,9 @@ exports.dispatcher = function( req, res ) {
 
         database.Donation.find({ where: { "transactionID": id } }).then(function( donationObj ) {
             if ( donationObj !== null ) {
-                hooks.postRefund( donationObj.toJSON() );
+                donationObj.getDonor().then(function( donorObj ) {
+                    hooks.postRefund( donationObj.toJSON(), donorObj.toJSON() );
+                });
             }
         });
     } else if ( stripeEvent.type === "invoice.payment_succeeded" ) {
@@ -45,6 +47,7 @@ exports.dispatcher = function( req, res ) {
                 var donation = {
                     recurring: true,
                     source: "stripe",
+                    name: donorObj.name,
                     donorID: donorObj.id,
                     email: donorObj.email,
                     date: transaction.date * 1000,
@@ -69,24 +72,36 @@ exports.dispatcher = function( req, res ) {
         // Monthly donations successfully begun
         //
 
-        hooks.postSubscribe({
-            name: transaction.metadata.name,
-            date: transaction.start * 1000,
-            email: transaction.metadata.email,
-            amount: transaction.quantity, // Stripe tracks quantity for plans
-            description: transaction.metadata.description
+        customer = transaction.customer;
+
+        database.Donor.find({ where: { "customerID": customer } }).then(function( donorObj ) {
+            if ( donorObj !== null ) {
+                hooks.postSubscribe({
+                    name: donorObj.name,
+                    date: transaction.start * 1000,
+                    email: transaction.metadata.email,
+                    amount: transaction.quantity, // Stripe tracks quantity for plans
+                    description: transaction.metadata.description
+                });
+            }
         });
     } else if ( stripeEvent.type === "customer.subscription.deleted" ) {
         //
         // Monthly donations successfully ended
         //
 
-        hooks.postUnsubscribe({
-            name: transaction.metadata.name,
-            date: transaction.canceled_at * 1000,
-            email: transaction.metadata.email,
-            amount: transaction.quantity, // Stripe tracks quantity for plans
-            description: transaction.metadata.description
+        customer = transaction.customer;
+
+        database.Donor.find({ where: { "customerID": customer } }).then(function( donorObj ) {
+            if ( donorObj !== null ) {
+                hooks.postUnsubscribe({
+                    name: donorObj.name,
+                    date: transaction.canceled_at * 1000,
+                    email: transaction.metadata.email,
+                    amount: transaction.quantity, // Stripe tracks quantity for plans
+                    description: transaction.metadata.description
+                });
+            }
         });
     }
 
