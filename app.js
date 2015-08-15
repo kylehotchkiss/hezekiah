@@ -15,6 +15,7 @@ if ( environment === "production" ) {
 var meta = require('./package.json');
 var config = require('./config.json'); // TODO: Load sequalize settings into .env
 
+var url = require('url');
 var cors = require('cors');
 var raven = require('raven');
 var express = require('express');
@@ -48,6 +49,17 @@ app.use(compress());
 app.use(bodyParser());
 app.use(validator());
 app.use(express.static('public',  { maxAge: '1w' }));
+
+//
+// Set subdomain for account purposes
+// This depends on a wildcard domain on our TLD
+// along with proper certificate setup
+//
+app.use(function( req, res, next ) {
+    req.subdomain = req.get('host').split('.')[0];
+
+    next();
+});
 
 
 //

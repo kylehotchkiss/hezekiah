@@ -93,16 +93,13 @@ var slack = function( message, callback ) {
 };
 
 exports.postDonate = function( donation, callback ) {
-    receipt( donation, "Thank you for your donation!", "donation-receipt", function( error, receipt ) {
-        donation.receiptID = receipt;
+    save( donation, function() {
+        donation.amount = donation.amount / 100;
 
-        save( donation, function() {
-            donation.amount = donation.amount / 100;
-
-            slack("[donation] A $" + donation.amount + " donation for " + donation.description + " was successfully processed" );
-            notification( donation, "[donation] A donation has been processed", "donation-notification" );
-            subscribe( donation );
-        });
+        slack("[donation] A $" + donation.amount + " donation for " + donation.description + " was successfully processed" );
+        receipt( donation, "Thank you for your donation!", "donation-receipt");
+        notification( donation, "[donation] A donation has been processed", "donation-notification" );
+        subscribe( donation );
     });
 
     // quickbooks
@@ -112,7 +109,7 @@ exports.postRefund = function( donation, donor, callback ) {
     donation.refunded = true;
 
     save( donation, function() {
-        donation.amount = ( donation.amount / 100 );
+        donation.amount = donation.amount / 100;
         donation.name = donor.name;
         donation.date = donation.updatedAt;
 
