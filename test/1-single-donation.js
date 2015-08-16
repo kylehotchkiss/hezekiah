@@ -31,7 +31,7 @@ describe("Single Donation", function() {
             data.single.donation.token = token.id;
 
             request( hezekiah )
-                .post( "/donate/one" )
+                .post( "/api/donate/one" )
                 .type( 'form' )
                 .send( data.single.donation )
                 .end(function( error, response ) {

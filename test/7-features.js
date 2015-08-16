@@ -38,7 +38,7 @@ describe("Special Features", function() {
             data.single.donation.token = token;
 
             request( hezekiah )
-                .post( "/donate/one" )
+                .post( "/api/donate/one" )
                 .type( "form" )
                 .send( data.single.donation )
                 .end(function( error, response ) {
@@ -50,7 +50,7 @@ describe("Special Features", function() {
                         data.single.donation.token = token;
 
                         request( hezekiah )
-                            .post( "/donate/one" )
+                            .post( "/api/donate/one" )
                             .type( "form" )
                             .send( data.single.donation )
                             .end(function( error, response ) {
@@ -71,7 +71,7 @@ describe("Special Features", function() {
             data.monthly.donation.token = token;
 
             request( hezekiah )
-                .post( "/donate/monthly" )
+                .post( "/api/donate/monthly" )
                 .type( "form" )
                 .send( data.monthly.donation )
                 .end(function( error, response ) {
@@ -83,7 +83,7 @@ describe("Special Features", function() {
                         data.monthly.donation.token = token;
 
                         request( hezekiah )
-                            .post( "/donate/monthly" )
+                            .post( "/api/donate/monthly" )
                             .type( "form" )
                             .send( data.monthly.donation )
                             .end(function( error, response ) {

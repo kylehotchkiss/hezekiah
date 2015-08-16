@@ -50,11 +50,11 @@ module.exports = function( app ) {
     app.get('/hook/backup', hook.backup);
 
 
-    // Donation Processing
-    app.get('/donate/retrieve', donate.retrieve);
-    app.post('/donate/one', donate.one);
-    app.post('/donate/monthly', donate.monthly);
-    app.get('/donate/cancel', donate.cancel);
+    // API: Donation Processing 
+    app.get('/api/donate/retrieve', donate.retrieve);
+    app.post('/api/donate/one', donate.one);
+    app.post('/api/donate/monthly', donate.monthly);
+    app.get('/api/donate/cancel', donate.cancel);
 
 
     // Reporting

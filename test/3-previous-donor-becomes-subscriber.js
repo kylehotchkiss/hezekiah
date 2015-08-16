@@ -28,7 +28,7 @@ describe("Monthly Subscriptions - Previous Donor", function() {
             data.single.donation.token = token.id;
 
             request( hezekiah )
-                .post( "/donate/monthly" )
+                .post( "/api/donate/monthly" )
                 .type( 'form' )
                 .send( data.single.donation )
                 .end(function( error, response ) {

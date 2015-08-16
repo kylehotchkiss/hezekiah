@@ -28,7 +28,7 @@ describe("Single Donation - Chargeback", function() {
             data.stolen.donation.token = token.id;
 
             request( hezekiah )
-                .post( "/donate/one" )
+                .post( "/api/donate/one" )
                 .type( "form" )
                 .send( data.stolen.donation )
                 .end(function( error, response ) {

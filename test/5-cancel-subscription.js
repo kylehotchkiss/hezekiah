@@ -24,7 +24,7 @@ var qs = "?email=" + encodeURIComponent( data.monthly.donation.email ) +
 describe("Cancel Subscription", function() {
     it("successfully queries the quantity of subscriptions [api]", function( done ) {
         request( hezekiah )
-            .get( "/donate/retrieve" + qs )
+            .get( "/api/donate/retrieve" + qs )
             .end(function( error, response ) {
                 var body = response.body;
                 should( body.status ).equal("success");
@@ -36,7 +36,7 @@ describe("Cancel Subscription", function() {
 
     it("successfully cancels the subscriptions [api]", function( done ) {
         request( hezekiah )
-            .get( "/donate/cancel" + qs )
+            .get( "/api/donate/cancel" + qs )
             .end(function( error, response ) {
                 var body = response.body;
                 should( body.status ).equal("success");
@@ -68,9 +68,9 @@ describe("Cancel Subscription", function() {
         }, 1000);
     });
 
-    it("successfully receives a response of 0 while querying quantity of subscriptions [api]", function( done ) {            
+    it("successfully receives a response of 0 while querying quantity of subscriptions [api]", function( done ) {
         request( hezekiah )
-            .get( "/donate/retrieve" + qs )
+            .get( "/api/donate/retrieve" + qs )
             .end(function( error, response ) {
                 var body = response.body;
 
