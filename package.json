@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "test": "( killall ultrahook &> /dev/null ) & ( ultrahook testing 5000 &> /dev/null ) & ./node_modules/mocha/bin/mocha --require blanket -R html-cov > coverage.html"
+    "test": "( killall ultrahook &> /dev/null ) & ( ultrahook testing 5000 &> /dev/null ) & ./node_modules/mocha/bin/mocha",
+    "coverage": "( killall ultrahook &> /dev/null ) & ( ultrahook testing 5000 &> /dev/null ) & (istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec)"
   },
   "engines": {
     "node": "0.10.x"
