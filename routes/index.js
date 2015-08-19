@@ -50,19 +50,42 @@ module.exports = function( app ) {
     app.get('/hook/backup', hook.backup);
 
 
-    // API: Donation Processing 
+    // API: Donation Processing
     app.get('/api/donate/retrieve', donate.retrieve);
     app.post('/api/donate/one', donate.one);
     app.post('/api/donate/monthly', donate.monthly);
     app.get('/api/donate/cancel', donate.cancel);
 
+    /*
+    app.get('/admin') // Login - Dashboard
+    app.post('/admin/login') // - Login Action
+    app.get('/admin/logout') // - Logout Action
+    app.post('/admin/user') // - New User
+    app.post('/admin/user/:user') // - Update User
+    app.post('/admin/account') // - Update account settings
+    app.post('/admin/integrations') // - Update account Integrations
+    app.get('/admin/campaigns') // View all campaigns
+    app.post('/admin/campaigns') // Make new campaign
+    app.get('/admin/campaigns/:campaign') // View Campaign
+    app.post('/admin/campaigns/:campaign') // Edit Campaign
+    app.get('/admin/campaigns/:campaign/subcampaigns') // View subcampaigns
+    app.post('/admin/campaigns/:campaign/subcampaigns') // Make new subcampaign
+    app.get('/admin/campaigns/:campaign/subcampaigns/:subcampaign') // View subcampaign
+    app.post('/admin/campaigns/:campaign/subcampaigns/:subcampaign') // Edit subcampaign
+
+    USER LEVELS
+        Account Admin (change account settings)
+        Campaigns Manager (change campaigns and associated settings)
+        Reporting (view reports)
+    */
+
 
     // Reporting
-    app.get('/reporting/latest', reporting.latest);
-    app.get('/reporting/monthly', reporting.monthly);
-    app.get('/reporting/annual', reporting.annual);
-    app.get('/reporting/donors', reporting.donors);
-    app.get('/reporting/campaigns', reporting.campaigns);
+    app.get('/admin/reporting/latest', reporting.latest);
+    app.get('/admin/reporting/monthly', reporting.monthly);
+    app.get('/admin/reporting/annual', reporting.annual);
+    app.get('/admin/reporting/donors', reporting.donors);
+    app.get('/admin/reporting/campaigns', reporting.campaigns);
 
 
     // 404

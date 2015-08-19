@@ -63,6 +63,9 @@ exports.dispatcher = function( req, res ) {
 
                     hooks.postDonate( donation );
                 });
+            } else {
+                console.log("Customer not found... " + customer);
+                console.log( transaction )
             }
         });
 

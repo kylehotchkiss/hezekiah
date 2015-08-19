@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "test": "( killall ultrahook &> /dev/null ) & ( ultrahook testing 5000 &> /dev/null ) & ./node_modules/mocha/bin/mocha"
+    "test": "( killall ultrahook &> /dev/null ) & ( ultrahook testing 5000 &> /dev/null ) & ./node_modules/mocha/bin/mocha --require blanket -R html-cov > coverage.html"
   },
   "engines": {
     "node": "0.10.x"
@@ -45,6 +45,7 @@
     "with-env": "^0.1.0"
   },
   "devDependencies": {
+    "blanket": "^1.1.7",
     "del": "^1.1.1",
     "gulp": "^3.8.10",
     "gulp-autoprefixer": "^2.1.0",
