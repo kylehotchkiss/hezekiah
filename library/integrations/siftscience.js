@@ -5,7 +5,7 @@
 //
 
 var request = require("request");
-var countries = require("../data/countries.json");
+var countries = require("../../data/countries.json");
 
 var API = "https://api.siftscience.com/v203/events";
 

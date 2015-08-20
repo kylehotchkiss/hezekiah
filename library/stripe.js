@@ -6,7 +6,7 @@
 
 var stripe = require("stripe")( process.env.HEZ_STRIPE_API );
 var database = require("../models");
-var siftscience = require("./siftscience.js");
+var siftscience = require("./integrations/siftscience.js");
 
 //
 // Idea: direct fundrasing platform for missionaries

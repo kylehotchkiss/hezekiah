@@ -5,9 +5,9 @@
 //
 
 var request = require('request');
-var mandrill = require("../library/mandrill.js");
 var database = require("../models");
-var mailchimp = require("../library/mailchimp.js");
+var mandrill = require("../library/integrations/mandrill.js");
+var mailchimp = require("../library/integrations/mailchimp.js");
 
 /*donation
     send to quickbooks

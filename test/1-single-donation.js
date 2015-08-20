@@ -13,7 +13,6 @@ var should = require("should");
 var request = require('supertest');
 var database = require("../models");
 var hezekiah = require('../app.js');
-var mandrill = require("../library/mandrill");
 var stripe = require("stripe")( process.env.HEZ_STRIPE_API );
 
 var data = require("./data.json");
@@ -69,4 +68,7 @@ describe("Single Donation", function() {
             });
         }, 1000);
     });
+
+    it("successfully created a campaign record [database]");
+    it("successfully created a subcampaign record [database]");
 });
