@@ -72,8 +72,12 @@ module.exports = {
         console.log( level );
 
         return function( req, res, next ) {
-            console.log("Checking in");
-            next();
+            if ( req.isAuthenticated() ) { // check those levels too
+                next();
+            } else {
+                req.flash('error', 'You must be logged in to view that page');
+                res.redirect('/admin');
+            }
         };
     },
 };
