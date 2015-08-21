@@ -1,9 +1,19 @@
-module.exports = function() {
-    this.actions = {
-        login: function( req, res ) {
-            passport.authenticate('local', { successRedirect: '/', failureRedirect: '/', failureFlash: true });
+module.exports = {
+    views: {
+        index: function( req, res ) {
+            if ( req.isAuthenticated() ) {
+                res.render("dashboard.html");
+            } else {
+                var error = req.flash('error');
+
+                if ( Array.isArray( error ) ) {
+                    error = error[0];
+                }
+
+                res.render("login.html", { error: error });
+            }
         }
-    };
+    }
 };
 
 /*exports.views.login

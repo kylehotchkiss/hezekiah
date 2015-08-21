@@ -1,0 +1,6 @@
+<form action="/admin/login" method="POST">
+    {% if error %}{{ error }}{% endif %}
+    <input type="text" name="username" placeholder="Username" />
+    <input type="password" name="password" placeholder="Password" />
+    <button type="submit">Log In</button
+</form>

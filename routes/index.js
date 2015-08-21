@@ -15,8 +15,9 @@ var express = require('express');
 var passport = require('passport');
 var donate = require("./donate.js");
 var reporting = require("./reporting.js");
-var local = require('passport-local').Strategy;
+var Local = require('passport-local').Strategy;
 
+var admin = require('./admin.js');
 var user = require('../library/components/user.js');
 
 module.exports = function( app ) {
@@ -40,21 +41,29 @@ module.exports = function( app ) {
     app.set('view engine', 'html');
     app.set('views', __dirname + '/../views');
 
+    app.use(require('connect-flash')());
+    app.use(require('cookie-parser')());
+    app.use(require('body-parser').urlencoded({ extended: true }));
+    app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+    app.use(passport.initialize());
+    app.use(passport.session());
+
     if ( environment !== "production" ) {
         app.set('view cache', false);
         swig.setDefaults({ cache: false, locals: { "environment": "development" } });
     }
 
+
+    // Redirect all root requests
     app.get('/', function( req, res ) {
         res.redirect('http://www.hezekiahapp.com/?referrer=' + req.subdomain);
     });
 
+
     // Login/Sessions
-    passport.use(new local( user.login ));
+    passport.use(new Local( user.login ));
     passport.serializeUser( user.serialize );
     passport.deserializeUser( user.unserialize );
-
-    app.post('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login', failureFlash: true }));
 
 
     // Hooks
@@ -68,8 +77,9 @@ module.exports = function( app ) {
     app.post('/api/donate/monthly', donate.monthly);
     app.get('/api/donate/cancel', donate.cancel);
 
+
     /*
-    app.get('/admin', user.auth('reporting'),) // Login - Dashboard
+     // Login - Dashboard
     app.post('/admin/login') // - Login Action
     app.get('/admin/logout') // - Logout Action
     app.post('/admin/user', user.auth('admin'),) // - New User
@@ -91,6 +101,10 @@ module.exports = function( app ) {
         Reporting (view reports)
     */
 
+
+    // Admin
+    app.get('/admin', admin.views.index);
+    app.post('/admin/login', passport.authenticate('local', { successRedirect: '/admin', failureRedirect: '/admin', failureFlash: true }));
 
     // Reporting
     app.get('/admin/reporting/latest', user.auth('reporting'), reporting.latest);
