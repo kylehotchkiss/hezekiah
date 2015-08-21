@@ -12,8 +12,12 @@ var swig = require('swig');
 var moment = require("moment");
 var hook = require("./hook.js");
 var express = require('express');
+var passport = require('passport');
 var donate = require("./donate.js");
 var reporting = require("./reporting.js");
+var local = require('passport-local').Strategy;
+
+var user = require('../library/components/user.js');
 
 module.exports = function( app ) {
 
@@ -45,6 +49,14 @@ module.exports = function( app ) {
         res.redirect('http://www.hezekiahapp.com/?referrer=' + req.subdomain);
     });
 
+    // Login/Sessions
+    passport.use(new local( user.login ));
+    passport.serializeUser( user.serialize );
+    passport.deserializeUser( user.unserialize );
+
+    app.post('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login', failureFlash: true }));
+
+
     // Hooks
     app.post('/hook/stripe', hook.dispatcher);
     app.get('/hook/backup', hook.backup);
@@ -57,21 +69,21 @@ module.exports = function( app ) {
     app.get('/api/donate/cancel', donate.cancel);
 
     /*
-    app.get('/admin') // Login - Dashboard
+    app.get('/admin', user.auth('reporting'),) // Login - Dashboard
     app.post('/admin/login') // - Login Action
     app.get('/admin/logout') // - Logout Action
-    app.post('/admin/user') // - New User
-    app.post('/admin/user/:user') // - Update User
-    app.post('/admin/account') // - Update account settings
-    app.post('/admin/integrations') // - Update account Integrations
-    app.get('/admin/campaigns') // View all campaigns
-    app.post('/admin/campaigns') // Make new campaign
-    app.get('/admin/campaigns/:campaign') // View Campaign
-    app.post('/admin/campaigns/:campaign') // Edit Campaign
-    app.get('/admin/campaigns/:campaign/subcampaigns') // View subcampaigns
-    app.post('/admin/campaigns/:campaign/subcampaigns') // Make new subcampaign
-    app.get('/admin/campaigns/:campaign/subcampaigns/:subcampaign') // View subcampaign
-    app.post('/admin/campaigns/:campaign/subcampaigns/:subcampaign') // Edit subcampaign
+    app.post('/admin/user', user.auth('admin'),) // - New User
+    app.post('/admin/user/:user', user.auth('admin')) // - Update User
+    app.post('/admin/account', user.auth('admin')) // - Update account settings
+    app.post('/admin/integrations', user.auth('admin')) // - Update account Integrations
+    app.get('/admin/campaigns', user.auth('reporting')) // View all campaigns
+    app.post('/admin/campaigns', user.auth('campaigns')) // Make new campaign
+    app.get('/admin/campaigns/:campaign', user.auth('reporting')) // View Campaign
+    app.post('/admin/campaigns/:campaign', user.auth('campaigns')) // Edit Campaign
+    app.get('/admin/campaigns/:campaign/subcampaigns', user.auth('reporting')) // View subcampaigns
+    app.post('/admin/campaigns/:campaign/subcampaigns', user.auth('campaigns')) // Make new subcampaign
+    app.get('/admin/campaigns/:campaign/subcampaigns/:subcampaign', user.auth('reporting')) // View subcampaign
+    app.post('/admin/campaigns/:campaign/subcampaigns/:subcampaign', user.auth('campaigns')) // Edit subcampaign
 
     USER LEVELS
         Account Admin (change account settings)
@@ -81,11 +93,11 @@ module.exports = function( app ) {
 
 
     // Reporting
-    app.get('/admin/reporting/latest', reporting.latest);
-    app.get('/admin/reporting/monthly', reporting.monthly);
-    app.get('/admin/reporting/annual', reporting.annual);
-    app.get('/admin/reporting/donors', reporting.donors);
-    app.get('/admin/reporting/campaigns', reporting.campaigns);
+    app.get('/admin/reporting/latest', user.auth('reporting'), reporting.latest);
+    app.get('/admin/reporting/monthly', user.auth('reporting'), reporting.monthly);
+    app.get('/admin/reporting/annual', user.auth('reporting'), reporting.annual);
+    app.get('/admin/reporting/donors', user.auth('reporting'), reporting.donors);
+    app.get('/admin/reporting/campaigns', user.auth('reporting'), reporting.campaigns);
 
 
     // 404

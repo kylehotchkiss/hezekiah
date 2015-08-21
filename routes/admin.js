@@ -1,3 +1,10 @@
+module.exports = function() {
+    this.actions = {
+        login: function( req, res ) {
+            passport.authenticate('local', { successRedirect: '/', failureRedirect: '/', failureFlash: true });
+        }
+    };
+};
 
 /*exports.views.login
 exports.views.home
