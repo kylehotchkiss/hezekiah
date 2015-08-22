@@ -12,12 +12,12 @@ a, a:hover {
 }
 
 .navigation {
-    padding: 30px;
+    padding: 20px;
 
     .logo {
         img {
             display: block;
-            margin: 0 auto 30px auto;
+            margin: 0 auto 20px auto;
             width: 150px;
         }
     }
@@ -33,6 +33,10 @@ a, a:hover {
             padding: 15px;
         }
 
+        ul ul {
+            padding-bottom: 0;
+        }
+
         li {
             margin-bottom: 15px;
         }
@@ -41,6 +45,7 @@ a, a:hover {
             color: lighten(#444444, 30%);
             font-family: "brandon-grotesque";
             font-size: 14px;
+            font-weight: bold;
             letter-spacing: 2px;
             text-transform: uppercase;
 
@@ -52,9 +57,8 @@ a, a:hover {
         li li {
             color: #FFFFFF;
             font-size: 12px;
-            font-weight: bold;
             line-height: 15px;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
             text-transform: lowercase;
 
             .total {

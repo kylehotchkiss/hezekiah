@@ -19,29 +19,9 @@
                             <img src="/images/logo.png" />
                         </div>
 
-                        <ul class="menus">
-                            <li><a href="/reporting/latest" class="{% if slug == 'latest' %}active{% endif %}">Recent Donations</a></li>
-                            <li><a href="/reporting/monthly" class="{% if slug == 'monthly' %}active{% endif %}">Monthly Summary</a></li>
-                            <li><a href="/reporting/annual" class="{% if slug == 'annual' %}active{% endif %}">Annual Summary</a></li>
-                            <li><a href="/reporting/donors" class="{% if slug == 'donors' %}active{% endif %}">Donors</a></li>
-                            <li>
-                                <a href="/reporting/campaigns" class="{% if slug == 'campaigns' %}active{% endif %}">Campaigns</a>
-                                <ul>
-                                    {% if sidebar %}
-                                        {% for row in sidebar %}
-                                            {% if loop.index0 < 5 %}
-                                            <li>
-                                                <div class="row">
-                                                    <div class="col-xs-6">{{ row.campaign }}</div>
-                                                    <div class="col-xs-6"><div class="sparkline">{{ row.sparkline }}</div></div>
-                                                </div>
-                                            </li>
-                                            {% endif %}
-                                        {% endfor %}
-                                    {% endif %}
-                                </ul>
-                            </li>
-                        </ul>
+                        <div class="menus">
+                            {% include "partials/menus.html" %}
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-9 body-content">

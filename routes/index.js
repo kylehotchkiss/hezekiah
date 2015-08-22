@@ -80,8 +80,7 @@ module.exports = function( app ) {
 
     /*
      // Login - Dashboard
-    app.post('/admin/login') // - Login Action
-    app.get('/admin/logout') // - Logout Action
+     // - Logout Action
     app.post('/admin/user', user.auth('admin'),) // - New User
     app.post('/admin/user/:user', user.auth('admin')) // - Update User
     app.post('/admin/account', user.auth('admin')) // - Update account settings
@@ -103,15 +102,19 @@ module.exports = function( app ) {
 
 
     // Admin
+    app.use('/admin', admin.helpers.middleware);
     app.get('/admin', admin.views.index);
     app.post('/admin/login', passport.authenticate('local', { successRedirect: '/admin', failureRedirect: '/admin', failureFlash: true }));
+    app.get('/admin/logout', admin.actions.logout);
+
 
     // Reporting
-    app.get('/admin/reporting/latest', user.auth('reporting'), reporting.latest);
-    app.get('/admin/reporting/monthly', user.auth('reporting'), reporting.monthly);
-    app.get('/admin/reporting/annual', user.auth('reporting'), reporting.annual);
-    app.get('/admin/reporting/donors', user.auth('reporting'), reporting.donors);
-    app.get('/admin/reporting/campaigns', user.auth('reporting'), reporting.campaigns);
+    app.get('/admin/reports/latest', user.auth('reporting'), reporting.latest);
+    app.get('/admin/reports/monthly', user.auth('reporting'), reporting.monthly);
+    app.get('/admin/reports/annual', user.auth('reporting'), reporting.annual);
+    app.get('/admin/reports/donors', user.auth('reporting'), reporting.donors);
+    app.get('/admin/reports/campaigns', user.auth('reporting'), reporting.campaigns);
+    app.get("/admin/*", user.auth('reporting'), admin.views.notfound);
 
 
     // 404

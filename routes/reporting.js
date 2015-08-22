@@ -232,35 +232,31 @@ exports.annual = function( req, res ) {
 };
 
 exports.donors = function( req, res ) {
-
     database.Donation.findAll({ include: [ database.Donor ] }).then(function( donorsObj ) {
         res.render("reporting/report.html", { report: donorsObj });
     });
-
 };
 
 exports.campaigns = function( req, res ) {
-
-    database.DonationModel.find().exec(function( error, donations ) {
+    database.Donation.findAll({ include: [ database.Donor ] }).then(function( donationsObj ) {
         var campaigns = {};
 
-        for ( var i in donations ) {
-            var donation = donations[i];
+        for ( var i in donationsObj ) {
+            var donation = donationsObj[i];
 
             if ( campaigns[ donation.campaign ] ) {
                 campaigns[ donation.campaign ].quantity++;
                 campaigns[ donation.campaign ].amount += donation.amount;
-                campaigns[ donation.campaign ].lastDonation = donation.date;
+                campaigns[ donation.campaign ].lastDonation = donation.createdAt;
             } else {
                 campaigns[ donation.campaign ] = {
                     quantity: 1,
                     amount: donation.amount,
-                    firstDonation: donation.date
+                    firstDonation: donation.createdAt
                 };
             }
         }
 
         res.send( JSON.stringify( campaigns, null, 4 ) );
     });
-
 };

@@ -23,7 +23,9 @@ module.exports = function( sequelize, type ) {
         donorID: { type: type.INTEGER, references: { model: 'Donors', key: 'id' } },
         transactionID: { type: type.STRING, unique: true },
         subscriptionID: { type: type.STRING },
-        receiptID: { type: type.STRING }
+        receiptID: { type: type.STRING },
+
+        metadata: { type: type.JSONB }
     }, {
         classMethods: {
             associate: function( models ) {

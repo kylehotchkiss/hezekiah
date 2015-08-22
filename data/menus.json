@@ -1,0 +1,48 @@
+{
+    "items": [
+        {
+            "title": "Home",
+            "url": "/admin",
+            "role": "reporting"
+        }, {
+            "title": "Reports",
+            "url": "/admin/reports",
+            "role": "reporting",
+
+            "items": [
+                {
+                    "title": "Recent Donations",
+                    "url": "/admin/reports/latest"
+                }, {
+                    "title": "Monthly Summary",
+                    "url": "/admin/reports/monthly"
+                }, {
+                    "title": "Annual Summary",
+                    "url": "/admin/reports/annual"
+                }, {
+                    "title": "Donors",
+                    "url": "/admin/reports/donors"
+                }, {
+                    "title": "Campaigns",
+                    "url": "/admin/reports/campaigns"
+                }
+            ]
+        }, {
+            "title": "Campaigns",
+            "url": "/admin/campaigns",
+            "role": "campaigns"
+        }, {
+            "title": "Integrations",
+            "url": "/admin/integrations",
+            "role": "admin"
+        }, {
+            "title": "Account",
+            "url": "/admin/account",
+            "role": "admin"
+        }, {
+            "title": "Logout",
+            "url": "/admin/logout",
+            "role": "reporting"
+        }
+    ]
+}

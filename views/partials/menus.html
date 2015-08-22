@@ -1,0 +1,23 @@
+{% macro link( title, url ) %}
+    {% if url == path %}
+        <a href="{{ url }}" class="active">{{ title }}</a>
+    {% else %}
+        <a href="{{ url }}">{{ title }}</a>
+    {% endif %}
+{% endmacro %}
+
+<ul>
+    {% for item in menus %}
+        <li>
+            {{ link( item.title, item.url ) }}
+
+            {% if item.items %}
+                <ul>
+                    {% for item in item.items %}
+                        <li>{{ link( item.title, item.url ) }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

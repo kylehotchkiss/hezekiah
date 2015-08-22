@@ -44,9 +44,9 @@ module.exports = {
             } else {
                 bcrypt.compare( password, userObj.password, function( error, match ) {
                     if ( match ) {
-                        done( false, userObj, { message: 'Invalid password' } );
+                        done( false, userObj.dataValues );
                     } else {
-                        done( null, false );
+                        done( null, false, { message: 'Invalid password' } );
                     }
                 });
             }
@@ -62,21 +62,34 @@ module.exports = {
 
     // Grab user info from DB from every request
     unserialize: function( id, done ) {
-        database.User.find({ where: { id: id }}).then(function( error, user ) {
-            done( error, user );
+        database.User.findById(id).then(function( user ) {
+            done( false, user.dataValues );
+        }, function( error ) {
+            done( error, false );
         });
     },
 
     // Check the auth level string passed in via middleware
     auth: function( level ) {
-        console.log( level );
-
         return function( req, res, next ) {
-            if ( req.isAuthenticated() ) { // check those levels too
-                next();
+            if ( req.isAuthenticated() ) {
+                var role = req.user.role;
+
+                if ( level === 'admin' && role === 'admin' ) {
+                    next();
+                } else if ( level === 'campaigns' && ( role === 'admin' || role === 'campaigns' ) ) {
+                    next();
+                } else if ( level === 'reporting' && ( role === 'admin' || role === 'campaigns' || role === 'reporting' )) {
+                    next();
+                } else if ( !level ) {
+                    next();
+                } else {
+                    res.render('errors/401.html');
+                }
             } else {
                 req.flash('error', 'You must be logged in to view that page');
-                res.redirect('/admin');
+                req.session.next = req.originalUrl;
+                res.redirect( '/admin' );
             }
         };
     },
