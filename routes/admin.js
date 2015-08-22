@@ -47,6 +47,10 @@ module.exports = {
                     var level = item.role;
                     var role = req.user.role;
 
+                    if ( item.title.indexOf("%username") !== -1 ) {
+                        item.title = item.title.replace("%username", req.user.firstname);
+                    }
+
                     if ( level === 'admin' && role === 'admin' ) {
                         menus.push( item );
                     } else if ( level === 'campaigns' && ( role === 'admin' || role === 'campaigns' ) ) {

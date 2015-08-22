@@ -40,7 +40,7 @@
             "url": "/admin/account",
             "role": "admin"
         }, {
-            "title": "Logout",
+            "title": "Logout %username",
             "url": "/admin/logout",
             "role": "reporting"
         }
