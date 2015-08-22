@@ -1,0 +1,39 @@
+<fieldset>
+    <legend>Create new user...</legend>
+
+    <form action="/admin/user" method="POST">
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label>First Name</label>
+                <input type="text" name="firstname" class="form-control" required />
+            </div>
+            <div class="col-sm-6 form-group">
+                <label>Last name</label>
+                <input type="text" name="lastname" class="form-control" required />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label>Username</label>
+                <input type="text" name="username" class="form-control" required />
+            </div>
+            <div class="col-sm-6 form-group">
+                <label>Password</label>
+                <input type="text" name="password" class="form-control" required />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label>User Role</label>
+                <select name="role" class="form-control" required>
+                    <option value="reporting" selected>Reporting-only</option>
+                    <option value="campaigns">Campaigns Manager</option>
+                    <option value="admin">Account Administrator</option>
+                </select>
+            </div>
+            <div class="col-sm-12 form-group">
+                <button type="submit" class="btn">Create User</button>
+            </div>
+        </div>
+    </form>
+</fieldset>

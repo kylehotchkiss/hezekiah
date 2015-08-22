@@ -44,7 +44,7 @@ module.exports = function( app ) {
     app.use(require('connect-flash')());
     app.use(require('cookie-parser')());
     app.use(require('body-parser').urlencoded({ extended: true }));
-    app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+    app.use(require('express-session')({ secret: process.env.HEZ_SECRET, cookie: { maxAge: 1440000 } }));
     app.use(passport.initialize());
     app.use(passport.session());
 
@@ -81,9 +81,9 @@ module.exports = function( app ) {
     /*
      // Login - Dashboard
      // - Logout Action
-    app.post('/admin/user', user.auth('admin'),) // - New User
+     // - New User
     app.post('/admin/user/:user', user.auth('admin')) // - Update User
-    app.post('/admin/account', user.auth('admin')) // - Update account settings
+
     app.post('/admin/integrations', user.auth('admin')) // - Update account Integrations
     app.get('/admin/campaigns', user.auth('reporting')) // View all campaigns
     app.post('/admin/campaigns', user.auth('campaigns')) // Make new campaign
@@ -106,6 +106,9 @@ module.exports = function( app ) {
     app.get('/admin', admin.views.index);
     app.post('/admin/login', passport.authenticate('local', { successRedirect: '/admin', failureRedirect: '/admin', failureFlash: true }));
     app.get('/admin/logout', admin.actions.logout);
+
+    app.get('/admin/account', user.auth('admin'), admin.views.account); // - Update account settings
+    app.post('/admin/user', user.auth('admin'), admin.actions.userCreate);
 
 
     // Reporting

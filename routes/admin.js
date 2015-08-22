@@ -1,4 +1,5 @@
 var menu = require('../data/menus.json');
+var user = require('../library/components/user.js');
 
 module.exports = {
     views: {
@@ -25,6 +26,12 @@ module.exports = {
 
         notfound: function( req, res ) {
             res.render("errors/404.html");
+        },
+
+        account: function( req, res ) {
+            user.list(function( error, users ) {
+                res.render("account/index.html", { users: users });
+            });
         }
     },
 
@@ -32,6 +39,18 @@ module.exports = {
         logout: function( req, res ) {
             req.logout();
             res.redirect('/admin');
+        },
+
+        userCreate: function( req, res ) {
+            user.create(req.body, function( error, user ) {
+                if ( error ) {
+                    req.flash('failure', 'The user could not be created');
+                } else {
+                    req.flash('success', 'The user was successfully created');
+                }
+
+                res.redirect('/admin/account');
+            });
         }
     },
 
@@ -60,8 +79,22 @@ module.exports = {
                     }
                 }
 
+                // Menus Stuff
                 req.app.locals.menus = menus;
                 req.app.locals.path = req.originalUrl;
+
+                // Flash Stuff
+                var success = req.flash('success');
+                var failure = req.flash('failure');
+
+                if ( Array.isArray(success) ) {
+                    req.app.locals.success = success[0];
+                }
+
+                if ( Array.isArray(failure) ) {
+                    req.app.locals.failure = failure[0];
+                }
+
                 next();
             } else {
                 next();

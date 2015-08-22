@@ -32,6 +32,14 @@ module.exports = {
         });
     },
 
+    list: function( callback ) {
+        database.User.findAll().then(function( usersObj ) {
+            callback( false, usersObj );
+        }, function( error ) {
+            callback( true, false );
+        });
+    },
+
     edit: function( id, data, callback ) {
 
     },

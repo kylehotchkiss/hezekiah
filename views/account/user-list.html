@@ -1,0 +1,11 @@
+<fieldset>
+    <legend>Account Users</legend>
+
+
+    {% for user in users %}
+        <div>
+            <code>{{ user.username }}</code> {{ user.firstname }} {{ user.lastname }}
+        </div>
+    {% endfor %}
+
+</fieldset>

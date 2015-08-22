@@ -1,0 +1,16 @@
+{% set title = "Account Settings" %}
+{% extends "../layout.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-5">
+            {% include "user-create.html" %}
+        </div>
+
+        <div class="col-sm-offset-1 col-sm-6">
+            {% include "user-list.html" %}
+        </div>
+    </div>
+
+
+{% endblock %}

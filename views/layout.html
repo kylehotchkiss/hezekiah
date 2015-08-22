@@ -26,6 +26,14 @@
                 </div>
                 <div class="col-md-9 body-content">
                     <article>
+                        <h1>{{ title }}</h1>
+
+                        {% if success %}
+                            <div class="alert alert-success" role="alert">{{ success }}</div>
+                        {% elseif failure %}
+                            <div class="alert alert-danger" role="alert">{{ failure }}</div>
+                        {% endif %}
+
                         {% block content %}{% endblock %}
                     </article>
                 </div>
