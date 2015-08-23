@@ -4,6 +4,7 @@
 // All Rights Reserved
 //
 
+var slug = require('slug');
 var stripe = require("stripe")( process.env.HEZ_STRIPE_API );
 var database = require("../models");
 var siftscience = require("./integrations/siftscience.js");
@@ -17,15 +18,28 @@ var siftscience = require("./integrations/siftscience.js");
 
 // Retrieve or Create a Campaign
 var retrieveCampaign = function( donation, callback ) {
-    var campaign = {
-        slug: donation.campaign
-    };
+    var campaign = { slug: slug( donation.campaign ) };
 
     database.Campaign.findOrCreate( { where: campaign, defaults: campaign } ).then(function( campaignObj ) {
-        if ( campaignObj === null ) {
-            callback( false, false );
+        if ( donation.subcampaign ) {
+            var name = slug( donation.campaign + '-' + donation.subcampaign );
+            var subcampaign = { slug: name, campaign: donation.campaign, name: donation.subcampaign };
+
+            donation.subcampaign = name;
+
+            database.Subcampaign.findOrCreate( { where: subcampaign, defaults: subcampaign } ).then(function(subcampaignObj ) {
+                if ( campaignObj === null ) {
+                    callback( false, false );
+                } else {
+                    callback( false, campaignObj[0].toJSON() );
+                }
+            });
         } else {
-            callback( false, campaignObj[0].toJSON() );
+            if ( campaignObj === null ) {
+                callback( false, false );
+            } else {
+                callback( false, campaignObj[0].toJSON() );
+            }
         }
     }, function( error ) {
         callback( error, false );

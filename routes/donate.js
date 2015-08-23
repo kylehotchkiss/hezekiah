@@ -33,6 +33,7 @@ exports.one = function( req, res ) {
         email: req.body.email,
         amount: req.body.amount, // Amounts are handled by their value in cents
         campaign: req.body.campaign,
+        subcampaign: req.body.subcampaign,
         description: req.body.description,
         addressCity: req.body.addressCity,
         addressState: req.body.addressState,
@@ -84,6 +85,7 @@ exports.monthly = function( req, res ) {
         email: req.body.email,
         amount: req.body.amount, // Amounts are handled by their value in cents
         campaign: req.body.campaign,
+        subcampaign: req.body.subcampaign,
         description: req.body.description,
         addressCity: req.body.addressCity,
         addressState: req.body.addressState,

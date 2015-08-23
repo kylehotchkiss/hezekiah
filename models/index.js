@@ -10,7 +10,7 @@ var environment = process.env.NODE_ENV || 'development';
 var sequelize, Sequelize = require('sequelize');
 
 var log = function( text ) {
-    if ( environment === "development" ) {
+    if ( environment === "development" && process.env.DATABASE_LOGGING === "true" ) {
         console.log( text );
     }
 };

@@ -44,6 +44,26 @@ module.exports = {
 
     },
 
+    reset: function( email, callback ) {
+        var resetHash = '';
+
+        database.User.findById({ where: { email: email }}).then(function( userObj ) {
+            if ( userObj === null ) {
+
+            } else {
+                userObj.updateAttributes({
+
+                }).then(function() {
+                    // UserObj wouldn't be updated here due to sqlize issue
+
+                    callback( false, true );
+                });
+            }
+        }, function( error ) {
+            callback( error, false );
+        });
+    },
+
     // Login Middleware
     login: function( username, password, done ) {
         database.User.find({ where: { username: username }}).then(function( userObj ) {

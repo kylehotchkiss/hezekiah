@@ -11,11 +11,11 @@ module.exports = function( sequelize, type ) {
         amount: { type: type.INTEGER, allowNull: false },
         transactionFee: { type: type.INTEGER, allowNull: false },
         campaign: { type: type.STRING, allowNull: false, references: { model: 'Campaigns', key: 'slug' } },
-        description: { type: type.STRING, allowNull: false },
-
-        source: { type: type.STRING },
         subcampaign: { type: type.STRING, references: { model: 'Subcampaigns', key: 'slug' } },
 
+        description: { type: type.STRING, allowNull: false },
+        
+        source: { type: type.STRING },
         refunded: { type: type.BOOLEAN, default: false },
         recurring: { type: type.BOOLEAN, default: false },
 

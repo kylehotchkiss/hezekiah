@@ -12,6 +12,11 @@ module.exports = function( sequelize, type ) {
         password: { type: type.STRING, allowNull: false, },
         firstname: { type: type.STRING },
         lastname: { type: type.STRING },
+
+        email: { type: type.STRING },
+        resetKey: { type: type.STRING },
+        inviteKey: { type: type.STRING },
+
         role: { type: type.ENUM, values: ['admin', 'campaigns', 'reporting'], allowNull: false, defaultValue: 'reporting' },
     }, {
         classMethods: {
