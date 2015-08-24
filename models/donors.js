@@ -18,7 +18,9 @@ module.exports = function( sequelize, type ) {
         addressPostal: { type: type.STRING },
         addressCountry: { type: type.STRING },
 
-        subscriber: { type: type.BOOLEAN, defaultValue: false }
+        subscriber: { type: type.BOOLEAN, defaultValue: false },
+
+        metadata: { type: type.JSONB }
     }, {
         classMethods: {
             associate: function( models ) {

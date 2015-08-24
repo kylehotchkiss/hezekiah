@@ -11,7 +11,9 @@ module.exports = function( sequelize, type ) {
         slug: { type: type.STRING, allowNull: false, unique: true },
         name: { type: type.STRING },
 
-        campaign: { type: type.STRING, references: { model: 'Campaigns', key: 'slug' } }
+        campaign: { type: type.STRING, references: { model: 'Campaigns', key: 'slug' } },
+
+        metadata: { type: type.JSONB }
     }, {
         classMethods: {
             associate: function( models ) {
