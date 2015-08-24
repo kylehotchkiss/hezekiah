@@ -7,20 +7,21 @@ module.exports = function( sequelize, type ) {
     var Donation = sequelize.define('Donation', {
         id: { type: type.INTEGER, primaryKey: true, autoIncrement: true, unique: true },
 
-        email: { type: type.STRING, allowNull: false },
+        email: { type: type.STRING, allowNull: false, references: { model: 'Donors', key: 'email' } },
         amount: { type: type.INTEGER, allowNull: false },
         transactionFee: { type: type.INTEGER, allowNull: false },
         campaign: { type: type.STRING, allowNull: false, references: { model: 'Campaigns', key: 'slug' } },
         subcampaign: { type: type.STRING, references: { model: 'Subcampaigns', key: 'slug' } },
 
         description: { type: type.STRING, allowNull: false },
-        
+
         source: { type: type.STRING },
+        referrer: { type: type.STRING },
+
         refunded: { type: type.BOOLEAN, default: false },
         recurring: { type: type.BOOLEAN, default: false },
 
         ip: { type: type.STRING },
-        donorID: { type: type.INTEGER, references: { model: 'Donors', key: 'id' } },
         transactionID: { type: type.STRING, unique: true },
         subscriptionID: { type: type.STRING },
         receiptID: { type: type.STRING },
@@ -29,7 +30,7 @@ module.exports = function( sequelize, type ) {
     }, {
         classMethods: {
             associate: function( models ) {
-                Donation.belongsTo( models.Donor, { foreignKey: "donorID" } );
+                Donation.belongsTo( models.Donor, { foreignKey: "email" } );
                 Donation.belongsTo( models.Campaign, { foreignKey: "campaign" } );
                 Donation.belongsTo( models.Subcampaign, { foreignKey: "subcampaign" } );
             }

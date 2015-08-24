@@ -15,7 +15,7 @@ module.exports = function( sequelize, type ) {
         direct: { type: type.STRING, unique: true }, // Unused
         expose: { type: type.BOOLEAN, defaultValue: false },
 
-        metadata: { type: type.JSONB }
+        //metadata: { type: type.JSONB }
     }, {
         classMethods: {
             associate: function( models ) {

@@ -20,11 +20,13 @@ module.exports = function( sequelize, type ) {
 
         subscriber: { type: type.BOOLEAN, defaultValue: false },
 
-        metadata: { type: type.JSONB }
+        reportingKey: { type: type.STRING, unique: true },
+
+        //metadata: { type: type.JSONB }
     }, {
         classMethods: {
             associate: function( models ) {
-                Donor.hasMany( models.Donation, { foreignKey: "donorID" } );
+                Donor.hasMany( models.Donation, { foreignKey: "email" } );
             }
         }
     });

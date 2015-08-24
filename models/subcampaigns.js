@@ -13,7 +13,7 @@ module.exports = function( sequelize, type ) {
 
         campaign: { type: type.STRING, references: { model: 'Campaigns', key: 'slug' } },
 
-        metadata: { type: type.JSONB }
+        //metadata: { type: type.JSONB }
     }, {
         classMethods: {
             associate: function( models ) {
