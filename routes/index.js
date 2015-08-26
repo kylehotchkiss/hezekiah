@@ -59,13 +59,15 @@ module.exports = function( app ) {
         res.redirect('http://www.hezekiahapp.com/?referrer=' + req.subdomain);
     });
 
-    app.get('*', function( req, res, next ) {
-        if ( req.headers['x-forwarded-proto'] !== 'https' ) {
-            res.redirect( request.headers.host + req.url );
-        } else {
-            next();
-        }
-    });
+    if ( environment === "production" ) {
+        app.get('*', function( req, res, next ) {
+            if ( req.headers['x-forwarded-proto'] !== 'https' ) {
+                res.redirect( re.headers.host + req.url );
+            } else {
+                next();
+            }
+        });
+    }
 
 
     // Login/Sessions
