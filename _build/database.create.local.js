@@ -6,6 +6,8 @@
 
 require('node-env-file')(__dirname + '/../.env');
 
+console.log( process.env.DATABASE_URL );
+
 var database = require('../models');
 
 database.sequelize.sync({ force:true });

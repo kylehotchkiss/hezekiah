@@ -30,7 +30,7 @@ module.exports = function( sequelize, type ) {
     }, {
         classMethods: {
             associate: function( models ) {
-                Donation.belongsTo( models.Donor, { as: "Donor", foreignKey: "email" } );
+                Donation.belongsTo( models.Donor, { foreignKey: "email" } );
                 Donation.belongsTo( models.Campaign, { foreignKey: "campaign" } );
                 Donation.belongsTo( models.Subcampaign, { foreignKey: "subcampaign" } );
             }
