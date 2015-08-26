@@ -1,7 +1,0 @@
-/* email -> Donor.email
-campaign -> Campaign.slug
-subcampaign -> Subcampaign.slug
-description -> idk??
-amount -> float
-stripeID -> String Stripe.SubID UNIQURE
-metadata type.JSONB */

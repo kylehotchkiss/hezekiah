@@ -6,10 +6,10 @@
 
 module.exports = function( sequelize, type ) {
     var Donor = sequelize.define('Donor', {
-        id: { type: type.INTEGER, primaryKey: true, autoIncrement: true, unique: true },
+        id: { type: type.INTEGER, unique: true, autoIncrement: true },
 
+        email: { type: type.STRING,  primaryKey: true, unique: true },
         name: { type: type.STRING },
-        email: { type: type.STRING, unique: true },
         customerID: { type: type.STRING },
 
         addressCity: { type: type.STRING },
@@ -22,7 +22,7 @@ module.exports = function( sequelize, type ) {
 
         reportingKey: { type: type.STRING, unique: true },
 
-        //metadata: { type: type.JSONB }
+        metadata: { type: type.JSONB }
     }, {
         classMethods: {
             associate: function( models ) {

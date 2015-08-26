@@ -30,7 +30,7 @@ exports.dispatcher = function( req, res ) {
         database.Donation.find({ where: { "transactionID": id } }).then(function( donationObj ) {
             if ( donationObj !== null ) {
                 donationObj.getDonor().then(function( donorObj ) {
-                    hooks.postRefund( donationObj.toJSON(), donorObj.toJSON() );
+                    hooks.postRefund( donationObj.toJSON(), donationObj.toJSON() );
                 });
             }
         });

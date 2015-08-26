@@ -6,16 +6,16 @@
 
 module.exports = function( sequelize, type ) {
     var Campaign = sequelize.define('Campaign', {
-        id: { type: type.INTEGER, primaryKey: true, autoIncrement: true, unique: true },
+        id: { type: type.INTEGER, unique: true, autoIncrement: true },
 
-        slug: { type: type.STRING, allowNull: false, unique: true },
+        slug: { type: type.STRING, primaryKey: true, unique: true, allowNull: false },
         name: { type: type.STRING },
         mode: { type: type.ENUM, values: ['flexible', 'designated', 'sponsorship', 'ticketed'], allowNull: false, defaultValue: 'flexible' },
 
         direct: { type: type.STRING, unique: true }, // Unused
         expose: { type: type.BOOLEAN, defaultValue: false },
 
-        //metadata: { type: type.JSONB }
+        metadata: { type: type.JSONB }
     }, {
         classMethods: {
             associate: function( models ) {

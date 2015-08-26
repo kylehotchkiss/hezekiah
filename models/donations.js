@@ -7,11 +7,11 @@ module.exports = function( sequelize, type ) {
     var Donation = sequelize.define('Donation', {
         id: { type: type.INTEGER, primaryKey: true, autoIncrement: true, unique: true },
 
-        email: { type: type.STRING, allowNull: false, references: { model: 'Donors', key: 'email' } },
+        email: { type: type.STRING, allowNull: false, references: { model: 'Donors', key: 'email' } }, // pk
         amount: { type: type.INTEGER, allowNull: false },
         transactionFee: { type: type.INTEGER, allowNull: false },
-        campaign: { type: type.STRING, allowNull: false, references: { model: 'Campaigns', key: 'slug' } },
-        subcampaign: { type: type.STRING, references: { model: 'Subcampaigns', key: 'slug' } },
+        campaign: { type: type.STRING, allowNull: false, references: { model: 'Campaigns', key: 'slug' } }, // pk
+        subcampaign: { type: type.STRING, references: { model: 'Subcampaigns', key: 'slug' } }, // pk
 
         description: { type: type.STRING, allowNull: false },
 
@@ -30,7 +30,7 @@ module.exports = function( sequelize, type ) {
     }, {
         classMethods: {
             associate: function( models ) {
-                Donation.belongsTo( models.Donor, { foreignKey: "email" } );
+                Donation.belongsTo( models.Donor, { as: "Donor", foreignKey: "email" } );
                 Donation.belongsTo( models.Campaign, { foreignKey: "campaign" } );
                 Donation.belongsTo( models.Subcampaign, { foreignKey: "subcampaign" } );
             }

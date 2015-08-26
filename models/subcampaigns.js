@@ -6,14 +6,14 @@
 
 module.exports = function( sequelize, type ) {
     var Subcampaign = sequelize.define('Subcampaign', {
-        id: { type: type.INTEGER, primaryKey: true, autoIncrement: true, unique: true },
+        id: { type: type.INTEGER, autoIncrement: true, unique: true },
 
-        slug: { type: type.STRING, allowNull: false, unique: true },
+        slug: { type: type.STRING, primaryKey: true, unique: true, allowNull: false },
         name: { type: type.STRING },
 
-        campaign: { type: type.STRING, references: { model: 'Campaigns', key: 'slug' } },
+        campaign: { type: type.STRING, references: { model: 'Campaigns', key: 'slug' } }, // pk
 
-        //metadata: { type: type.JSONB }
+        metadata: { type: type.JSONB }
     }, {
         classMethods: {
             associate: function( models ) {
