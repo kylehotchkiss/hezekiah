@@ -62,7 +62,7 @@ module.exports = function( app ) {
     if ( environment === "production" ) {
         app.get('*', function( req, res, next ) {
             if ( req.headers['x-forwarded-proto'] !== 'https' ) {
-                res.redirect( req.headers.host + req.url );
+                res.redirect( [ 'https://', req.get('Host'), req.url ].join('') );
             } else {
                 next();
             }
