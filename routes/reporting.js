@@ -197,8 +197,6 @@ exports.latest = function( req, res ) {
             var output = processDonations( donationsObj );
 
             res.render("reporting/report.html", {
-                slug: "latest",
-                sidebar: sidebar,
                 graph: output.graph,
                 report: output.donations,
                 summaries: output.summaries
@@ -214,7 +212,11 @@ exports.monthly = function( req, res ) {
         database.Donation.findAll({ where: { createdAt: { "gte": moment().startOf("month").format() } }, include: [ database.Donor ], order: '"updatedAt" DESC' }).then(function( donationsObj ) {
             var output = processDonations( donationsObj );
 
-            res.render("reporting/report.html", { graph: output.graph, report: output.donations, sidebar: sidebar, slug: "monthly" });
+            res.render("reporting/report.html", {
+                graph: output.graph,
+                report: output.donations,
+                summaries: output.summaries
+            });
         });
     });
 };
@@ -226,7 +228,11 @@ exports.annual = function( req, res ) {
         database.Donation.findAll({ where: { createdAt: { "gte": moment().startOf("year").format() } }, include: [ database.Donor ], order: '"updatedAt" DESC' }).then(function( donationsObj ) {
             var output = processDonations( donationsObj );
 
-            res.render("reporting/report.html", { graph: output.graph, report: output.donations, sidebar: sidebar, slug: "annual" });
+            res.render("reporting/report.html", {
+                graph: output.graph,
+                report: output.donations,
+                summaries: output.summaries
+            });
         });
     });
 };
@@ -238,25 +244,7 @@ exports.donors = function( req, res ) {
 };
 
 exports.campaigns = function( req, res ) {
-    database.Donation.findAll({ include: [ database.Donor ] }).then(function( donationsObj ) {
-        var campaigns = {};
-
-        for ( var i in donationsObj ) {
-            var donation = donationsObj[i];
-
-            if ( campaigns[ donation.campaign ] ) {
-                campaigns[ donation.campaign ].quantity++;
-                campaigns[ donation.campaign ].amount += donation.amount;
-                campaigns[ donation.campaign ].lastDonation = donation.createdAt;
-            } else {
-                campaigns[ donation.campaign ] = {
-                    quantity: 1,
-                    amount: donation.amount,
-                    firstDonation: donation.createdAt
-                };
-            }
-        }
-
-        res.send( JSON.stringify( campaigns, null, 4 ) );
+    database.Campaign.findAll().then(function( campaignsObj ) {
+        res.render("reporting/campaigns.html", { campaigns: campaignsObj });
     });
 };

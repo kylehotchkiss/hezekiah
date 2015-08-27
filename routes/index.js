@@ -44,7 +44,12 @@ module.exports = function( app ) {
     app.use(require('connect-flash')());
     app.use(require('cookie-parser')());
     app.use(require('body-parser').urlencoded({ extended: true }));
-    app.use(require('express-session')({ secret: process.env.HEZ_SECRET, cookie: { maxAge: 1440000 } }));
+    app.use(require('express-session')({
+        resave: true,
+        saveUninitialized: false,
+        cookie: { maxAge: 1440000 },
+        secret: process.env.HEZ_SECRET,
+    }));
     app.use(passport.initialize());
     app.use(passport.session());
 

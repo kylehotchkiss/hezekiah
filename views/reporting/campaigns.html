@@ -1,0 +1,32 @@
+{% extends "../layout.html" %}
+
+{% set title = "Campaigns" %}
+
+{% block content %}
+    <div class="row page-report">
+        <div class="col-sm-12">
+            {% for campaign in campaigns %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ campaign.slug }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                {{ campaign.mode }}
+                            </div>
+
+                            <div class="col-sm-4">
+                                TOTAL:
+                            </div>
+
+                            <div class="col-sm-4">
+                                DONORS:
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
