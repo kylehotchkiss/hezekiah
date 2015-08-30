@@ -18,11 +18,11 @@ exports.one = function( req, res ) {
     req.checkBody("amount").notEmpty().isInt();
     req.checkBody("campaign").notEmpty();
     req.checkBody("description").notEmpty();
-    req.checkBody("addressCity").notEmpty();
-    req.checkBody("addressState").notEmpty();
-    req.checkBody("addressPostal").notEmpty();
-    req.checkBody("addressStreet").notEmpty();
-    req.checkBody("addressCountry").notEmpty();
+    //req.checkBody("addressCity").notEmpty();
+    //req.checkBody("addressState").notEmpty();
+    //req.checkBody("addressPostal").notEmpty();
+    //req.checkBody("addressStreet").notEmpty();
+    //req.checkBody("addressCountry").notEmpty();
 
     var donation = {
         ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
@@ -40,6 +40,11 @@ exports.one = function( req, res ) {
         addressPostal: req.body.addressPostal,
         addressStreet: req.body.addressStreet,
         addressCountry: req.body.addressCountry
+    };
+
+    // Add custom fields, campaign tracking info
+    donation.metadata = {
+        custom: req.body.custom
     };
 
     var errors = req.validationErrors();

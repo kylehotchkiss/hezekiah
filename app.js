@@ -46,7 +46,7 @@ if ( environment === "production" ) {
 }
 
 app.use(compress());
-app.use(bodyParser());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(validator());
 app.use(express.static('public',  { maxAge: '1w' }));
 
