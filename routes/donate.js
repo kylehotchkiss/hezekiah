@@ -10,7 +10,6 @@ var stripe = require("../library/stripe.js");
 var database = require("../models");
 
 
-
 exports.one = function( req, res ) {
     req.checkBody("token").notEmpty().len(28);
     req.checkBody("name").notEmpty();
@@ -33,19 +32,18 @@ exports.one = function( req, res ) {
         email: req.body.email,
         amount: req.body.amount, // Amounts are handled by their value in cents
         campaign: req.body.campaign,
+        referrer: req.body.referrer,
         subcampaign: req.body.subcampaign,
         description: req.body.description,
         addressCity: req.body.addressCity,
         addressState: req.body.addressState,
         addressPostal: req.body.addressPostal,
         addressStreet: req.body.addressStreet,
-        addressCountry: req.body.addressCountry
+        addressCountry: req.body.addressCountry,
     };
 
     // Add custom fields, campaign tracking info
-    donation.metadata = {
-        custom: req.body.custom
-    };
+    donation.metadata = { custom: req.body.custom };
 
     var errors = req.validationErrors();
 
@@ -74,11 +72,11 @@ exports.monthly = function( req, res ) {
     req.checkBody("amount").notEmpty().isInt();
     req.checkBody("campaign").notEmpty();
     req.checkBody("description").notEmpty();
-    req.checkBody("addressCity").notEmpty();
-    req.checkBody("addressState").notEmpty();
-    req.checkBody("addressPostal").notEmpty();
-    req.checkBody("addressStreet").notEmpty();
-    req.checkBody("addressCountry").notEmpty();
+    //req.checkBody("addressCity").notEmpty();
+    //req.checkBody("addressState").notEmpty();
+    //req.checkBody("addressPostal").notEmpty();
+    //req.checkBody("addressStreet").notEmpty();
+    //req.checkBody("addressCountry").notEmpty();
 
     var donation = {
         ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
@@ -90,6 +88,7 @@ exports.monthly = function( req, res ) {
         email: req.body.email,
         amount: req.body.amount, // Amounts are handled by their value in cents
         campaign: req.body.campaign,
+        referrer: req.body.referrer,
         subcampaign: req.body.subcampaign,
         description: req.body.description,
         addressCity: req.body.addressCity,
@@ -98,6 +97,8 @@ exports.monthly = function( req, res ) {
         addressStreet: req.body.addressStreet,
         addressCountry: req.body.addressCountry
     };
+
+    donation.metadata = { custom: req.body.custom };
 
     var errors = req.validationErrors();
 

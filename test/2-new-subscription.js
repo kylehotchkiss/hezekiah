@@ -102,4 +102,6 @@ describe("Monthly Subscriptions - New Donor", function() {
 
     it("successfully created a campaign record [database]");
     it("successfully created a subcampaign record [database]");
+
+    it("successfully created a subscription record [database]");
 });

@@ -80,4 +80,6 @@ describe("Cancel Subscription", function() {
                 done();
             });
     });
+
+    it("successfully canceled the subscription record [database]");
 });

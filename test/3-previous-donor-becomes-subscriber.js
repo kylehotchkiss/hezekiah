@@ -106,4 +106,6 @@ describe("Monthly Subscriptions - Previous Donor", function() {
             });
         })();
     });
+
+    it("successfully created a subscription record [database]");
 });

@@ -69,6 +69,7 @@ describe("Single Donation", function() {
         }, 1000);
     });
 
+    it("successfully saved custom fields [database]");
     it("successfully created a campaign record [database]");
     it("successfully created a subcampaign record [database]");
 });
