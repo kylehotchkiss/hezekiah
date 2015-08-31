@@ -56,6 +56,8 @@ module.exports = function( app ) {
     if ( environment !== "production" ) {
         app.set('view cache', false);
         swig.setDefaults({ cache: false, autoescape: false, locals: { "environment": "development" } });
+    } else {
+        swig.setDefaults({ autoescape: false, locals: { "environment": "production" } });
     }
 
 
