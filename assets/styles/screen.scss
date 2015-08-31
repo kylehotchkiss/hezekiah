@@ -80,9 +80,34 @@ a, a:hover {
     }
 }
 
+
+
 #sparkline canvas {
     height: 10px !important;
     width: 60px !important;
+}
+
+.body-content {
+    h1 {
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    .label {
+        color: lighten(#444444, 30%);
+        text-transform: uppercase;
+    }
+
+    .value {
+        font-weight: bold;
+        text-transform: capitalize;
+    }
+
+    .griddle {
+        .filter-container {
+            max-width: 200px;
+        }
+    }
 }
 
 .page-report {
@@ -104,6 +129,10 @@ a, a:hover {
             font-size: 14px;
             font-weight: bold;
         }
+    }
+
+    th {
+        text-transform: capitalize;
     }
 }
 

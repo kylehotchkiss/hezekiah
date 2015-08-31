@@ -1,0 +1,24 @@
+{% extends "../layout.html" %}
+
+{% set title = "Campaign - " + campaign.slug  %}
+
+{% block content %}
+    <div class="row page-report">
+        <div class="col-sm-12">
+            <div id="react-results-table"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        React.render(
+            React.createElement(Griddle, {
+                showFilter: true,
+                tableClassName: "table",
+                useGriddleStyles: false,
+                results: {{ donations }}
+            }), document.getElementById('react-results-table')
+        );
+    </script>
+{% endblock %}

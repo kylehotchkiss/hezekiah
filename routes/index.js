@@ -55,7 +55,7 @@ module.exports = function( app ) {
 
     if ( environment !== "production" ) {
         app.set('view cache', false);
-        swig.setDefaults({ cache: false, locals: { "environment": "development" } });
+        swig.setDefaults({ cache: false, autoescape: false, locals: { "environment": "development" } });
     }
 
 
@@ -131,7 +131,8 @@ module.exports = function( app ) {
     app.get('/admin/reports/monthly', user.auth('reporting'), reporting.monthly);
     app.get('/admin/reports/annual', user.auth('reporting'), reporting.annual);
     app.get('/admin/reports/donors', user.auth('reporting'), reporting.donors);
-    app.get('/admin/reports/campaigns', user.auth('reporting'), reporting.campaigns);
+    app.get('/admin/reports/campaigns',  user.auth('reporting'), reporting.campaigns);
+    app.get('/admin/reports/campaigns/:campaign', user.auth('reporting'), reporting.campaign);
     app.get("/admin/*", user.auth('reporting'), admin.views.notfound);
 
 

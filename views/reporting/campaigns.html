@@ -6,26 +6,41 @@
     <div class="row page-report">
         <div class="col-sm-12">
             {% for campaign in campaigns %}
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{ campaign.slug }}</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-sm-4">
-                                {{ campaign.mode }}
-                            </div>
+                {% if loop.index0 % 2 == 0 %}
+                    <div class="row">
+                {% endif %}
 
-                            <div class="col-sm-4">
-                                TOTAL:
-                            </div>
+                <div class="col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <a href="/admin/reports/campaigns/{{ campaign.slug }}">{{ campaign.slug }}</a>
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <span class="label">Mode:</span>
+                                    <span class="value">{{ campaign.mode }}</span>
+                                </div>
 
-                            <div class="col-sm-4">
-                                DONORS:
+                                <div class="col-sm-4">
+                                    <span class="label">Total:</span>
+                                    <span class="value">{{ campaign.total }}</span>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <span class="label">Donations:</span>
+                                    <span class="value">{{ campaign.count }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                {% if loop.index0 % 2 != 0 or loop.last %}
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
     </div>

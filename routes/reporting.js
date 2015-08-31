@@ -7,6 +7,10 @@
 var moment = require("moment");
 var database = require("../models");
 
+var amount = function( value ) {
+    return '$' + ( value / 100 ).toFixed( 2 );
+};
+
 var sidebarContent = function( callback ) {
     //
     // TODO: Why are we getting strings for the amounts here and not integers?
@@ -244,7 +248,49 @@ exports.donors = function( req, res ) {
 };
 
 exports.campaigns = function( req, res ) {
-    database.Campaign.findAll().then(function( campaignsObj ) {
-        res.render("reporting/campaigns.html", { campaigns: campaignsObj });
+    database.Campaign.findAll({ include: [ database.Donation ] } ).then(function( campaignsObj ) {
+        var campaigns = campaignsObj.map(function( campaign, i ) {
+            var total = 0;
+            var count = 0;
+
+            campaign.Donations.map(function( donation, j ) {
+                total += donation.amount;
+                count++;
+            });
+
+            campaign.total = amount( total );
+            campaign.count = count;
+
+            return campaign;
+        });
+
+        res.render("reporting/campaigns.html", { campaigns: campaigns });
+    });
+};
+
+exports.campaign = function( req, res ) {
+    var campaign = req.param('campaign');
+
+    database.Campaign.find({ where: { slug: campaign }, include: { model: database.Donation, include: [{ model: database.Donor }, { model: database.Subcampaign }] } }).then(function( campaignObj ) {
+        var donations = campaignObj.Donations.map(function( donation, i ) {
+            var table = {
+                date: moment( donation.createdAt ).format('MM/DD/YYYY'),
+                name: donation.Donor.name,
+                subcampaign: donation.Subcampaign.name,
+                amount: amount( donation.amount )
+            };
+
+            // Custom Fields
+            if ( typeof donation.metadata.custom !== 'undefined' ) {
+                for ( var j in donation.metadata.custom ) {
+                    table[j] = donation.metadata.custom[j];
+                }
+            }
+
+            return table;
+        });
+
+        // TODO: If Ticketing
+        res.render('reporting/campaign-ticketing.html', { campaign: campaignObj, donations: JSON.stringify( donations ) });
     });
 };

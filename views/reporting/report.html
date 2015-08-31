@@ -32,35 +32,14 @@
                 </div>
             </div>
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Amount</th>
-                        <th>Donor</th>
-                        <th>Campaign</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for donation in report %}
-                    <tr>
-                        <td>{{ donation.createdAt|date }}</td>
-                        <td>{{ donation.amount|amount }}</td>
-                        <td>{{ donation.Donor.name }}</td>
-                        <td>{{ donation.campaign }}</td>
-                        <td><a href="https://dashboard.stripe.com/payments/{{ donation.transactionID }}">Details</a></td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div id="react-results-table"></div>
         </div>
     </div>
 {% endblock %}
 
 {% block scripts %}
     <script>
-        var data = {
+        /*var data = {
             labels: {{ JSON.stringify( graph.labels ) }},
             series: [ {{ JSON.stringify( graph.series ) }} ]
         };
@@ -74,6 +53,15 @@
             axisY: { offset: 50, scaleMinSpace: 100, labelInterpolationFnc: function ( value ) { return "$" + value.toFixed(2) } }
         };
 
-        new Chartist.Line( '.ct-chart', data, options );
+        new Chartist.Line( '.ct-chart', data, options );*/
+
+        React.render(
+            React.createElement(Griddle, {
+                showFilter: true,
+                tableClassName: "table",
+                useGriddleStyles: false,
+                results: {{ donations }}
+            }), document.getElementById('react-results-table')
+        );
     </script>
 {% endblock %}
