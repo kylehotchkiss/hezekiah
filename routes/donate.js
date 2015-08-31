@@ -11,7 +11,7 @@ var database = require("../models");
 
 
 exports.one = function( req, res ) {
-    req.checkBody("token").notEmpty().len(28);
+    req.checkBody("token").notEmpty();
     req.checkBody("name").notEmpty();
     req.checkBody("email").notEmpty().isEmail();
     req.checkBody("amount").notEmpty().isInt();
@@ -66,7 +66,7 @@ exports.one = function( req, res ) {
 };
 
 exports.monthly = function( req, res ) {
-    req.checkBody("token").notEmpty().len(28);
+    req.checkBody("token").notEmpty();
     req.checkBody("name").notEmpty();
     req.checkBody("email").notEmpty().isEmail();
     req.checkBody("amount").notEmpty().isInt();
