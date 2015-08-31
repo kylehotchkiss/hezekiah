@@ -63,7 +63,7 @@ var receipt = function( data, subject, template, callback ) {
 var notification = function( data, subject, template, callback ) {
     // todo: set donation amount to dollars, not cents
 
-    mandrill.send( "kyle@kylehotchkiss.com", subject, data, template, function( error, id ) {
+    mandrill.send( "accounts@illuminatenations.org", subject, data, template, function( error, id ) {
         if ( typeof callback === "function" ) {
             if ( error ) {
                 callback( error, false );
