@@ -4,6 +4,7 @@
 // All Rights Reserved
 //
 
+var _ = require('underscore');
 var request = require('request');
 var database = require("../models");
 var mandrill = require("../library/integrations/mandrill.js");
@@ -17,24 +18,18 @@ refund
 
 //
 // Helper/Wrapper functions around our various interfaces
+// Future Kyle - I'm so sorry about this sqlize code, it's Doing Too Much™
 //
 var save = function( donation, callback ) {
     if ( !donation.transactionFee ) { // TODO: Stripe doesn't return fee, but it may change?
         donation.transactionFee = (( donation.amount * 0.029 ) + 30).toFixed(0);
     }
 
-    // TODO: Clone pre-save && widdle down by whitelist
-    delete donation.date;
-    delete donation.name;
-    delete donation.token;
-    delete donation.donorID;
-    delete donation.customerID;
-    delete donation.addressCity;
-    delete donation.addressState;
-    delete donation.addressPostal;
-    delete donation.addressStreet;
-    delete donation.addressCountry;
+    // Prevent overwriting objects before they arrive to other hook
+    var thisDonation = _.clone( donation );
+    delete thisDonation.id;
 
+    // Get donation + (sub)campaign info
     var getDonation = function( id, callback ) {
         database.Donation.find( { where: { id: id }, include: [ database.Campaign, database.Subcampaign ]} ).then(function( donationObj ) {
             if ( donationObj ) {
@@ -47,20 +42,23 @@ var save = function( donation, callback ) {
         });
     };
 
-    var updateDonation = function( donationObj, callback ) {
-        donationObj.updateAttributes( donationObj ).then(function( donationObj ) {
+    // Update donation
+    var updateDonation = function( donationObj, data, callback ) {
+        donationObj.updateAttributes( data ).then(function( donationObj ) {
             callback( false, donationObj );
         }, function( error ) {
             callback( error, false );
         });
     };
 
-    database.Donation.findOrCreate({ where: donation, defaults: donation }).then(function( output ) {
+
+    // Find (then update) or just create
+    database.Donation.findOrCreate({ where: { id: donation.id }, defaults: thisDonation }).then(function( output ) {
         var donationObj = output[0]; // LOL WUT
         var created = output[1]; // LOL THIS IS REAL LIFE
 
-        if ( !created ) {
-            updateDonation(function( error, donationObj ) {
+        if ( !created && donationObj ) {
+            updateDonation( donationObj, thisDonation, function( error, donationObj ) {
                 getDonation( donationObj.id, function( error, donationObj ) {
                     callback( false, donationObj );
                 });
@@ -71,7 +69,6 @@ var save = function( donation, callback ) {
             });
         }
     }, function( error ) {
-        console.log( error );
         callback( error, false );
     });
 };
@@ -90,8 +87,6 @@ var receipt = function( data, subject, template, callback ) {
 
 var notification = function( data, subject, template, callback ) {
     // todo: set donation amount to dollars, not cents
-
-    console.log( data.dataValues );
 
     mandrill.send( "accounts@illuminatenations.org", subject, data, template, function( error, id ) {
         if ( typeof callback === "function" ) {
