@@ -31,7 +31,7 @@ var save = function( donation, callback ) {
 
     // Get donation + (sub)campaign info
     var getDonation = function( id, callback ) {
-        database.Donation.find( { where: { id: id }, include: [ database.Campaign, database.Subcampaign ]} ).then(function( donationObj ) {
+        database.Donation.find( { where: { id: id }, include: [ database.Campaign, database.Subcampaign, database.Donor ]} ).then(function( donationObj ) {
             if ( donationObj ) {
                 callback( false, donationObj );
             } else {
@@ -60,12 +60,12 @@ var save = function( donation, callback ) {
         if ( !created && donationObj ) {
             updateDonation( donationObj, thisDonation, function( error, donationObj ) {
                 getDonation( donationObj.id, function( error, donationObj ) {
-                    callback( false, donationObj );
+                    callback( false, donationObj.toJSON() );
                 });
             });
         } else {
             getDonation( donationObj.id, function( error, donationObj ) {
-                callback( false, donationObj );
+                callback( false, donationObj.toJSON() );
             });
         }
     }, function( error ) {
@@ -74,21 +74,35 @@ var save = function( donation, callback ) {
 };
 
 var receipt = function( data, subject, template, callback ) {
-    mandrill.send( data.email, subject, data, template, function( error, id ) {
-        if ( typeof callback === "function" ) {
-            if ( error ) {
-                callback( error, false );
-            } else {
-                callback( false, id );
+    var sendNormally = function() {
+        mandrill.send( data.email, subject, data, template, false, function( error, id ) {
+            if ( typeof callback === "function" ) {
+                if ( error ) { callback( error, false );
+                } else { callback( false, id ); }
             }
+        });
+    };
+
+    if ( data.Campaign ) {
+        if ( data.Campaign.metadata.emails.donation ) {
+            var customTemplate = data.Campaign.metadata.emails.donation;
+
+            mandrill.send( data.email, subject, data, false, customTemplate, function( error, id ) {
+                if ( typeof callback === "function" ) {
+                    if ( error ) { callback( error, false );
+                    } else { callback( false, id ); }
+                }
+            });
+        } else {
+            sendNormally();
         }
-    });
+    } else {
+        sendNormally();
+    }
 };
 
 var notification = function( data, subject, template, callback ) {
-    // todo: set donation amount to dollars, not cents
-
-    mandrill.send( "accounts@illuminatenations.org", subject, data, template, function( error, id ) {
+    mandrill.send( "accounts@illuminatenations.org", subject, data, template, false, function( error, id ) {
         if ( typeof callback === "function" ) {
             if ( error ) {
                 callback( error, false );
