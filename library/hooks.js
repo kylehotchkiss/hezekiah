@@ -19,32 +19,60 @@ refund
 // Helper/Wrapper functions around our various interfaces
 //
 var save = function( donation, callback ) {
-    database.Donation.find({ where: { id: donation.id } }).then(function( donationObj ) {
-        if ( !donation.transactionFee ) { // TODO: Stripe doesn't return fee, but it may change?
-            donation.transactionFee = (( donation.amount * 0.029 ) + 30).toFixed(0);
-        }
+    if ( !donation.transactionFee ) { // TODO: Stripe doesn't return fee, but it may change?
+        donation.transactionFee = (( donation.amount * 0.029 ) + 30).toFixed(0);
+    }
 
-        if ( donationObj === null ) {
-            database.Donation.create( donation ).then(function() {
-                if ( typeof callback === "function" ) {
-                    callback( false );
-                }
+    // TODO: Clone pre-save && widdle down by whitelist
+    delete donation.date;
+    delete donation.name;
+    delete donation.token;
+    delete donation.donorID;
+    delete donation.customerID;
+    delete donation.addressCity;
+    delete donation.addressState;
+    delete donation.addressPostal;
+    delete donation.addressStreet;
+    delete donation.addressCountry;
+
+    var getDonation = function( id, callback ) {
+        database.Donation.find( { where: { id: id }, include: [ database.Campaign, database.Subcampaign ]} ).then(function( donationObj ) {
+            if ( donationObj ) {
+                callback( false, donationObj );
+            } else {
+                callback( true, false );
+            }
+        }, function( error ) {
+            callback( error, false );
+        });
+    };
+
+    var updateDonation = function( donationObj, callback ) {
+        donationObj.updateAttributes( donationObj ).then(function( donationObj ) {
+            callback( false, donationObj );
+        }, function( error ) {
+            callback( error, false );
+        });
+    };
+
+    database.Donation.findOrCreate({ where: donation, defaults: donation }).then(function( output ) {
+        var donationObj = output[0]; // LOL WUT
+        var created = output[1]; // LOL THIS IS REAL LIFE
+
+        if ( !created ) {
+            updateDonation(function( error, donationObj ) {
+                getDonation( donationObj.id, function( error, donationObj ) {
+                    callback( false, donationObj );
+                });
             });
         } else {
-            donationObj.updateAttributes( donation ).then(function() {
-                if ( typeof callback === "function" ) {
-                    callback( false );
-                }
-            }, function( error ) {
-                if ( typeof callback === "function" ) {
-                    callback( error );
-                }
+            getDonation( donationObj.id, function( error, donationObj ) {
+                callback( false, donationObj );
             });
         }
     }, function( error ) {
-        if ( typeof callback === "function" ) {
-            callback( error );
-        }
+        console.log( error );
+        callback( error, false );
     });
 };
 
@@ -62,6 +90,8 @@ var receipt = function( data, subject, template, callback ) {
 
 var notification = function( data, subject, template, callback ) {
     // todo: set donation amount to dollars, not cents
+
+    console.log( data.dataValues );
 
     mandrill.send( "accounts@illuminatenations.org", subject, data, template, function( error, id ) {
         if ( typeof callback === "function" ) {
@@ -93,7 +123,7 @@ var slack = function( message, callback ) {
 };
 
 exports.postDonate = function( donation, callback ) {
-    save( donation, function() {
+    save( donation, function( error, donation ) {
         donation.amount = donation.amount / 100;
 
         slack("[donation] A $" + donation.amount + " donation for " + donation.description + " was successfully processed" );
@@ -108,7 +138,7 @@ exports.postDonate = function( donation, callback ) {
 exports.postRefund = function( donation, donor, callback ) {
     donation.refunded = true;
 
-    save( donation, function() {
+    save( donation, function( error, donation ) {
         donation.amount = donation.amount / 100;
         donation.name = donor.name;
         donation.date = donation.updatedAt;
