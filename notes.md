@@ -1,0 +1,3 @@
+Metadata structure:
+
+{"emails": {"donation": "{% if Donor.name %}<p>Hey {{ Donor.name }},</p>{% else %}<p>Hey Friend!</p>{% endif %}<p>Jump for joy! You're going to illuminate the night with us at the Illuminate 5k!</p><p>You ordered the {{ Subcampaign.name }} ticket for {{ amount }} on {{ createdAt }}.</p><p>Make sure you invite your friends and share photos from the event on <a href='https://facebook.com/illuminatenations'>Facebook</a> / <a href='https://instagram.com/illuminatenations/'>Instagram</a> and tag @illuminatenations + #Illuminate5k so we can see your glow swag.</p><p>Honored to illuminate the nations with you, friend!</p>"}}

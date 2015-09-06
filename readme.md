@@ -5,7 +5,7 @@
 
 ## Features
 
-* Simple fundraising. 
+* Simple fundraising.
 * We're not touching, storing, or risking your donors credit card data. We process all our transactions on the renowned credit card processor called Stripe. Check them out for details on security.
 * Simple fundraising data. Accessible reports make fundraising intelligence easy.
 * Want to make your donation monthly? It's only a checkbox away. Want to cancel that monthly donation? That'll be two clicks. Monthly donations should be as easy to cancel as emails.
@@ -20,4 +20,3 @@
 ## Integrations
 
 * **Mailchimp** - Ddd donors to a list and places them in an *interest group* with the same name as the campaign they donated to. It's nice to email donors updates!
-
