@@ -9,6 +9,7 @@ var environment = process.env.NODE_ENV || 'development';
 var meta = require('../package.json');
 
 var swig = require('swig');
+var redis = require('redis');
 var moment = require("moment");
 var hook = require("./hook.js");
 var express = require('express');
@@ -17,12 +18,23 @@ var donate = require("./donate.js");
 var session = require('express-session');
 var reporting = require("./reporting.js");
 var Local = require('passport-local').Strategy;
-var RedisStore = require('connect-redis')( session );
 
 var admin = require('./admin.js');
 var user = require('../library/components/user.js');
 
 module.exports = function( app ) {
+    var redisClient;
+
+    if ( process.env.REDIS_URL ) {
+        var decoded = require('url').parse( process.env.REDIS_URL );
+        redisClient = require('redis').createClient( decoded.port, decoded.hostname );
+
+        redisClient.auth( decoded.auth.split(':')[1] );
+    } else {
+        redisClient = redis.createClient();
+    }
+
+    var redisSession = require('connect-redis')(session);
 
     swig.setFilter("date", function( input ) {
         return moment( input ).format("MM.D.YYYY");
@@ -45,7 +57,7 @@ module.exports = function( app ) {
 
     app.use(session({
         resave: true,
-        store: new RedisStore(),
+        store: new redisSession({ client: redisClient }),
         saveUninitialized: false,
         cookie: { maxAge: 1440000 },
         secret: process.env.HEZ_SECRET,
