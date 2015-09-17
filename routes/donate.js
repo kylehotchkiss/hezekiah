@@ -25,7 +25,6 @@ exports.one = function( req, res ) {
 
     var donation = {
         ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-        date: Date.now(),
         source: "stripe",
         token: req.body.token,
         name: req.body.name,
@@ -82,7 +81,6 @@ exports.monthly = function( req, res ) {
         ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
         source: "stripe",
         recurring: true,
-        date: Date.now(),
         token: req.body.token,
         name: req.body.name,
         email: req.body.email,

@@ -14,7 +14,7 @@ var config = require("../../config.json");
 var mandrillBase = "https://mandrillapp.com/api/1.0/";
 var mandrillAPI = process.env.HEZ_MANDRILL_API;
 
-exports.send = function( email, subject, incoming, template, callback ) {
+exports.send = function( email, subject, incoming, fileTemplate, customTemplate, callback ) {
     var content = _.clone( incoming );
     var loadedTemplate;
     var send = true;
@@ -23,19 +23,27 @@ exports.send = function( email, subject, incoming, template, callback ) {
     // not we can load the template file here.
     // TODO: This seems safe since the template name is only set from private
     // functions but just double check any ramifications of FS access.
-    try {
-        loadedTemplate = swig.compileFile("./emails/" + template + ".html");
-    } catch( error ) {
-        send = false;
+    if ( fileTemplate ) {
+        try {
+            loadedTemplate = swig.compileFile("./emails/" + template + ".html");
+        } catch( error ) {
+            send = false;
+        }
+    } else {
+        if ( customTemplate ) {
+            loadedTemplate = swig.compile( customTemplate );
+        } else {
+            send = false;
+        }
     }
 
     if ( send ) {
-        if ( typeof content.date === "number" || content.date instanceof Date ) {
-            content.date = moment( content.date ).format('M/D/YYYY [at] h:mm a');
+        if ( content.createdAt instanceof Date ) {
+            content.createdAt = moment( content.createdAt ).format('M/D/YYYY [at] h:mm a');
         }
 
         if ( typeof content.amount === "number" ) {
-            content.amount = numeral( content.amount ).format("0,0.00");
+            content.amount = numeral( content.amount ).format("$0,0.00");
         }
 
         var compiledTemplate = loadedTemplate( content );
@@ -54,7 +62,7 @@ exports.send = function( email, subject, incoming, template, callback ) {
                 }],
                 message: {
                     to: [{ email: email }],
-                    tags: [template],
+                    tags: fileTemplate ? [ fileTemplate ] : undefined,
                     subject: subject,
                     auto_text: true,
                     from_name: config.organization.name,
