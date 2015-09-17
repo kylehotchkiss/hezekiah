@@ -23,14 +23,13 @@ var compress = require('compression');
 var bodyParser = require('body-parser');
 var validator = require('express-validator');
 
-
 //
 // Express Setup
 //
 var app = express();
 
 if ( process.env.HEZ_SENTRY_URL ) {
-    app.use(raven.middleware.express(  process.env.HEZ_SENTRY_URL ));
+    app.use(raven.middleware.express( process.env.HEZ_SENTRY_URL ));
 }
 
 if ( environment === "production" ) {
@@ -52,9 +51,7 @@ app.use(validator());
 app.use(express.static('public',  { maxAge: '1w' }));
 
 //
-// Set subdomain for account purposes
-// This depends on a wildcard domain on our TLD
-// along with proper certificate setup
+// Get Subdomain
 //
 app.use(function( req, res, next ) {
     req.subdomain = req.get('host').split('.')[0];

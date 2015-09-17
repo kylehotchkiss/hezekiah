@@ -1,5 +1,9 @@
+var moment = require('moment');
+var numeral = require("numeral");
+
 var menu = require('../data/menus.json');
 var user = require('../library/components/user.js');
+var database = require('../models');
 
 module.exports = {
     views: {
@@ -11,7 +15,38 @@ module.exports = {
 
                     res.redirect( next );
                 } else {
-                    res.render("dashboard.html");
+                    var date = moment().format('MMMM YYYY');
+
+                    database.Donation.findAll({ where: { createdAt: { gte: moment().startOf('month').toDate() }}}).then(function( donations ) {
+                        var amount = 0;
+                        var donors = [];
+                        var campaigns = [];
+
+                        donations.map(function( donation, i ) {
+                            if ( donors.indexOf( donation.email ) === -1 ) {
+                                donors.push( donation.email );
+                            }
+
+                            if ( campaigns.indexOf( donation.campaign ) === -1 ) {
+                                campaigns.push( donation.campaign );
+                            }
+
+                            amount += donation.amount;
+                        });
+
+                        amount /= 100;
+
+                        res.render("dashboard.html", {
+                            date: date,
+                            amount: numeral( amount ).format("$0,0.00"),
+                            donors: donors.length,
+                            campaigns: campaigns.length
+                        });
+                    }, function( error ) {
+                        console.log( error );
+
+                        res.render('errors/500.html');
+                    });
                 }
             } else {
                 var error = req.flash('error');

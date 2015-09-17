@@ -14,8 +14,10 @@ var hook = require("./hook.js");
 var express = require('express');
 var passport = require('passport');
 var donate = require("./donate.js");
+var session = require('express-session');
 var reporting = require("./reporting.js");
 var Local = require('passport-local').Strategy;
+var RedisStore = require('connect-redis')( session );
 
 var admin = require('./admin.js');
 var user = require('../library/components/user.js');
@@ -44,8 +46,10 @@ module.exports = function( app ) {
     app.use(require('connect-flash')());
     app.use(require('cookie-parser')());
     app.use(require('body-parser').urlencoded({ extended: true }));
-    app.use(require('express-session')({
+
+    app.use(session({
         resave: true,
+        store: new RedisStore(),
         saveUninitialized: false,
         cookie: { maxAge: 1440000 },
         secret: process.env.HEZ_SECRET,

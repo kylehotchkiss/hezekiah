@@ -1,5 +1,11 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <h1>HOME</h1>
+    <div class="row text-center">
+        <div class="col-sm-12">
+            <h1 style="font-weight:100;font-size:50px;line-height:60px;font-family:brandon-grotesque">
+                In {{ date }}, {{ donors }} cool people <br /> donated {{ amount }} to {{ campaigns }} campaigns.<br />Awesome!
+            </h1>
+        </div>
+    </div>
 {% endblock %}
