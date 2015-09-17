@@ -43,10 +43,6 @@ module.exports = function( app ) {
     app.set('view engine', 'html');
     app.set('views', __dirname + '/../views');
 
-    app.use(require('connect-flash')());
-    app.use(require('cookie-parser')());
-    app.use(require('body-parser').urlencoded({ extended: true }));
-
     app.use(session({
         resave: true,
         store: new RedisStore(),
@@ -54,6 +50,11 @@ module.exports = function( app ) {
         cookie: { maxAge: 1440000 },
         secret: process.env.HEZ_SECRET,
     }));
+
+    app.use(require('connect-flash')());
+    app.use(require('cookie-parser')());
+    app.use(require('body-parser').urlencoded({ extended: true }));
+
     app.use(passport.initialize());
     app.use(passport.session());
 
