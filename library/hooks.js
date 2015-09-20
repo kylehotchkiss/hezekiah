@@ -4,7 +4,7 @@
 // All Rights Reserved
 //
 
-var _ = require('underscore');
+var _ = require('lodash');
 var request = require('request');
 var database = require("../models");
 var mandrill = require("../library/integrations/mandrill.js");
@@ -74,28 +74,34 @@ var save = function( donation, callback ) {
 };
 
 var receipt = function( data, subject, template, callback ) {
-    var sendNormally = function() {
+    function sendNormally() {
         mandrill.send( data.email, subject, data, template, false, function( error, id ) {
             if ( typeof callback === "function" ) {
-                if ( error ) { callback( error, false );
-                } else { callback( false, id ); }
+                if ( error ) {
+                    callback( error, false );
+                } else {
+                    callback( false, id );
+                }
             }
         });
-    };
+    }
 
-    if ( data.Campaign ) {
-        if ( data.Campaign.metadata.emails.donation ) {
-            var customTemplate = data.Campaign.metadata.emails.donation;
+    function sendTemplate() {
+        var customTemplate = _.get(data, 'Campaign.metadata.emails.donation');
 
-            mandrill.send( data.email, subject, data, false, customTemplate, function( error, id ) {
-                if ( typeof callback === "function" ) {
-                    if ( error ) { callback( error, false );
-                    } else { callback( false, id ); }
+        mandrill.send( data.email, subject, data, false, customTemplate, function( error, id ) {
+            if ( typeof callback === "function" ) {
+                if ( error ) {
+                    callback( error, false );
+                } else {
+                    callback( false, id );
                 }
-            });
-        } else {
-            sendNormally();
-        }
+            }
+        });
+    }
+
+    if ( _.get(data, 'Campaign.metadata.emails.donation') ) {
+        sendTemplate();
     } else {
         sendNormally();
     }

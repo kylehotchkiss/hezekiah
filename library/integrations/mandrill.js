@@ -25,7 +25,7 @@ exports.send = function( email, subject, incoming, fileTemplate, customTemplate,
     // functions but just double check any ramifications of FS access.
     if ( fileTemplate ) {
         try {
-            loadedTemplate = swig.compileFile("./emails/" + template + ".html");
+            loadedTemplate = swig.compileFile("./emails/" + fileTemplate + ".html");
         } catch( error ) {
             send = false;
         }

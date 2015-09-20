@@ -34,6 +34,7 @@
     "express-session": "^1.11.3",
     "express-validator": "^2.8.0",
     "keen.io": "^0.1.2",
+    "lodash": "^3.10.1",
     "moment": "^2.8.3",
     "newrelic": "~1.5.4",
     "numeral": "^1.5.3",
