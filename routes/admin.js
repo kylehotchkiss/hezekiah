@@ -18,7 +18,7 @@ module.exports = {
                 } else {
                     var date = moment().format('MMMM YYYY');
 
-                    database.Donation.findAll({ where: { createdAt: { gte: moment().startOf('month').toDate() }}}).then(function( donations ) {
+                    database.Donation.findAll({ where: { createdAt: { gte: moment().minus(7, 'days').toDate() }}}).then(function( donations ) {
                         var amount = 0;
                         var donors = [];
                         var campaigns = [];
