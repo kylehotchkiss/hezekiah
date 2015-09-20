@@ -59,7 +59,7 @@ module.exports = function( app ) {
         resave: true,
         store: new redisSession({ client: redisClient }),
         saveUninitialized: false,
-        cookie: { maxAge: 1440000 },
+        cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 },
         secret: process.env.HEZ_SECRET,
     }));
 
