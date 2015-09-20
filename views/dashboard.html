@@ -8,4 +8,47 @@
             </h1>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="box red">
+                <canvas class="graph" id="js-graph-donations" width="295" height="160"></canvas>
+                <div class="overlay">Donations &raquo;</div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="box green">
+                Donors &raquo;
+                <div id="js-graph-donors"></div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="box blue">
+                Campaigns &raquo;
+                <div id="js-graph-campaigns"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        var data = {
+            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            datasets: [{
+                label: "My First dataset",
+                fillColor: "rgba(0,0,0,.05)",
+                strokeColor: "rgba(0,0,0,0)",
+                data: JSON.parse("{{ donorChart }}")
+            }]
+        };
+
+        var ctx = document.getElementById("js-graph-donations").getContext("2d");
+
+        var myLineChart = new Chart(ctx).Line(data, {
+            pointDot: false,
+            showScale: false,
+            scaleShowLabels: false,
+        });
+    </script>
 {% endblock %}

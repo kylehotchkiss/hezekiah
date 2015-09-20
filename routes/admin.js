@@ -4,6 +4,7 @@ var numeral = require("numeral");
 var menu = require('../data/menus.json');
 var user = require('../library/components/user.js');
 var database = require('../models');
+var reporting = require('../library/components/reporting.js');
 
 module.exports = {
     views: {
@@ -40,7 +41,8 @@ module.exports = {
                             date: date,
                             amount: numeral( amount ).format("$0,0.00"),
                             donors: donors.length,
-                            campaigns: campaigns.length
+                            campaigns: campaigns.length,
+                            donorChart: JSON.stringify( reporting.chart( donations ) ),
                         });
                     }, function( error ) {
                         console.log( error );

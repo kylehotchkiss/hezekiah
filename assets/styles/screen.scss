@@ -144,3 +144,38 @@ a, a:hover {
 article {
     padding: 60px 0;
 }
+
+.box {
+    background-color: #BBBBBB;
+    color: #FFFFFF;
+    height: 160px;
+    font-family: "brandon-grotesque";
+    font-size: 25px;
+    font-weight: bold;
+    padding: 15px;
+    position: relative;
+
+    .graph {
+        position: absolute;
+        top: 5px;
+        left: -5px;
+        z-index: 1;
+    }
+
+    .overlay {
+        position: relative;
+        z-index: 2;
+    }
+
+    /*&.red {
+        background-color: red;
+    }
+
+    &.green {
+        background-color: green;
+    }
+
+    &.blue {
+        background-color: blue;
+    }*/
+}
