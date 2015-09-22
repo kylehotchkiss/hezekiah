@@ -5,8 +5,8 @@
             "url": "/admin",
             "role": "reporting"
         }, {
-            "title": "Reports",
-            "url": "/admin/reports",
+            "title": "Fundraising",
+            "url": "#",
             "role": "reporting",
 
             "items": [

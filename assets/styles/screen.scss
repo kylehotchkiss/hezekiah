@@ -9,6 +9,26 @@ a, a:hover {
 .body-sidebar {
     background-color: #444444;
     height: 100vh;
+
+    .logo {
+        padding: 50px 0;
+        text-align: center;
+
+        h1 {
+            color: #FFFFFF;
+            font-family: "bello-pro";
+            font-size: 50px;
+            line-height: 50px;
+        }
+
+        h6 {
+            color: rgba(#FFFFFF, .5);
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+    }
 }
 
 .navigation {
@@ -41,15 +61,17 @@ a, a:hover {
             margin-bottom: 15px;
         }
 
-        li > a {
-            color: lighten(#444444, 30%);
-            font-family: "brandon-grotesque";
-            font-size: 14px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+        li {
+            &, a {
+                color: lighten(#444444, 30%);
+                font-family: "brandon-grotesque";
+                font-size: 14px;
+                font-weight: bold;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+            }            
 
-            &.active {
+            a.active {
                 color: #FFFFFF;
             }
         }

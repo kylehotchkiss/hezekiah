@@ -1,8 +1,12 @@
 {% macro link( title, url ) %}
-    {% if url == path %}
-        <a href="{{ url }}" class="active">{{ title }}</a>
+    {% if url == '#' %}
+        {{ title }}
     {% else %}
-        <a href="{{ url }}">{{ title }}</a>
+        {% if url == path %}
+            <a href="{{ url }}" class="active">{{ title }}</a>
+        {% else %}
+            <a href="{{ url }}">{{ title }}</a>
+        {% endif %}
     {% endif %}
 {% endmacro %}
 
