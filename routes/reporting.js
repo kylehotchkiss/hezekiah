@@ -288,7 +288,6 @@ exports.campaign = function( req, res ) {
             return table;
         });
 
-        // TODO: If Ticketing
-        res.render('reporting/campaign-ticketing.html', { campaign: campaignObj, donations: JSON.stringify( donations ) });
+        res.render('reporting/report.html', { donations: JSON.stringify( donations ) });
     });
 };
