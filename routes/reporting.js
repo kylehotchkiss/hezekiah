@@ -193,57 +193,48 @@ var processDonations = function( donationsObj ) {
 // Latest
 // Table of
 
-exports.latest = function( req, res ) {
-    sidebarContent( function( error, content ) {
-        var sidebar = !error ? content : false;
-
-        database.Donation.findAll({ include: [ database.Donor ], order: '"updatedAt" DESC' }).then(function( donationsObj ) {
-            var output = processDonations( donationsObj );
-
-            res.render("reporting/report.html", {
-                graph: output.graph,
-                report: output.donations,
-                summaries: output.summaries
-            });
-        });
-    });
-};
-
 exports.monthly = function( req, res ) {
-    sidebarContent( function( error, content ) {
-        var sidebar = !error ? content : false;
-
-        database.Donation.findAll({ where: { createdAt: { "gte": moment().startOf("month").format() } }, include: [ database.Donor ], order: '"updatedAt" DESC' }).then(function( donationsObj ) {
-            var output = processDonations( donationsObj );
-
-            res.render("reporting/report.html", {
-                graph: output.graph,
-                report: output.donations,
-                summaries: output.summaries
-            });
+    database.Donation.findAll({ where: { createdAt: { gte: moment().startOf('month').toDate() } }, include: [ database.Donor ], order: '"createdAt" DESC' }).then(function( donationsObj ) {
+        var donations = donationsObj.map(function( donation, i ) {
+            return {
+                date: moment( donation.createdAt ).format('MM/DD/YYYY'),
+                name: donation.Donor.name,
+                campaign: donation.campaign,
+                amount: amount( donation.amount )
+            };
         });
+
+        res.render('reporting/report.html', { donations: JSON.stringify( donations ) });
     });
 };
 
 exports.annual = function( req, res ) {
-    sidebarContent( function( error, content ) {
-        var sidebar = !error ? content : false;
-
-        database.Donation.findAll({ where: { createdAt: { "gte": moment().startOf("year").format() } }, include: [ database.Donor ], order: '"updatedAt" DESC' }).then(function( donationsObj ) {
-            var output = processDonations( donationsObj );
-
-            res.render("reporting/report.html", {
-                graph: output.graph,
-                report: output.donations,
-                summaries: output.summaries
-            });
+    database.Donation.findAll({ where: { createdAt: { gte: moment().startOf('year').toDate() } }, include: [ database.Donor ], order: '"createdAt" DESC' }).then(function( donationsObj ) {
+        var donations = donationsObj.map(function( donation, i ) {
+            return {
+                date: moment( donation.createdAt ).format('MM/DD/YYYY'),
+                name: donation.Donor.name,
+                campaign: donation.campaign,
+                amount: amount( donation.amount )
+            };
         });
+
+        res.render('reporting/report.html', { donations: JSON.stringify( donations ) });
     });
 };
 
 exports.donors = function( req, res ) {
-    database.Donation.findAll({ include: [ database.Donor ] }).then(function( donorsObj ) {
-        res.render("reporting/report.html", { report: donorsObj });
+    database.Donor.findAll({ order: '"updatedAt" DESC'}).then(function( donorsObj ) {
+        var donors = donorsObj.map(function( donor, i ) {
+            return {
+                name: donor.name,
+                email: donor.email,
+                monthlyDonor: donor.subscriber ? "Yes" : "No",
+                lastEdited: moment( donor.updatedAt ).format('MM/DD/YYYY'),
+            };
+        });
+
+        res.render('reporting/report.html', { donations: JSON.stringify( donors ) });
     });
 };
 
@@ -271,7 +262,14 @@ exports.campaigns = function( req, res ) {
 exports.campaign = function( req, res ) {
     var campaign = req.param('campaign');
 
-    database.Campaign.find({ where: { slug: campaign }, include: { model: database.Donation, include: [{ model: database.Donor }, { model: database.Subcampaign }] } }).then(function( campaignObj ) {
+    database.Campaign.find({
+        where: { slug: campaign },
+        include: {
+            order: '"createdAt" DESC',
+            model: database.Donation,
+            include: [{ model: database.Donor }, { model: database.Subcampaign }]
+        }
+    }).then(function( campaignObj ) {
         var donations = campaignObj.Donations.map(function( donation, i ) {
             var table = {
                 date: moment( donation.createdAt ).format('MM/DD/YYYY'),

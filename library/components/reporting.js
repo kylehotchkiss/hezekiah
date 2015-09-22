@@ -27,7 +27,6 @@ module.exports = {
         });
 
         // Turn the dates object into an Array
-
         for ( var i = 0; i <= count; i++ ) {
             var key = moment( first, 'YYYYMMDD' ).add(i, 'days').format('YYYYMMDD');
 

@@ -11,9 +11,6 @@
 
             "items": [
                 {
-                    "title": "Recent Donations",
-                    "url": "/admin/reports/latest"
-                }, {
                     "title": "Monthly Summary",
                     "url": "/admin/reports/monthly"
                 }, {

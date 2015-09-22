@@ -146,7 +146,6 @@ module.exports = function( app ) {
 
 
     // Reporting
-    app.get('/admin/reports/latest', user.auth('reporting'), reporting.latest);
     app.get('/admin/reports/monthly', user.auth('reporting'), reporting.monthly);
     app.get('/admin/reports/annual', user.auth('reporting'), reporting.annual);
     app.get('/admin/reports/donors', user.auth('reporting'), reporting.donors);
