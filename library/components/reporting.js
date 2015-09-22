@@ -5,7 +5,7 @@ module.exports = {
         var count = initialCount || 0;
         var days = {};
         var chart = [];
-        var first = initialCount ? parseInt( moment().subtract( initialCount ).format('YYYYMMDD') ) : parseInt( moment().format('YYYYMMDD') );
+        var first = initialCount ? parseInt( moment().subtract( initialCount, 'days' ).format('YYYYMMDD') ) : parseInt( moment().format('YYYYMMDD') );
 
         // Break the donations out into their dates
         donations.map(function( donation, i ) {
