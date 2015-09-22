@@ -4,6 +4,7 @@
 // All Rights Reserved
 //
 
+var S = require("string");
 var moment = require("moment");
 var database = require("../models");
 
@@ -271,17 +272,26 @@ exports.campaign = function( req, res ) {
         }
     }).then(function( campaignObj ) {
         var donations = campaignObj.Donations.map(function( donation, i ) {
-            var table = {
-                date: moment( donation.createdAt ).format('MM/DD/YYYY'),
-                name: donation.Donor.name,
-                subcampaign: donation.Subcampaign.name,
-                amount: amount( donation.amount )
-            };
+            var table;
+
+            if ( campaignObj.mode === 'ticketing' ) {
+                table = {
+                    "Name": donation.Donor.name,
+                    "Type": donation.Subcampaign.name,
+                };
+            } else {
+                table = {
+                    "Date": moment( donation.createdAt ).format('MM/DD/YYYY'),
+                    "Name": donation.Donor.name,
+                    "Designation": donation.Subcampaign.name,
+                    "Amount": amount( donation.amount )
+                };
+            }
 
             // Custom Fields
             if ( typeof donation.metadata.custom !== 'undefined' ) {
                 for ( var j in donation.metadata.custom ) {
-                    table[j] = donation.metadata.custom[j];
+                    table[ S.humanize( j ).s ] = donation.metadata.custom[j];
                 }
             }
 
