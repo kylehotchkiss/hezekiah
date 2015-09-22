@@ -291,7 +291,7 @@ exports.campaign = function( req, res ) {
             // Custom Fields
             if ( typeof donation.metadata.custom !== 'undefined' ) {
                 for ( var j in donation.metadata.custom ) {
-                    table[ S.humanize( j ).s ] = donation.metadata.custom[j];
+                    table[ S( j ).humanize.s ] = donation.metadata.custom[j];
                 }
             }
 
