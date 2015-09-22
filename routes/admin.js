@@ -42,7 +42,7 @@ module.exports = {
                             amount: numeral( amount ).format("$0,0.00"),
                             donors: donors.length,
                             campaigns: campaigns.length,
-                            donorChart: JSON.stringify( reporting.chart( donations ) ),
+                            donorChart: JSON.stringify( reporting.chart( donations, 7 ) ),
                         });
                     }, function( error ) {
                         console.log( error );

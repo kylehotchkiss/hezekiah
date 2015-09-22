@@ -1,8 +1,8 @@
 var moment = require('moment');
 
 module.exports = {
-    chart: function( donations ) {
-        var count = 0;
+    chart: function( donations, initialCount ) {
+        var count = initialCount || 0;
         var days = {};
         var chart = [];
         var first = parseInt( moment().format('YYYYMMDD') );
@@ -14,7 +14,9 @@ module.exports = {
             if ( key < first ) {
                 first = key;
 
-                count = moment().diff( moment( donation.createdAt ), 'days' );
+                if ( !initialCount ) {
+                    count = moment().diff( moment( donation.createdAt ), 'days' );
+                }
             }
 
             if ( typeof days[key] === 'undefined' ) {
