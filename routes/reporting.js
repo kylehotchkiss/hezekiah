@@ -274,7 +274,7 @@ exports.campaign = function( req, res ) {
         var donations = campaignObj.Donations.map(function( donation, i ) {
             var table;
 
-            if ( campaignObj.mode === 'ticketing' ) {
+            if ( campaignObj.mode === 'ticketed' ) {
                 table = {
                     "Name": donation.Donor.name,
                     "Type": donation.Subcampaign.name,
