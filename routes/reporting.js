@@ -225,13 +225,27 @@ exports.annual = function( req, res ) {
 };
 
 exports.donors = function( req, res ) {
-    database.Donor.findAll({ order: '"updatedAt" DESC'}).then(function( donorsObj ) {
+    database.Donor.findAll({ include: [ database.Donation ], order: '"updatedAt" DESC' }).then(function( donorsObj ) {
         var donors = donorsObj.map(function( donor, i ) {
+            var ytd = 0;
+            var total = 0;
+
+            // TODO: We can probably aggregate this in SQL for speed in the future
+            donor.Donations.map(function( donation, i ) {
+                if ( moment( donation.createdAt ).isAfter( moment().startOf('year') ) ) {
+                    ytd += donation.amount;
+                }
+
+                total += donation.amount;
+            });
+
             return {
-                name: donor.name,
-                email: donor.email,
-                monthlyDonor: donor.subscriber ? "Yes" : "No",
-                lastEdited: moment( donor.updatedAt ).format('MM/DD/YYYY'),
+                Name: donor.name,
+                Email: donor.email,
+                "Donated: YTD": amount( ytd ),
+                "Donated: Total": amount( total ),
+                "Is Monthly Donor?": donor.subscriber ? "Yes" : "No",
+                "Last Edited": moment( donor.updatedAt ).format('MM/DD/YYYY'),
             };
         });
 
@@ -243,7 +257,8 @@ exports.referrers = function( req, res ) {
     database.Donation.aggregate('*', 'count', {
         plain: false,
         group: ['referrer'],
-        attributes: ['referrer']
+        attributes: ['referrer'],
+        order: '"count" DESC',
     }).then(function( countObj ) {
         var referrers = countObj.map(function( referrer, i ) {
             if ( referrer.referrer ) {
@@ -251,7 +266,7 @@ exports.referrers = function( req, res ) {
                     URL: referrer.referrer,
                     total: referrer.count
                 };
-            }            
+            }
         });
 
         res.render('reporting/report.html', { donations: JSON.stringify( referrers ) });
