@@ -240,9 +240,10 @@ exports.donors = function( req, res ) {
 };
 
 exports.referrers = function( req, res ) {
-    database.Donation.findAll({
-        group: ['referrer'],
-        attributes: ['referrer', database.sequelize.fn('count', database.sequelize.col('*')) ]
+    database.Donation.aggregate('*', 'count', {
+        plain: false,
+        group: [ 'referrer' ],
+        attributes: ['referrer']
     }).then(function( countObj ) {
         console.log( countObj );
         res.send( JSON.stringify( countObj ) );
