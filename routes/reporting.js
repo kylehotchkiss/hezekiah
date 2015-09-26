@@ -240,11 +240,13 @@ exports.donors = function( req, res ) {
 };
 
 exports.referrers = function( req, res ) {
-    database.Donation.aggregate('referrer', 'COUNT', { plain: false, distinct: true })
-        .map( function( row ) { return row; })
-        .then( function( referrers ) {
-            res.send( JSON.stringify( referrers ) );
-        });
+    database.Donation.findAll({
+        group: ['referrer'],
+        attributes: ['referrer', database.sequelize.fn('count', database.sequelize.col('*')) ]
+    }).then(function( countObj ) {
+        console.log( countObj );
+        res.send( JSON.stringify( countObj ) );
+    });
 };
 
 exports.campaigns = function( req, res ) {
