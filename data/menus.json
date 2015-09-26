@@ -20,6 +20,9 @@
                     "title": "Donors",
                     "url": "/admin/reports/donors"
                 }, {
+                    "title": "Referrers",
+                    "url": "/admin/reports/referrers"
+                }, {
                     "title": "Campaigns",
                     "url": "/admin/reports/campaigns"
                 }

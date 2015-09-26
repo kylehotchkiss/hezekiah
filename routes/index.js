@@ -149,6 +149,7 @@ module.exports = function( app ) {
     app.get('/admin/reports/monthly', user.auth('reporting'), reporting.monthly);
     app.get('/admin/reports/annual', user.auth('reporting'), reporting.annual);
     app.get('/admin/reports/donors', user.auth('reporting'), reporting.donors);
+    app.get('/admin/reports/referrers', user.auth('reporting'), reporting.referrers);
     app.get('/admin/reports/campaigns',  user.auth('reporting'), reporting.campaigns);
     app.get('/admin/reports/campaigns/:campaign', user.auth('reporting'), reporting.campaign);
     app.get("/admin/*", user.auth('reporting'), admin.views.notfound);

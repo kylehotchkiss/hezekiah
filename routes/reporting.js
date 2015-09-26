@@ -201,7 +201,6 @@ exports.monthly = function( req, res ) {
                 date: moment( donation.createdAt ).format('MM/DD/YYYY'),
                 name: donation.Donor.name,
                 campaign: donation.campaign,
-                "Referrer": donation.referrer,
                 amount: amount( donation.amount )
             };
         });
@@ -238,6 +237,14 @@ exports.donors = function( req, res ) {
 
         res.render('reporting/report.html', { donations: JSON.stringify( donors ) });
     });
+};
+
+exports.referrers = function( req, res ) {
+    database.Donation.aggregate('referrer', 'DISTINCT', { plain: false })
+        .map( function( row ) { console.log( row ); return row.DISTINCT; })
+        .then( function( referrers ) {
+            res.send( JSON.stringify( referrers ) );
+        });
 };
 
 exports.campaigns = function( req, res ) {
@@ -285,7 +292,6 @@ exports.campaign = function( req, res ) {
                     "Date": moment( donation.createdAt ).format('MM/DD/YYYY'),
                     "Name": donation.Donor.name,
                     "Designation": donation.Subcampaign.name,
-                    "Referrer": donation.referrer,
                     "Amount": amount( donation.amount )
                 };
             }
