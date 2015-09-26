@@ -284,6 +284,7 @@ exports.campaign = function( req, res ) {
                     "Date": moment( donation.createdAt ).format('MM/DD/YYYY'),
                     "Name": donation.Donor.name,
                     "Designation": donation.Subcampaign.name,
+                    "Referrer": donation.referrer,
                     "Amount": amount( donation.amount )
                 };
             }
