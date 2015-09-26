@@ -201,6 +201,7 @@ exports.monthly = function( req, res ) {
                 date: moment( donation.createdAt ).format('MM/DD/YYYY'),
                 name: donation.Donor.name,
                 campaign: donation.campaign,
+                "Referrer": donation.referrer,
                 amount: amount( donation.amount )
             };
         });
