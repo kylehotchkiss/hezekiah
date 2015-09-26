@@ -240,8 +240,8 @@ exports.donors = function( req, res ) {
 };
 
 exports.referrers = function( req, res ) {
-    database.Donation.aggregate('referrer', 'DISTINCT', { plain: false })
-        .map( function( row ) { console.log( row ); return row.DISTINCT; })
+    database.Donation.aggregate('referrer', 'COUNT', { plain: false, distinct: true })
+        .map( function( row ) { return row; })
         .then( function( referrers ) {
             res.send( JSON.stringify( referrers ) );
         });
