@@ -242,11 +242,19 @@ exports.donors = function( req, res ) {
 exports.referrers = function( req, res ) {
     database.Donation.aggregate('*', 'count', {
         plain: false,
-        group: [ 'referrer' ],
+        group: ['referrer'],
         attributes: ['referrer']
     }).then(function( countObj ) {
-        console.log( countObj );
-        res.send( JSON.stringify( countObj ) );
+        var referrers = countObj.map(function( referrer, i ) {
+            if ( referrer.referrer ) {
+                return {
+                    URL: referrer.referrer,
+                    total: referrer.count
+                };
+            }            
+        });
+
+        res.render('reporting/report.html', { donations: JSON.stringify( referrers ) });
     });
 };
 
