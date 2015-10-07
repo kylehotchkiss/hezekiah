@@ -91,7 +91,11 @@ module.exports = {
     // Grab user info from DB from every request
     unserialize: function( id, done ) {
         database.User.findById(id).then(function( user ) {
-            done( false, user.dataValues );
+            if ( user !== null ) {
+                done( false, user.dataValues );
+            } else {
+                done( false, false );
+            }
         }, function( error ) {
             done( error, false );
         });

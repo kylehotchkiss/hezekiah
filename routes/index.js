@@ -93,6 +93,11 @@ module.exports = function( app ) {
         });
     }
 
+    app.use(function( req, res, next ) {
+        req.csv = ( req.originalUrl.indexOf('.csv') > 0 );
+
+        next();
+    });
 
     // Login/Sessions
     passport.use(new Local( user.login ));
@@ -146,10 +151,10 @@ module.exports = function( app ) {
 
 
     // Reporting
-    app.get('/admin/reports/monthly', user.auth('reporting'), reporting.monthly);
-    app.get('/admin/reports/annual', user.auth('reporting'), reporting.annual);
-    app.get('/admin/reports/donors', user.auth('reporting'), reporting.donors);
-    app.get('/admin/reports/referrers', user.auth('reporting'), reporting.referrers);
+    app.get('/admin/reports/monthly(.csv)?', user.auth('reporting'), reporting.monthly);
+    app.get('/admin/reports/annual(.csv)?', user.auth('reporting'), reporting.annual);
+    app.get('/admin/reports/donors(.csv)?', user.auth('reporting'), reporting.donors);
+    app.get('/admin/reports/referrers(.csv)?', user.auth('reporting'), reporting.referrers);
     app.get('/admin/reports/campaigns',  user.auth('reporting'), reporting.campaigns);
     app.get('/admin/reports/campaigns/:campaign', user.auth('reporting'), reporting.campaign);
     app.get("/admin/*", user.auth('reporting'), admin.views.notfound);

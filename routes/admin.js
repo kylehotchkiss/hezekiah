@@ -44,6 +44,8 @@ module.exports = {
                             campaigns: campaigns.length,
                             donorChart: JSON.stringify( reporting.chart( donations, 7 ) ),
                         });
+
+
                     }, function( error ) {
                         console.log( error );
 

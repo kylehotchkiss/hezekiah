@@ -7,80 +7,11 @@
 var S = require("string");
 var moment = require("moment");
 var database = require("../models");
+var stringify = require('csv-stringify');
 
 var amount = function( value ) {
     return '$' + ( value / 100 ).toFixed( 2 );
 };
-
-var sidebarContent = function( callback ) {
-    //
-    // TODO: Why are we getting strings for the amounts here and not integers?
-    //
-    database.Donation.findAll({ where: { createdAt: { gte: moment().subtract(1, "month").format() }}}).then(function( donations ) {
-        if ( donations === null ) {
-            callback( false, false );
-        } else {
-            var now = moment();
-            var campaigns = {};
-            var campaignsArray = [];
-
-            // Read all data from the donations table
-            for ( var i in donations ) {
-                var donation = donations[i];
-
-                if ( typeof campaigns[ donation.campaign ] === "undefined" ) {
-                    campaigns[ donation.campaign ] = {
-                        campaign: donation.campaign,
-                        total: 0,
-                        donations: []
-                    };
-                }
-
-                campaigns[ donation.campaign ].total += parseInt(donation.amount);
-                campaigns[ donation.campaign ].donations.push({
-                    amount: parseInt(donation.amount),
-                    offset: moment().diff(moment(donation.createdAt), 'days')
-                });
-            }
-
-            // Run some data conversions specifc to the sidebar
-            for ( var j in campaigns ) {
-                var sparkline = [];
-                var campaign = campaigns[j];
-
-                for ( var k = 0; k < 31; k++ ) {
-                    sparkline[k] = 0;
-                }
-
-                for ( var l in campaign.donations ) {
-                    var day = campaign.donations[l];
-
-                    sparkline[ day.offset ] += day.amount;
-                }
-
-                campaign.sparkline = sparkline.toString();
-                delete campaign.donations;
-
-                campaignsArray.push( campaign );
-            }
-
-            campaignsArray.sort(function( a, b ) {
-                if ( a.total < b.total ) {
-                    return 1;
-                } else if ( a.total > b.total ) {
-                    return -1;
-                } else {
-                    return 0;
-                }
-            });
-
-            callback( false, campaignsArray );
-        }
-    }, function( error ) {
-        callback( error, false );
-    });
-};
-
 
 var filter = function( input ) {
     var start = new Date().getTime();
@@ -121,55 +52,6 @@ var filter = function( input ) {
     return output;
 };
 
-
-var processDonations = function( donationsObj ) {
-    var campaigns = {};
-    var dates = {};
-    var graph = { labels: [], series: [] };
-    var donors = {};
-    var fees = 0;
-    var total = 0;
-    var donorCount = 0;
-
-    donations = filter( donationsObj );
-
-    for ( var i in donationsObj ) {
-        var donation = donationsObj[i];
-        var dateString = moment( donation.createdAt ).format("MM-DD-YYYY");
-
-        if ( typeof dates[dateString] === "undefined" ) {
-            dates[dateString] = 0;
-        }
-
-        dates[dateString] += parseInt( ( donation.amount / 100 ).toFixed(0) );
-        total += donation.amount;
-        fees += donation.transactionFee;
-
-        if ( typeof donors[ donation.email ] === "undefined" ) {
-            donors[ donation.email ] = true;
-
-            donorCount++;
-        }
-    }
-
-    for ( var j in dates ) {
-        var col = dates[j];
-
-        graph.labels.push( j );
-        graph.series.push( col );
-    }
-
-    return {
-        graph: graph,
-        donations: donations,
-        summaries: {
-            fees: fees,
-            total: total,
-            donors: donorCount
-        }
-    };
-};
-
 // Monthly * Annual * Donors * Latest * Campaigns
 
 // Monthly
@@ -205,7 +87,14 @@ exports.monthly = function( req, res ) {
             };
         });
 
-        res.render('reporting/report.html', { donations: JSON.stringify( donations ) });
+        if ( req.csv ) {
+            stringify(donations, { header: true }, function( error, output ) {
+                res.set('Content-Type', 'text/csv');
+                res.send( output );
+            });
+        } else {
+            res.render('reporting/report.html', { title: 'Monthly Summary', csv: true, donations: JSON.stringify( donations ) });
+        }
     });
 };
 
@@ -220,7 +109,14 @@ exports.annual = function( req, res ) {
             };
         });
 
-        res.render('reporting/report.html', { donations: JSON.stringify( donations ) });
+        if ( req.csv ) {
+            stringify(donations, { header: true }, function( error, output ) {
+                res.set('Content-Type', 'text/csv');
+                res.send( output );
+            });
+        } else {
+            res.render('reporting/report.html', {  title: 'Annual Summary', csv: true, donations: JSON.stringify( donations ) });
+        }
     });
 };
 
@@ -249,7 +145,14 @@ exports.donors = function( req, res ) {
             };
         });
 
-        res.render('reporting/report.html', { donations: JSON.stringify( donors ) });
+        if ( req.csv ) {
+            stringify(donors, { header: true }, function( error, output ) {
+                res.set('Content-Type', 'text/csv');
+                res.send( output );
+            });
+        } else {
+            res.render('reporting/report.html', { title: 'Donors', csv: true, donations: JSON.stringify( donors ) });
+        }
     });
 };
 
@@ -269,7 +172,14 @@ exports.referrers = function( req, res ) {
             }
         });
 
-        res.render('reporting/report.html', { donations: JSON.stringify( referrers ) });
+        if ( req.csv ) {
+            stringify(referrers, { header: true }, function( error, output ) {
+                res.set('Content-Type', 'text/csv');
+                res.send( output );
+            });
+        } else {
+            res.render('reporting/report.html', {  title: 'Referrers', csv: true, donations: JSON.stringify( referrers ) });
+        }
     });
 };
 
@@ -290,7 +200,7 @@ exports.campaigns = function( req, res ) {
             return campaign;
         });
 
-        res.render("reporting/campaigns.html", { campaigns: campaigns });
+        res.render("reporting/campaigns.html", {  title: 'Campaigns', campaigns: campaigns });
     });
 };
 
@@ -317,9 +227,12 @@ exports.campaign = function( req, res ) {
                 table = {
                     "Date": moment( donation.createdAt ).format('MM/DD/YYYY'),
                     "Name": donation.Donor.name,
-                    "Designation": donation.Subcampaign.name,
                     "Amount": amount( donation.amount )
                 };
+
+                if ( donation.Subcampaign ) {
+                    table.Designation = donation.Subcampaign.name;
+                }
             }
 
             // Custom Fields
@@ -332,6 +245,6 @@ exports.campaign = function( req, res ) {
             return table;
         });
 
-        res.render('reporting/report.html', { donations: JSON.stringify( donations ) });
+        res.render('reporting/report.html', {  title: campaignObj.slug + ' Campaign', donations: JSON.stringify( donations ) });
     });
 };

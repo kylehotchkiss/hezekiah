@@ -10,12 +10,15 @@
         <link href="//cdnjs.cloudflare.com/ajax/libs/chartist/0.4.1/chartist.min.css" rel="stylesheet" />
         <link href="/styles/screen.css" rel="stylesheet" />
     </head>
-    <body>
-        <div class="container">
-                <div class="col-sm-6 col-sm-offset-3 body-content">
-                    <article>
-                        <h1>Login to Hezekiah</h1>
+    <body class="page-login">
 
+        <div class="form">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="title">Hezekiah</div>
+                    </div>
+                    <div class="col-sm-8">
                         <form action="/admin/login" method="POST">
                             {% if error %}
                                 <div class="row">
@@ -26,20 +29,17 @@
                             {% endif %}
                             <div class="row">
                                 <div class="field-group col-sm-4">
-                                    <label>Username</label>
                                     <input type="text" class="form-control" name="username" placeholder="Username" />
                                 </div>
                                 <div class="field-group col-sm-4">
-                                    <label>Password</label>
                                     <input type="password" class="form-control"  name="password" placeholder="Password" />
                                 </div>
                                 <div class="field-group col-sm-4">
-                                    <br />
                                     <button type="submit" class="btn">Log In</button>
                                 </div>
                             </div>
                         </form>
-                    </article>
+                    </div>
                 </div>
             </div>
         </div>
