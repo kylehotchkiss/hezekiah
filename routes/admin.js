@@ -90,6 +90,18 @@ module.exports = {
 
                 res.redirect('/admin/account');
             });
+        },
+
+        userModify: function( req, res ) {
+            user.modify(req.param('user'), req.body, function( error ) {
+                if ( error ) {
+                    req.flash('failure', 'User ' + req.param('user') + ' could not be modified');
+                } else {
+                    req.flash('success', 'User ' + req.param('user') + ' was successfully modified');
+                }
+
+                res.redirect('/admin/account');
+            });
         }
     },
 

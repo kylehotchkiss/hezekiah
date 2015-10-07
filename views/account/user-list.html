@@ -4,7 +4,18 @@
 
     {% for user in users %}
         <div>
-            <code>{{ user.username }}</code> {{ user.firstname }} {{ user.lastname }}
+            <p><code>{{ user.username }}</code> {{ user.firstname }} {{ user.lastname }}</p>
+
+            <form action="/admin/user/{{ user.username }}" method="POST">
+                <div class="row">
+                    <div class="col-sm-6 form-group">
+                        <input type="text" name="password" class="form-control" placeholder="password" required />
+                    </div>
+                    <div class="col-sm-3 form-group">
+                        <button type="submit" class="btn">Change Password</button>
+                    </div>
+                </div>
+            </forn>
         </div>
     {% endfor %}
 

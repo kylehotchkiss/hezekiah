@@ -148,6 +148,7 @@ module.exports = function( app ) {
 
     app.get('/admin/account', user.auth('admin'), admin.views.account); // - Update account settings
     app.post('/admin/user', user.auth('admin'), admin.actions.userCreate);
+    app.post('/admin/user/:user', user.auth('admin'), admin.actions.userModify);
 
 
     // Reporting

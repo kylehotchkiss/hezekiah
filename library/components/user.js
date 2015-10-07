@@ -32,16 +32,42 @@ module.exports = {
         });
     },
 
+    modify: function( user, data, callback ) {
+        var whitelist = {
+            password: true,
+            firstname: true,
+            lastname: true,
+            role: true
+        };
+
+        // Apply whitelist for security purposes
+        this.hash( data.password, function( error, hash ) {
+            data.password = hash;
+
+            database.User.find({ where: { username: user }}).then(function( userObj ) {
+                userObj.updateAttributes( data ).then(function() {
+                    if ( typeof callback == "function" ) {
+                        callback( false );
+                    }
+                }, function( error ) {
+                    if ( typeof callback == "function" ) {
+                        callback( true );
+                    }
+                });
+            }, function( error ) {
+                if ( typeof callback == "function" ) {
+                    callback( true );
+                }
+            });
+        });
+    },
+
     list: function( callback ) {
         database.User.findAll().then(function( usersObj ) {
             callback( false, usersObj );
         }, function( error ) {
             callback( true, false );
         });
-    },
-
-    edit: function( id, data, callback ) {
-
     },
 
     reset: function( email, callback ) {
