@@ -215,36 +215,67 @@ exports.campaign = function( req, res ) {
             include: [{ model: database.Donor }, { model: database.Subcampaign }]
         }
     }).then(function( campaignObj ) {
-        var donations = campaignObj.Donations.map(function( donation, i ) {
-            var table;
+        var next = function( subcampaigns ) {
+            var donations = campaignObj.Donations.map(function( donation, i ) {
+                var table;
 
-            if ( campaignObj.mode === 'ticketed' ) {
-                table = {
-                    "Name": donation.Donor.name,
-                    "Type": donation.Subcampaign.name,
-                };
-            } else {
-                table = {
-                    "Date": moment( donation.createdAt ).format('MM/DD/YYYY'),
-                    "Name": donation.Donor.name,
-                    "Amount": amount( donation.amount )
-                };
+                if ( campaignObj.mode === 'ticketed' ) {
+                    table = {
+                        "Name": donation.Donor.name,
+                    };
 
-                if ( donation.Subcampaign ) {
-                    table.Designation = donation.Subcampaign.name;
+                    if ( donation.Subcampaign ) {
+                        table.Type = donation.Subcampaign.name;
+                    }
+                } else {
+                    table = {
+                        "Date": moment( donation.createdAt ).format('MM/DD/YYYY'),
+                        "Name": donation.Donor.name,
+                        "Amount": amount( donation.amount )
+                    };
+
+                    if ( donation.Subcampaign ) {
+                        table.Designation = donation.Subcampaign.name;
+                    }
                 }
+
+                // Custom Fields
+                if ( donation.metadata ) {
+                    if ( typeof donation.metadata.custom !== 'undefined' ) {
+                        for ( var j in donation.metadata.custom ) {
+                            table[ S( j ).humanize().s ] = donation.metadata.custom[j];
+                        }
+                    }
+                }
+
+                return table;
+            });
+
+            var data = {
+                title: campaignObj.slug + ' Campaign',
+                donations: JSON.stringify( donations )
+            };
+
+            if ( subcampaigns ) {
+                data.subcampaigns = JSON.stringify( subcampaigns );
             }
 
-            // Custom Fields
-            if ( typeof donation.metadata.custom !== 'undefined' ) {
-                for ( var j in donation.metadata.custom ) {
-                    table[ S( j ).humanize().s ] = donation.metadata.custom[j];
-                }
-            }
+            res.render('reporting/report.html', data);
+        };
 
-            return table;
-        });
 
-        res.render('reporting/report.html', {  title: campaignObj.slug + ' Campaign', donations: JSON.stringify( donations ) });
+        if ( campaignObj.mode === 'ticketed' ) {
+            database.Donation.aggregate('*', 'count', {
+                plain: false,
+                where: { campaign: campaign },
+                group: ['subcampaign'],
+                attributes: ['subcampaign'],
+                order: '"count" DESC',
+            }).then(function( countObj ) {
+                next( countObj );
+            });
+        } else {
+            next( false );
+        }
     });
 };
