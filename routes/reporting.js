@@ -164,7 +164,7 @@ exports.referrers = function( req, res ) {
         order: '"count" DESC',
     }).then(function( countObj ) {
         var referrers = countObj.map(function( referrer, i ) {
-            if ( referrer.referrer ) {
+            if ( typeof referrer.referrer !== 'undefined' ) {
                 return {
                     URL: referrer.referrer,
                     total: referrer.count
