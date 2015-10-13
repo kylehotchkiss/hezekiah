@@ -257,8 +257,10 @@ exports.campaign = function( req, res ) {
             };
 
             if ( subcampaigns ) {
-                data.subcampaigns = JSON.stringify( subcampaigns );
+                data.subcampaigns = subcampaigns;
             }
+
+            console.log( subcampaigns );
 
             res.render('reporting/report.html', data);
         };

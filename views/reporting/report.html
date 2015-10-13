@@ -3,8 +3,20 @@
 {% block content %}
     <div class="row page-report">
         <div class="col-sm-12">
-            {{ subcampaigns }}
-            
+
+            {% if subcampaigns %}
+                <h3>Subcampaign Totals</h3>
+                <ul class="subcampaigns">
+                    {% for sub in subcampaigns %}
+                        <li class="subcampaign">
+                            <div class="title">{{ sub.subcampaign || "n/a" }}</div>
+                            <div class="count">{{ sub.count }}</div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <h3>Donations</h3>
             <div id="react-results-table"></div>
         </div>
     </div>
@@ -14,7 +26,7 @@
     <script>
         React.render(
             React.createElement(Griddle, {
-                showFilter: true,
+                showFilter: false,
                 tableClassName: "table",
                 useGriddleStyles: false,
                 resultsPerPage: 100,

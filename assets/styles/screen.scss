@@ -1,19 +1,15 @@
+$color-white: #FFFFFF;
+
+$color-gold: #9d7435;
+$color-rust: #733420;
+$color-oxblood: #703434;
+$color-yellow: #a9722d;
+$color-indigo: #24424d;
+$color-indigo-light: #346070;
+
+
 body {
     font-family: "proxima-nova";
-}
-
-a, a:hover {
-    text-decoration: none;
-}
-
-h1 {
-    .download {
-        top: -4px;
-        position: relative;
-        font-size: 14px;
-        font-weight: normal;
-        margin-left: 30px;        
-    }
 }
 
 .body-sidebar {
@@ -212,3 +208,5 @@ article {
 }
 
 @import "partials/login";
+@import "partials/report";
+@import "partials/typography";
