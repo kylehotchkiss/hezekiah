@@ -5,19 +5,23 @@
         <div class="col-sm-12">
 
             {% if subcampaigns %}
-                <h3>Subcampaign Totals</h3>
-                <ul class="subcampaigns">
-                    {% for sub in subcampaigns %}
-                        <li class="subcampaign">
-                            <div class="title">{{ sub.subcampaign || "n/a" }}</div>
-                            <div class="count">{{ sub.count }}</div>
-                        </li>
-                    {% endfor %}
-                </ul>
+                <div class="report-section">
+                    <h3>Subcampaign Totals</h3>
+                    <ul class="subcampaigns">
+                        {% for sub in subcampaigns %}
+                            <li class="subcampaign">
+                                <div class="title">{{ sub.subcampaign || "n/a" }}</div>
+                                <div class="count">{{ sub.count }}</div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             {% endif %}
 
-            <h3>Donations</h3>
-            <div id="react-results-table"></div>
+            <div class="report-section">
+                <h3>Donations</h3>
+                <div id="react-results-table"></div>
+            </div>
         </div>
     </div>
 {% endblock %}
