@@ -210,12 +210,28 @@ exports.campaign = function( req, res ) {
     database.Campaign.find({
         where: { slug: campaign },
         include: {
-            order: '"createdAt" DESC',
             model: database.Donation,
             include: [{ model: database.Donor }, { model: database.Subcampaign }]
-        }
+        },
+        order: [
+            [ database.Donation, 'createdAt', 'DESC' ]
+        ]
     }).then(function( campaignObj ) {
-        var next = function( subcampaigns ) {
+        if ( campaignObj.mode === 'ticketed' ) {
+            database.Donation.aggregate('*', 'count', {
+                plain: false,
+                where: { campaign: campaign },
+                group: ['subcampaign'],
+                attributes: ['subcampaign'],
+                order: '"count" DESC',
+            }).then(function( countObj ) {
+                next( countObj );
+            });
+        } else {
+            next( false );
+        }
+
+        function next( subcampaigns ) {
             var donations = campaignObj.Donations.map(function( donation, i ) {
                 var table;
 
@@ -263,21 +279,6 @@ exports.campaign = function( req, res ) {
             console.log( subcampaigns );
 
             res.render('reporting/report.html', data);
-        };
-
-
-        if ( campaignObj.mode === 'ticketed' ) {
-            database.Donation.aggregate('*', 'count', {
-                plain: false,
-                where: { campaign: campaign },
-                group: ['subcampaign'],
-                attributes: ['subcampaign'],
-                order: '"count" DESC',
-            }).then(function( countObj ) {
-                next( countObj );
-            });
-        } else {
-            next( false );
         }
     });
 };
