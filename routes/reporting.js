@@ -83,7 +83,7 @@ exports.monthly = function( req, res ) {
                 date: moment( donation.createdAt ).format('MM/DD/YYYY'),
                 name: donation.Donor.name,
                 campaign: donation.campaign,
-                amount: amount( donation.amount )
+                amount: amount( donation.amount - donation.transactionFee )
             };
         });
 
@@ -105,7 +105,7 @@ exports.annual = function( req, res ) {
                 date: moment( donation.createdAt ).format('MM/DD/YYYY'),
                 name: donation.Donor.name,
                 campaign: donation.campaign,
-                amount: amount( donation.amount )
+                amount: amount( donation.amount - donation.transactionFee )
             };
         });
 
@@ -129,10 +129,10 @@ exports.donors = function( req, res ) {
             // TODO: We can probably aggregate this in SQL for speed in the future
             donor.Donations.map(function( donation, i ) {
                 if ( moment( donation.createdAt ).isAfter( moment().startOf('year') ) ) {
-                    ytd += donation.amount;
+                    ytd += ( donation.amount - donation.transactionFee );
                 }
 
-                total += donation.amount;
+                total += donation.amount - donation.transactionFee;
             });
 
             return {
@@ -190,7 +190,7 @@ exports.campaigns = function( req, res ) {
             var count = 0;
 
             campaign.Donations.map(function( donation, j ) {
-                total += donation.amount;
+                total += donation.amount - donation.transactionFee;
                 count++;
             });
 
@@ -247,7 +247,7 @@ exports.campaign = function( req, res ) {
                     table = {
                         "Date": moment( donation.createdAt ).format('MM/DD/YYYY'),
                         "Name": donation.Donor.name,
-                        "Amount": amount( donation.amount )
+                        "Amount": amount( donation.amount - donation.transactionFee )
                     };
 
                     if ( donation.Subcampaign ) {
