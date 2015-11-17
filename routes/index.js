@@ -150,6 +150,11 @@ module.exports = function( app ) {
     app.post('/admin/user', user.auth('admin'), admin.actions.userCreate);
     app.post('/admin/user/:user', user.auth('admin'), admin.actions.userModify);
 
+    app.get('/admin/campaigns', user.auth('campaigns'), admin.views.campaignsIndex);
+    app.get('/admin/campaigns/:campaign', user.auth('campaigns'), admin.views.campaignsModify);
+    //app.post('/admin/campaigns/:campaign', user.auth('campaigns'), admin.actions.campaignModify);
+    //app.post('/admin/campaigns/:campaign/email', user.auth('campaigns'), admin.actions.campaignEmailModify);
+
 
     // Reporting
     app.get('/admin/reports/monthly(.csv)?', user.auth('reporting'), reporting.monthly);

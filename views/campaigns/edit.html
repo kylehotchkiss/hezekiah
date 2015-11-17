@@ -1,0 +1,46 @@
+{% set title = "Edit Campaign" %}
+{% extends "../layout.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            <fieldset>
+                <legend>Details</legend>
+
+                <form action="/admin/{{ campaign.slug }}" method="POST">
+                    <div class="row">
+                        <div class="col-sm-6 form-group">
+                            <label>Name</label>
+                            <input type="text" name="name" class="form-control" value="{{ campaign.name }}" required />
+                        </div>
+                        <div class="col-sm-6 form-group">
+                            <label>Mode</label>
+                            <select name="mode" class="form-control">
+                                <option value="flexible">Flexible</option>
+                                <option value="designated">Designated</option>
+                                <option value="sponsorship">Sponsorship</option>
+                                <option value="ticketed">Ticketed</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </fieldset>
+
+            <fieldset>
+                <legend>Email Templates</legend>
+
+                <form action="/admin/{{ campaign.slug }}/email" method="POST">
+                    <div class="row">
+                        <div class="col-sm-6 form-group">
+                            <label>Donation Email</label>
+                            <textarea class="form-control" name="donation">{{ campaign.metadata.emails.donation }}</textarea>
+                        </div>
+                    </div>
+                </form>
+            </fieldset>
+
+
+        </div>
+    </div>
+
+{% endblock %}

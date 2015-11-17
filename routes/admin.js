@@ -1,9 +1,9 @@
 var moment = require('moment');
 var numeral = require("numeral");
-
+var database = require('../models');
 var menu = require('../data/menus.json');
 var user = require('../library/components/user.js');
-var database = require('../models');
+var campaigns = require('../library/components/campaign.js');
 var reporting = require('../library/components/reporting.js');
 
 module.exports = {
@@ -70,6 +70,24 @@ module.exports = {
         account: function( req, res ) {
             user.list(function( error, users ) {
                 res.render("account/index.html", { users: users });
+            });
+        },
+
+        campaignsIndex: function( req, res ) {
+            campaigns.getAll(function( error, campaigns ) {
+                res.render("campaigns/index.html", { campaigns: campaigns });
+            });
+        },
+
+        campaignsModify: function( req, res ) {
+            var slug = req.param('slug');
+
+            campaigns.get(slug, function( error, campaign ) {
+                if ( error ) {
+                    res.render("errors/404.html");
+                } else {
+                    res.render("campaigns/edit.html", { campaign: campaign });
+                }                
             });
         }
     },

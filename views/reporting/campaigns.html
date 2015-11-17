@@ -5,6 +5,9 @@
 {% block content %}
     <div class="row page-report">
         <div class="col-sm-12">
+            <p>To create a campaign, send a donation with your desired <code>slug</code> variable.</p>
+        </div>
+        <div class="col-sm-12">
             {% for campaign in campaigns %}
                 {% if loop.index0 % 2 == 0 %}
                     <div class="row">
