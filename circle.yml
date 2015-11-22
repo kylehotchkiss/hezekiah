@@ -21,7 +21,7 @@ deployment:
   production:
     branch: master
     heroku:
-      appname: hezekiah-production
+      appname: hezekiah
   staging:
     branch: staging
     heroku:
