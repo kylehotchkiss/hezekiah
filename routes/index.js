@@ -80,7 +80,7 @@ module.exports = function( app ) {
 
     // Redirect all root requests
     app.get('/', function( req, res ) {
-        res.redirect('http://www.hezekiahapp.com/?referrer=' + req.subdomain);
+        res.redirect( [ 'https://', req.get('Host'), req.url ].join('') + '/admin' );
     });
 
     if ( environment === "production" ) {
