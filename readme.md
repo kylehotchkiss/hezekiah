@@ -1,7 +1,4 @@
-# Hezekiah Fundraising Platform
-*You worked hard to show passionate people your cause.*
-
-*Hezekiah make it easier for donors to get involved and donate*
+<img src="http://s3.amazonaws.com/www.hezekiahapp.com/assets/images/hezekiah-logo.png" width="250" />
 
 ## Features
 
