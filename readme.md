@@ -1,4 +1,4 @@
-<img src="http://s3.amazonaws.com/www.hezekiahapp.com/assets/images/hezekiah-logo.png" width="250" />
+<img src="http://s3.amazonaws.com/www.hezekiahapp.com/assets/images/hezekiah-logo.png" width="500" />
 
 ## Features
 
