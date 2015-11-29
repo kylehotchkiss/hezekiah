@@ -1,26 +1,35 @@
 body.page-login {
-    background-image: url('../images/login-background.jpg');
-    background-size: cover;
-
-    .title {
-        
-    }
-
-    .form {
-        left: 0;
-        bottom: 0;
-        position: absolute;
-        background-color: rgba(255,255,255,.85);
-        padding: 20px 0;
-        width: 100%;
-    }
-
     input[type=text], input[type=email], input[type=password] {
         background-color: transparent;
-        border: 0;
+        border: 3px solid rgba(0, 0, 0, .15);
         border-radius: 0;
-        border-bottom: 2px dashed #BBBBBB;
         box-shadow: none;
-        font-size: 18px;
+        font-size: 16px;
+        font-family: 'Avenir', sans-serif;
+        line-height: 40px;
+        height: 46px;
+        padding: 10px;
     }
+
+    button {
+        background-color: #CA453A;
+        border-radius: 0;
+        color: #FFFFFF;
+        font-weight: bold;
+        margin-top: 15px;
+
+        &:hover, &:active, &:focus {
+            color: #FFFFFF;
+        }
+    }
+
+    p.disclaimer {
+        font-size: 12px;
+        font-style: italic;
+        font-family: 'Avenir', sans-serif;
+        line-height: 1.6em;
+        margin-top: 60px;
+    }
+
+    a { color: #CA453A; }
 }
