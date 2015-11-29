@@ -80,7 +80,7 @@ module.exports = function( app ) {
 
     // Redirect all root requests
     app.get('/', function( req, res ) {
-        res.redirect( [ 'https://', req.get('Host'), req.url ].join('') + '/admin' );
+        res.redirect( [ 'https://', req.get('Host'), req.url ].join('') + 'admin' );
     });
 
     if ( environment === "production" ) {
@@ -108,7 +108,6 @@ module.exports = function( app ) {
     // Hooks
     app.post('/hook/stripe', hook.dispatcher);
     app.get('/hook/backup', hook.backup);
-
 
     // API: Donation Processing
     app.get('/api/donate/retrieve', donate.retrieve);
