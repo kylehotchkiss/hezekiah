@@ -165,12 +165,28 @@ exports.postRefund = function( donation, donor, callback ) {
 };
 
 exports.postSubscribe = function( subscription, callback ) {
+    //
+    // Data Changes
+    //
+    recurring.create( subscription );
+
+    //
+    // Messaging
+    //
     slack("[subscriptions] A $" + subscription.amount + " subscription for " + subscription.description + " was successfully started" );
     receipt( subscription, "You now make monthly donations!", "subscription-receipt" );
     notification( subscription, "[subscriptions] A donor has enabled automatic donations", "subscription-notification" );
 };
 
 exports.postUnsubscribe = function( subscription, callback ) {
+    //
+    // Data Changes
+    //
+    recurring.cancel( subscription );
+
+    //
+    // Messaging
+    //
     slack("[subscriptions] A $" + subscription.amount + " subscription for " + subscription.description + " was canceled" );
     receipt( subscription, "You have disabled monthly donations", "unsubscription-receipt" );
     notification( subscription, "[subscriptions] A donor has disabled automatic donations", "unsubscription-notification" );

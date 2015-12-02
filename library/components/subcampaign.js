@@ -1,3 +1,4 @@
+// Frontend-Only
 module.exports = function() {
     this.create = function( data, callback ) {
 

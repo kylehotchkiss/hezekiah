@@ -1,5 +1,6 @@
 var database = require('../../models');
 
+// Frontend-Only
 module.exports = {
     get: function( slug, callback ) {
         database.Campaign.find({ where: { slug: slug }}).then(function( campaignObj ) {

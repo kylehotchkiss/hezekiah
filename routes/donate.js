@@ -96,6 +96,7 @@ exports.monthly = function( req, res ) {
         addressCountry: req.body.addressCountry
     };
 
+    // Add custom fields, campaign tracking info
     donation.metadata = { custom: req.body.custom };
 
     var errors = req.validationErrors();
@@ -107,7 +108,7 @@ exports.monthly = function( req, res ) {
             if ( error ) {
                 api.error( req, res, error.code, error.message );
             } else {
-                res.json({ status: "success", subscription: subscription.id });
+                res.json({ status: "success", subscription: subscription.stripeID });
             }
         });
     }
