@@ -96,6 +96,7 @@ exports.monthly = function( req, res ) {
         addressCountry: req.body.addressCountry
     };
 
+    // Add custom fields, campaign tracking info
     donation.metadata = { custom: req.body.custom };
 
     var errors = req.validationErrors();

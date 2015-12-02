@@ -1,3 +1,4 @@
+/* jshint expr:true */
 //
 // Hezekiah v.0.3.0
 // Copyright 2013-2015 Kyle Hotchkiss
@@ -73,6 +74,17 @@ describe("Monthly Subscriptions - New Donor", function() {
         }, 1000);
     });
 
+    it("successfully saved the subscription [database]", function( done ) {
+        setTimeout(function() {
+            database.Recurring.find({ where: { stripeID: subscription } }).then(function( recurringObj ) {
+                should( recurringObj ).be.ok;
+                should( recurringObj.active ).equal( true );
+
+                done();
+            });
+        }, 1000);
+    });
+
     it("successfully saved the first transaction [webhooks]", function( done ) {
         var counter = 0;
 
@@ -100,8 +112,7 @@ describe("Monthly Subscriptions - New Donor", function() {
         })();
     });
 
+    it("successfully saved custom fields [database]");
     it("successfully created a campaign record [database]");
     it("successfully created a subcampaign record [database]");
-
-    it("successfully created a subscription record [database]");
 });

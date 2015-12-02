@@ -10,6 +10,8 @@ var database = require("../models");
 var mandrill = require("../library/integrations/mandrill.js");
 var mailchimp = require("../library/integrations/mailchimp.js");
 
+var recurring = require('../library/components/recurring.js');
+
 /*donation
     send to quickbooks
 
@@ -171,7 +173,9 @@ exports.postSubscribe = function( subscription, callback ) {
 };
 
 exports.postUnsubscribe = function( subscription, callback ) {
-    slack("[subscriptions] A $" + subscription.amount + " subscription for " + subscription.description + " was canceled" );
-    receipt( subscription, "You have disabled monthly donations", "unsubscription-receipt" );
-    notification( subscription, "[subscriptions] A donor has disabled automatic donations", "unsubscription-notification" );
+    recurring.cancelled(subscription.id, function() {
+        slack("[subscriptions] A $" + subscription.amount + " subscription for " + subscription.description + " was canceled" );
+        receipt( subscription, "You have disabled monthly donations", "unsubscription-receipt" );
+        notification( subscription, "[subscriptions] A donor has disabled automatic donations", "unsubscription-notification" );
+    });
 };

@@ -58,7 +58,7 @@ describe("Cancel Subscription", function() {
         }, 1000);
     });
 
-    it("successfully removes the subscriber flag from the donor [database]", function( done ) {
+    it("successfully updated the donor [database]", function( done ) {
         setTimeout(function() {
             database.Donor.find({ where: { email: data.monthly.donation.email }}).then(function( donorObj ) {
                 should( donorObj.subscriber ).equal( false );
@@ -66,6 +66,18 @@ describe("Cancel Subscription", function() {
                 done();
             });
         }, 1000);
+    });
+
+    it("successfully updated the subscription [database]", function( done ) {
+        setTimeout(function() {
+            database.Recurring.findAll().then(function( recurringObj ) {
+                // Only one of our donations is cancelled due to the returned query string
+                should( recurringObj[1] ).be.ok;
+                should( recurringObj[1].active ).equal( false );
+
+                done();
+            });
+        }, 5000);
     });
 
     it("successfully receives a response of 0 while querying quantity of subscriptions [api]", function( done ) {
@@ -80,6 +92,4 @@ describe("Cancel Subscription", function() {
                 done();
             });
     });
-
-    it("successfully canceled the subscription record [database]");
 });
