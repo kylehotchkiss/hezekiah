@@ -98,6 +98,7 @@ exports.dispatcher = function( req, res ) {
         database.Donor.find({ where: { "customerID": customer } }).then(function( donorObj ) {
             if ( donorObj !== null ) {
                 hooks.postUnsubscribe({
+                    id: transaction.id,
                     name: donorObj.name,
                     date: transaction.canceled_at * 1000,
                     email: transaction.metadata.email,

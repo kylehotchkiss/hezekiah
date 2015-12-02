@@ -70,6 +70,17 @@ describe("Monthly Subscriptions - Previous Donor", function() {
         }, 1000);
     });
 
+    it("successfully saved the subscription [database]", function( done ) {
+        setTimeout(function() {
+            database.Recurring.find({ where: { stripeID: subscription } }).then(function( recurringObj ) {
+                should( recurringObj ).be.ok;
+                should( recurringObj.active ).equal( true );
+
+                done();
+            });
+        }, 1000);
+    });
+
     it("successfully appended the customer ID to the existing donor [database]", function( done ) {
         setTimeout(function() {
             database.Donor.find({ where: { email: data.single.donation.email }}).then(function( donorObj ) {
@@ -106,6 +117,4 @@ describe("Monthly Subscriptions - Previous Donor", function() {
             });
         })();
     });
-
-    it("successfully created a subscription record [database]");
 });

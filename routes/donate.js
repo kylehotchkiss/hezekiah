@@ -108,7 +108,7 @@ exports.monthly = function( req, res ) {
             if ( error ) {
                 api.error( req, res, error.code, error.message );
             } else {
-                res.json({ status: "success", subscription: subscription.stripeID });
+                res.json({ status: "success", subscription: subscription.id });
             }
         });
     }

@@ -1,20 +1,18 @@
 //
 // Hezekiah v.0.3.0
 // Copyright 2013-2015 Kyle Hotchkiss
-// All Rights Reserved
+// Released under the GPL 2.0
+//
+// Most of the "on-demand" donation logic lives here -
+// anything a user will initiate. Stripe does a lot of its
+// dirty work via webhooks, which will be found in hooks.js
 //
 
 var slug = require('slug');
 var stripe = require("stripe")( process.env.HEZ_STRIPE_API );
 var database = require("../models");
-var siftscience = require("./integrations/siftscience.js");
 
-//
-// Idea: direct fundrasing platform for missionaries
-// We'd need to track all campaigns and check against a list of users to see if
-// a match is found. If everything checks out, initiate the transfer immediately.
-// Otherwise, leave funds alone for stripe to transfer all by itself.
-//
+var recurring = require('./components/recurring.js');
 
 // Retrieve or Create a Campaign
 var retrieveCampaign = function( donation, callback ) {
@@ -373,6 +371,11 @@ exports.monthly = function( donation, callback ) {
                                 } else {
                                     callback( false, subscription );
                                 }
+
+                                //
+                                // Async Actions
+                                //
+                                recurring.create( subscription.id, donation, function() {});
                             });
                         }
                     });
