@@ -76,7 +76,6 @@ describe("Cancel Subscription", function() {
             counter++;
 
             database.Recurring.findAll().then(function( recurringObj ) {
-                console.log(recurringObj[1].active);
                 if ( recurringObj[1].active ) {
                     setTimeout(function() {
                         findCancellation();
