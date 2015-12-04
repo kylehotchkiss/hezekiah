@@ -19,21 +19,12 @@ exports.dispatcher = function( req, res ) {
         // Refund or dispute successfully processed
         //
 
-        var id;
-
         if ( stripeEvent.type === "charge.refunded" ) {
-            id = transaction.id;
+            hooks.postRefund( transaction.id );
         } else {
-            id = transaction.charge;
+            hooks.postRefund( transaction.charge );
         }
 
-        database.Donation.find({ where: { "transactionID": id } }).then(function( donationObj ) {
-            if ( donationObj !== null ) {
-                donationObj.getDonor().then(function( donorObj ) {
-                    hooks.postRefund( donationObj.toJSON(), donationObj.toJSON() );
-                });
-            }
-        });
     } else if ( stripeEvent.type === "invoice.payment_succeeded" ) {
         //
         // Recurring Donations successfully made
@@ -42,45 +33,42 @@ exports.dispatcher = function( req, res ) {
         customer = transaction.customer;
         subscription = transaction.subscription;
 
-        database.Donor.find({ where: { "customerID": customer } }).then(function( donorObj ) {
-            if ( donorObj !== null ) {
-                var donation = {
-                    recurring: true,
-                    source: "stripe",
-                    name: donorObj.name,
-                    donorID: donorObj.id,
-                    email: donorObj.email,
-                    date: transaction.date * 1000,
-                    transactionID: transaction.charge,
-                    amount: transaction.amount_due.toFixed(0),
-                    subscriptionID: transaction.lines.data[0].id
-                };
+        database.Recurring.find({
+            where: { stripeID: subscription },
+            include: [{ model: database.Donor }]
+        }).then(function( recurringObj ) {
+            if ( recurringObj !== null ) {
+                var donation = recurringObj.toJSON();
 
-                stripe.customers.retrieveSubscription( customer, subscription, function( error, subscription ) {
-                    donation.ip = subscription.metadata.ip;
-                    donation.campaign = subscription.metadata.campaign;
-                    donation.description = subscription.metadata.description;
+                donation.recurring = true;
+                donation.source = 'stripe';
+                donation.name = donation.Donor.name;
+                donation.transactionID = transaction.charge;
+                donation.subscriptionID = subscription;
+                donation.date = transaction.date * 1000;
+                donation.amount = transaction.amount_due.toFixed(0);
 
-                    hooks.postDonate( donation );
-                });
+                // Filter out some excessive data so postgres doesn't choke later
+                delete donation.id;
+                delete donation.Donor;
+
+                hooks.postDonate( donation );
             } else {
-                console.log("Customer not found... " + customer);
-                console.log( transaction )
+                console.log('Warning! Subscription ID `' + subscription + '` does not exist!');
             }
         });
-
-
     } else if ( stripeEvent.type === "customer.subscription.created" ) {
         //
         // Monthly donations successfully begun
         //
 
-        customer = transaction.customer;
-
-        database.Donor.find({ where: { "customerID": customer } }).then(function( donorObj ) {
-            if ( donorObj !== null ) {
+        database.Recurring.find({
+            where: { "stripeID": transaction.id },
+            include: [{ model: database.Donor }]
+        }).then(function( recurringObj ) {
+            if ( recurringObj !== null ) {
                 hooks.postSubscribe({
-                    name: donorObj.name,
+                    name: recurringObj.Donor.name,
                     date: transaction.start * 1000,
                     email: transaction.metadata.email,
                     amount: transaction.quantity, // Stripe tracks quantity for plans
