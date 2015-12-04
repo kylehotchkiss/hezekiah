@@ -111,8 +111,8 @@ exports.postSubscribe = function( subscription, callback ) {
 
 exports.postUnsubscribe = function( subscription, callback ) {
     subscription.amount = subscription.amount / 100;
-    
-    recurring.cancelled(subscription.id, function() {
+
+    recurring.cancelled(subscription.stripeID, function() {
         slack("[subscriptions] A $" + subscription.amount + " subscription for " + subscription.description + " was canceled" );
         receipt( subscription, "You have disabled monthly donations", "unsubscription-receipt" );
         notification( subscription, "[subscriptions] A donor has disabled automatic donations", "unsubscription-notification" );

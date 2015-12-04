@@ -85,8 +85,6 @@ exports.dispatcher = function( req, res ) {
                     var donation = recurringObj.toJSON();
                     donation.donor = donorObj.toJSON();
 
-                    donation.active = false;
-
                     hooks.postUnsubscribe( donation );
                 });
             }
