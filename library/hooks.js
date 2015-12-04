@@ -79,6 +79,7 @@ var slack = function( message, callback ) {
 exports.postDonate = function( data, callback ) {
     donation.create( data, function( error, donationObj ) {
         donationObj.amount = donationObj.amount / 100;
+        donationObj.transactionFee = donationObj.transactionFee / 100;
 
         slack("[donation] A $" + donationObj.amount + " donation for " + donationObj.description + " was successfully processed" );
         receipt( donationObj, "Thank you for your donation!", "donation-receipt");
@@ -92,6 +93,7 @@ exports.postDonate = function( data, callback ) {
 exports.postRefund = function( donationID, callback ) {
     donation.refund( donationID, function( error, donationObj ) {
         donationObj.amount = donationObj.amount / 100;
+        donationObj.transactionFee = donationObj.transactionFee / 100;
 
         slack("[refund] A $" + donationObj.amount + " donation for " + donationObj.description + " was successfully refunded" );
         receipt( donationObj, "Your donation has been refunded", "refund-receipt" );
@@ -100,12 +102,16 @@ exports.postRefund = function( donationID, callback ) {
 };
 
 exports.postSubscribe = function( subscription, callback ) {
+    subscription.amount = subscription.amount / 100;
+
     slack("[subscriptions] A $" + subscription.amount + " subscription for " + subscription.description + " was successfully started" );
     receipt( subscription, "You now make monthly donations!", "subscription-receipt" );
     notification( subscription, "[subscriptions] A donor has enabled automatic donations", "subscription-notification" );
 };
 
 exports.postUnsubscribe = function( subscription, callback ) {
+    subscription.amount = subscription.amount / 100;
+    
     recurring.cancelled(subscription.id, function() {
         slack("[subscriptions] A $" + subscription.amount + " subscription for " + subscription.description + " was canceled" );
         receipt( subscription, "You have disabled monthly donations", "unsubscription-receipt" );

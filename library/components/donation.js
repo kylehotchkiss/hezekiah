@@ -17,7 +17,13 @@ module.exports = {
         }
 
         database.Donation.create( cloned ).then(function( donationObj ) {
-            callback( false, donationObj.toJSON() );
+            donationObj.getDonor().then(function( donorObj ) {
+                // Pass along Donor name
+                var donation = donationObj.toJSON();
+                donation.donor = donorObj.toJSON();
+
+                callback( false, donation );
+            });
         }, function( error ) {
             callback( error, false );
         });
@@ -34,7 +40,13 @@ module.exports = {
                 callback( true, false );
             } else {
                 donationObj.updateAttributes({ refunded: true }).then(function( donationObj ) {
-                    callback( false, donationObj.toJSON() );
+                    donationObj.getDonor().then(function( donorObj ) {
+                        // Pass along Donor name
+                        var donation = donationObj.toJSON();
+                        donation.donor = donorObj.toJSON();
+
+                        callback( false, donation );
+                    });
                 }, function( error ) {
                     callback( error, false );
                 });

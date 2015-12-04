@@ -14,6 +14,7 @@ exports.dispatcher = function( req, res ) {
     var stripeEvent = req.body;
     var transaction = stripeEvent.data.object;
 
+
     if ( stripeEvent.type === "charge.refunded" || stripeEvent.type === "charge.dispute.closed" ) {
         //
         // Refund or dispute successfully processed
@@ -33,26 +34,23 @@ exports.dispatcher = function( req, res ) {
         customer = transaction.customer;
         subscription = transaction.subscription;
 
-        database.Recurring.find({
-            where: { stripeID: subscription },
-            include: [{ model: database.Donor }]
-        }).then(function( recurringObj ) {
+        database.Recurring.find({ where: { stripeID: subscription } }).then(function( recurringObj ) {
             if ( recurringObj !== null ) {
-                var donation = recurringObj.toJSON();
+                recurringObj.getDonor().then(function( donorObj ) {
+                    var donation = recurringObj.toJSON();
+                    donation.donor = donorObj.toJSON();
 
-                donation.recurring = true;
-                donation.source = 'stripe';
-                donation.name = donation.Donor.name;
-                donation.transactionID = transaction.charge;
-                donation.subscriptionID = subscription;
-                donation.date = transaction.date * 1000;
-                donation.amount = transaction.amount_due.toFixed(0);
+                    donation.recurring = true;
+                    donation.source = 'stripe';
+                    donation.subscriptionID = subscription;
+                    donation.transactionID = transaction.charge;
+                    donation.amount = transaction.amount_due.toFixed(0);
 
-                // Filter out some excessive data so postgres doesn't choke later
-                delete donation.id;
-                delete donation.Donor;
+                    // Filter out some excessive data so postgres doesn't choke later
+                    delete donation.id;
 
-                hooks.postDonate( donation );
+                    hooks.postDonate( donation );
+                });
             } else {
                 console.log('Warning! Subscription ID `' + subscription + '` does not exist!');
             }
@@ -63,16 +61,14 @@ exports.dispatcher = function( req, res ) {
         //
 
         database.Recurring.find({
-            where: { "stripeID": transaction.id },
-            include: [{ model: database.Donor }]
+            where: { stripeID: transaction.id },
         }).then(function( recurringObj ) {
             if ( recurringObj !== null ) {
-                hooks.postSubscribe({
-                    name: recurringObj.Donor.name,
-                    date: transaction.start * 1000,
-                    email: transaction.metadata.email,
-                    amount: transaction.quantity, // Stripe tracks quantity for plans
-                    description: transaction.metadata.description
+                recurringObj.getDonor().then(function( donorObj ) {
+                    var donation = recurringObj.toJSON();
+                    donation.donor = donorObj.toJSON();
+
+                    hooks.postSubscribe( donation );
                 });
             }
         });
@@ -81,17 +77,15 @@ exports.dispatcher = function( req, res ) {
         // Monthly donations successfully ended
         //
 
-        customer = transaction.customer;
+        database.Recurring.find({
+            where: { stripeID: transaction.id },
+        }).then(function( recurringObj ) {
+            if ( recurringObj !== null ) {
+                recurringObj.getDonor().then(function( donorObj ) {
+                    var donation = recurringObj.toJSON();
+                    donation.donor = donorObj.toJSON();
 
-        database.Donor.find({ where: { "customerID": customer } }).then(function( donorObj ) {
-            if ( donorObj !== null ) {
-                hooks.postUnsubscribe({
-                    id: transaction.id,
-                    name: donorObj.name,
-                    date: transaction.canceled_at * 1000,
-                    email: transaction.metadata.email,
-                    amount: transaction.quantity, // Stripe tracks quantity for plans
-                    description: transaction.metadata.description
+                    hooks.postUnsubscribe( donation );
                 });
             }
         });
