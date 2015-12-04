@@ -72,10 +72,11 @@ describe("Cancel Subscription", function() {
     it("successfully updated the subscription [database]", function( done ) {
         var counter = 0;
 
-        var findCancellation = (function findTransaction() {
+        var findCancellation = (function findCancellation() {
             counter++;
 
             database.Recurring.findAll().then(function( recurringObj ) {
+                console.log(recurringObj[1].active);
                 if ( recurringObj[1].active ) {
                     setTimeout(function() {
                         findCancellation();
