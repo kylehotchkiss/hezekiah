@@ -1,3 +1,24 @@
-<p>
-    <strong>{{ Donor.name }}</strong> recieved a refund of <strong>${{ amount }}</strong> on {{ createdAt }}.
-</p>
+<p>A refund was recently processed. Details are below:</p>
+
+<table>
+<tr>
+<th>Date</th>
+<td></td>
+<td>{{ createdAt }}</td>
+</tr>
+<tr>
+<th>Donor</th>
+<td></td>
+<td>{{ donor.name }} (<a href="mailto:{{ email }}">{{ email }}</a>)
+</tr>
+<tr>
+<th>Amount</th>
+<td></td>
+<td>{{ amount }} (fee: {{ transactionFee }})</td>
+</tr>
+<tr>
+<th>Campaign</th>
+<td></td>
+<td>{{ campaign }} (description: {{ description }})</td>
+</tr>
+</table>

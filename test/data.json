@@ -10,7 +10,10 @@
             "addressStreet": "125 Portico Street",
             "addressPostal": "24502",
             "addressCountry": "US",
-            "session": "HEZEKIAH-TEST-SUITE"
+            "session": "HEZEKIAH-TEST-SUITE",
+            "custom": {
+                "Favorite Drink": "Three Africas Cold Brew"
+            }
         },
         "card": {
             "number": "4242 4242 4242 4242",
@@ -29,7 +32,10 @@
             "addressStreet": "125 Portico Street",
             "addressPostal": "24502",
             "addressCountry": "US",
-            "session": "HEZEKIAH-TEST-SUITE"
+            "session": "HEZEKIAH-TEST-SUITE",
+            "custom": {
+                "Favorite Drink": "Christmas in a Cup"
+            }
         },
         "card": {
             "number": "4012 8888 8888 1881",

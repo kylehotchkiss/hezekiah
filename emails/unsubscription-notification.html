@@ -1,21 +1,24 @@
-<p>A donor has disabled automatic monthly donations. Details are below:</p>
+<p>A donor cancelled their automatic monthly donations. Details are below:</p>
 
-<p>
-<strong>Date canceled:</strong> <br />
-{{ createdAt }}
-</p>
-
-<p>
-<strong>Name:</strong> <br />
-{{ Donor.name }}
-</p>
-
-<p>
-<strong>Amount:</strong> <br />
-{{ amount }}
-</p>
-
-<p>
-<strong>Campaign:</strong> <br />
-{{ description }}
-</p>
+<table>
+<tr>
+<th>Date</th>
+<td></td>
+<td>{{ createdAt }}</td>
+</tr>
+<tr>
+<th>Donor</th>
+<td></td>
+<td>{{ donor.name }} (<a href="mailto:{{ email }}">{{ donor.email }}</a>)
+</tr>
+<tr>
+<th>Amount</th>
+<td></td>
+<td>{{ amount }}</td>
+</tr>
+<tr>
+<th>Campaign</th>
+<td></td>
+<td>{{ campaign }} (description: {{ description }})</td>
+</tr>
+</table>

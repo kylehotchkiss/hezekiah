@@ -1,29 +1,28 @@
 {% if recurring %}
-
-<p>A monthly donation was recently processed. Details are below:</p>
-
+    <p>A monthly donation was recently processed. Details are below:</p>
 {% else %}
-
-<p>An one-time donation was recently processed. Details are below:</p>
-
+    <p>An one-time donation was recently processed. Details are below:</p>
 {% endif %}
 
-<p>
-<strong>Date:</strong> <br />
-{{ createdAt }}
-</p>
-
-<p>
-<strong>Name:</strong> <br />
-{{ Donor.name }}
-</p>
-
-<p>
-<strong>Amount:</strong> <br />
-{{ amount }}
-</p>
-
-<p>
-<strong>Campaign:</strong> <br />
-{{ description }}
-</p>
+<table>
+<tr>
+<th>Date</th>
+<td></td>
+<td>{{ createdAt }}</td>
+</tr>
+<tr>
+<th>Donor</th>
+<td></td>
+<td>{{ donor.name }} (<a href="mailto:{{ email }}">{{ email }}</a>)
+</tr>
+<tr>
+<th>Amount</th>
+<td></td>
+<td>{{ amount }} (fee: {{ transactionFee }})</td>
+</tr>
+<tr>
+<th>Campaign</th>
+<td></td>
+<td>{{ campaign }} (description: {{ description }})</td>
+</tr>
+</table>

@@ -37,6 +37,13 @@ exports.send = function( email, subject, incoming, fileTemplate, customTemplate,
         }
     }
 
+    //
+    // Only spam Kyle during email tests
+    //
+    if ( process.env.NODE_ENV === 'development' && process.env.HEZ_TESTING_EMAIL ) {
+        email = process.env.HEZ_TESTING_EMAIL;
+    }
+
     if ( send ) {
         if ( content.createdAt instanceof Date ) {
             content.createdAt = moment( content.createdAt ).format('M/D/YYYY [at] h:mm a');
@@ -44,6 +51,10 @@ exports.send = function( email, subject, incoming, fileTemplate, customTemplate,
 
         if ( typeof content.amount === "number" ) {
             content.amount = numeral( content.amount ).format("$0,0.00");
+        }
+
+        if ( typeof content.transactionFee === "number" ) {
+            content.transactionFee = numeral( content.transactionFee ).format("$0,0.00");
         }
 
         var compiledTemplate = loadedTemplate( content );

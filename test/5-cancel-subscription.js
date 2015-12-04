@@ -1,3 +1,4 @@
+/* jshint expr:true */
 //
 // Hezekiah v.0.3.0
 // Copyright 2013-2015 Kyle Hotchkiss
@@ -69,15 +70,24 @@ describe("Cancel Subscription", function() {
     });
 
     it("successfully updated the subscription [database]", function( done ) {
-        setTimeout(function() {
-            database.Recurring.findAll().then(function( recurringObj ) {
-                // Only one of our donations is cancelled due to the returned query string
-                should( recurringObj[1] ).be.ok;
-                should( recurringObj[1].active ).equal( false );
+        var counter = 0;
 
-                done();
+        var seekCancelation = (function findTransaction() {
+            counter++;
+
+            database.Recurring.findAll().then(function( recurringObj ) {
+                if ( recurringObj[1].active ) {
+                    setTimeout(function() {
+                        findTransaction();
+                    }, 5000);
+                } else {
+                    should( recurringObj[1] ).be.ok;
+                    should( recurringObj[1].active ).equal( false );
+
+                    done();
+                }
             });
-        }, 5000);
+        })();
     });
 
     it("successfully receives a response of 0 while querying quantity of subscriptions [api]", function( done ) {

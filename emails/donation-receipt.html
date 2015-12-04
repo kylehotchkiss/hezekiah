@@ -1,16 +1,15 @@
 {% if recurring %}
 
 <p>
-{{ Donor.name }},
+{{ donor.name }},
 </p><p>
-Your monthly donation of ${{ amount }} to Illuminate Nations for {{ description }} was successfully processed on {{ createdAt }}.
+Your monthly donation of {{ amount }} to Illuminate Nations for {{ description }} was successfully processed on {{ createdAt }}.
 </p><p>
-100% of your donation (minus processing fees) will be sent to {{ description }} so that they can spread the gospel into the unreached corners of the globe!
-We're so excited that you would come alongside us in spreading the good news around the world.
+100% of your donation (minus processing fees) will be used for {{ description }}. We're so excited that you would come alongside us in spreading the good news around the world!
 </p><p>
 Donations to Illuminate Nations are tax deductable under our parent organization, Everlasting Way Ministries, a 501(c)(3) organization in the USA.
 </p><p>
-If you need to change your monthly donations, <a href="http://www.illuminatenations.org/donate/manage?email={{ email|escape }}&amp;postal={{ postal }}">you can modify them here</a>.
+If you need to change your monthly donations or have any questions, please shoot us an email at <a href="mailto:hello@illuminatenations.org">hello@illuminatenations.org</a>
 </p><p>
 Have a wonderful day, <br />
 The Illuminate Nations team
@@ -19,12 +18,11 @@ The Illuminate Nations team
 {% else %}
 
 <p>
-{{ Donor.name }},
+{{ donor.name }},
 </p><p>
 Thank you so much for your generous donation of {{ amount }} to Illuminate Nations for {{ description }} on {{ createdAt }}.
 </p><p>
-100% of your donation (minus processing fees) will be sent to {{ description }} so that they can spread the gospel into the unreached corners of the globe!
-We're so excited that you would come alongside us in spreading the good news around the world.
+100% of your donation (minus processing fees) will be used for {{ description }}. We're so excited that you would come alongside us in spreading the good news around the world.
 </p><p>
 Donations to Illuminate Nations are tax deductable under our parent organization, Everlasting Way Ministries, a 501(c)(3) organization in the USA.
 </p><p>

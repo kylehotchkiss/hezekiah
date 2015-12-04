@@ -11,7 +11,7 @@ var meta = require('../package.json');
 var swig = require('swig');
 var redis = require('redis');
 var moment = require("moment");
-var hook = require("./hook.js");
+var webhook = require("./webhook.js");
 var express = require('express');
 var passport = require('passport');
 var donate = require("./donate.js");
@@ -106,8 +106,8 @@ module.exports = function( app ) {
 
 
     // Hooks
-    app.post('/hook/stripe', hook.dispatcher);
-    app.get('/hook/backup', hook.backup);
+    app.post('/hook/stripe', webhook.dispatcher);
+    app.get('/hook/backup', webhook.backup);
 
     // API: Donation Processing
     app.get('/api/donate/retrieve', donate.retrieve);
