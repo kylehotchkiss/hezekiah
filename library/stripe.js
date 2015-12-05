@@ -191,7 +191,7 @@ var verifyPlan = function( callback ) {
         amount: 100,
         currency: "usd",
         interval: "month",
-        statement_descriptor: "Monthly"
+        statement_descriptor: "Illuminate Nations"
     };
 
     stripe.plans.retrieve("one", function( error, plan ) {
