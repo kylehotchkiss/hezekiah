@@ -20,11 +20,14 @@
                     "title": "Donors",
                     "url": "/admin/reports/donors"
                 }, {
-                    "title": "Referrers",
-                    "url": "/admin/reports/referrers"
+                    "title": "Monthly Donors",
+                    "url": "/admin/reports/recurring"
                 }, {
                     "title": "Campaigns",
                     "url": "/admin/reports/campaigns"
+                }, {
+                    "title": "Referrers",
+                    "url": "/admin/reports/referrers"
                 }
             ]
         }, {
