@@ -204,6 +204,40 @@ exports.campaigns = function( req, res ) {
     });
 };
 
+exports.recurring = function( req, res ) {
+    database.Recurring.findAll({
+        where: { active: true },
+        include: [ { model: database.Donor } ]
+    }).then(function( recurringObj ) {
+        var subscriptions = recurringObj.map(function( recurring, i ) {
+            table = {
+                "Date Started": moment( recurring.createdAt ).format('MM/DD/YYYY'),
+                "Name": recurring.Donor.name,
+                "Amount": amount( recurring.amount ),
+                "Campaign": recurring.campaign
+            };
+
+            // Custom Fields
+            if ( recurring.metadata ) {
+                if ( typeof recurring.metadata.custom !== 'undefined' ) {
+                    for ( var j in recurring.metadata.custom ) {
+                        table[ S( j ).humanize().s ] = recurring.metadata.custom[j];
+                    }
+                }
+            }
+
+            return table;
+        });
+
+        var data = {
+            title: 'Monthly Donors',
+            donations: JSON.stringify( subscriptions )
+        };
+
+        res.render('reporting/report.html', data);
+    });
+};
+
 exports.campaign = function( req, res ) {
     var campaign = req.param('campaign');
 
@@ -275,8 +309,6 @@ exports.campaign = function( req, res ) {
             if ( subcampaigns ) {
                 data.subcampaigns = subcampaigns;
             }
-
-            console.log( subcampaigns );
 
             res.render('reporting/report.html', data);
         }
