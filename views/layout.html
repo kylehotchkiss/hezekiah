@@ -12,18 +12,14 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.min.js"></script>
         <script src="/scripts/lib/griddle.js"></script>
 
+        <link href="//s3.amazonaws.com/www.hezekiahapp.com/assets/fonts/ss-symbolicons-line.css" rel="stylesheet" />
         <link href="/styles/screen.css" rel="stylesheet" />
     </head>
     <body>
-        <div class="container-fluid">
+        <div class="container">
             <div class="row">
                 <div class="col-md-3 body-sidebar">
                     <div class="navigation">
-                        <div class="logo">
-                            <h1>Hezekiah</h1>
-                            <h6>Impact your world!</h6>
-                        </div>
-
                         <div class="menus">
                             {% include "partials/menus.html" %}
                         </div>
@@ -31,8 +27,9 @@
                 </div>
                 <div class="col-md-9 body-content">
                     <article>
-                        <h1>{{ title }}
-                            {% if csv %}<span class="download"><a href=".csv">Download CSV</a></span>{% endif %}
+                        <h1>
+                            {{ title }}
+                            {% if csv %}<a href=".csv" class="download btn">Download CSV <i class="ss-download"></i></a>{% endif %}
                         </h1>
 
                         {% if success %}
@@ -43,13 +40,14 @@
 
                         {% block content %}{% endblock %}
                     </article>
+
+                    {% include "partials/footer.html" %}
                 </div>
             </div>
         </div>
 
         <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.4.1/chartist.min.js"></script>
-
 
             <!-- build:js scripts/all.js -->
             <script src="/scripts/lib/chart.js"></script>

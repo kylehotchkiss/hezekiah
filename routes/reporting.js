@@ -80,10 +80,11 @@ exports.monthly = function( req, res ) {
     database.Donation.findAll({ where: { createdAt: { gte: moment().startOf('month').toDate() } }, include: [ database.Donor ], order: '"createdAt" DESC' }).then(function( donationsObj ) {
         var donations = donationsObj.map(function( donation, i ) {
             return {
-                date: moment( donation.createdAt ).format('MM/DD/YYYY'),
-                name: donation.Donor.name,
-                campaign: donation.campaign,
-                amount: amount( donation.amount - donation.transactionFee )
+                ID: donation.id,
+                Name: donation.Donor.name,
+                Campaign: donation.campaign,
+                Date: moment( donation.createdAt ).format('MM/DD/YYYY'),
+                Amount: amount( donation.amount - donation.transactionFee )
             };
         });
 
@@ -102,10 +103,11 @@ exports.annual = function( req, res ) {
     database.Donation.findAll({ where: { createdAt: { gte: moment().startOf('year').toDate() } }, include: [ database.Donor ], order: '"createdAt" DESC' }).then(function( donationsObj ) {
         var donations = donationsObj.map(function( donation, i ) {
             return {
-                date: moment( donation.createdAt ).format('MM/DD/YYYY'),
-                name: donation.Donor.name,
-                campaign: donation.campaign,
-                amount: amount( donation.amount - donation.transactionFee )
+                ID: donation.id,
+                Name: donation.Donor.name,
+                Campaign: donation.campaign,
+                Date: moment( donation.createdAt ).format('MM/DD/YYYY'),
+                Amount: amount( donation.amount - donation.transactionFee )
             };
         });
 
@@ -136,12 +138,12 @@ exports.donors = function( req, res ) {
             });
 
             return {
+                ID: donor.id,
                 Name: donor.name,
                 Email: donor.email,
-                "Donated: YTD": amount( ytd ),
-                "Donated: Total": amount( total ),
-                "Is Monthly Donor?": donor.subscriber ? "Yes" : "No",
                 "Last Edited": moment( donor.updatedAt ).format('MM/DD/YYYY'),
+                "YTD": amount( ytd ),
+                "Total": amount( total )
             };
         });
 
@@ -164,7 +166,7 @@ exports.referrers = function( req, res ) {
         order: '"count" DESC',
     }).then(function( countObj ) {
         var referrers = countObj.map(function( referrer, i ) {
-            if ( typeof referrer.referrer !== 'undefined' ) {
+            if ( typeof referrer.referrer !== 'undefined' && referrer.referrer ) {
                 return {
                     URL: referrer.referrer,
                     total: referrer.count
@@ -211,10 +213,11 @@ exports.recurring = function( req, res ) {
     }).then(function( recurringObj ) {
         var subscriptions = recurringObj.map(function( recurring, i ) {
             table = {
+                ID: recurring.id,
+                Name: recurring.Donor.name,
+                Campaign: recurring.campaign,
                 "Date Started": moment( recurring.createdAt ).format('MM/DD/YYYY'),
-                "Name": recurring.Donor.name,
-                "Amount": amount( recurring.amount ),
-                "Campaign": recurring.campaign
+                Amount: amount( recurring.amount )
             };
 
             // Custom Fields

@@ -13,7 +13,6 @@ body {
 }
 
 .body-sidebar {
-    background-color: #444444;
     height: 100vh;
 
     .logo {
@@ -38,6 +37,7 @@ body {
 }
 
 .navigation {
+    margin-top: 60px;
     padding: 20px;
 
     .logo {
@@ -55,21 +55,15 @@ body {
             list-style: none;
         }
 
-        ul {
-            padding: 15px;
-        }
-
-        ul ul {
-            padding-bottom: 0;
-        }
-
-        li {
-            margin-bottom: 15px;
+        ul, li {
+            margin: 0;
+            padding: 0;
         }
 
         li {
             &, a {
-                color: lighten(#444444, 30%);
+                color: $color-indigo-light;
+                display: block;
                 font-family: "brandon-grotesque";
                 font-size: 14px;
                 font-weight: bold;
@@ -77,21 +71,30 @@ body {
                 text-transform: uppercase;
             }
 
-            a.active {
-                color: #FFFFFF;
+            > div {
+                padding: 10px 15px;
+                margin-bottom: 2px;
+
+                &.subtitle {
+                    left: -15px;
+                    position: relative;
+                    color: #BBBBBB;
+                }
+
+                &.active {
+                    background-color: $color-indigo-light;
+
+                    a {
+                        color: #FFFFFF;
+                    }
+                }
             }
         }
 
         li li {
             color: #FFFFFF;
             font-size: 12px;
-            line-height: 15px;
-            margin-bottom: 10px;
             text-transform: lowercase;
-
-            .total {
-                color: lighten(#444444, 30%);
-            }
         }
     }
 }
@@ -109,14 +112,8 @@ body {
 }
 
 .body-content {
-    h1 {
-        font-weight: bold;
-        margin-bottom: 30px;
-    }
-
     .label {
         color: lighten(#444444, 30%);
-        text-transform: uppercase;
     }
 
     .value {
@@ -152,13 +149,30 @@ body {
         }
     }
 
-    th {
-        font-family: "brandon-grotesque";
-        font-weight: bold;
-        text-transform: uppercase;
+    .griddle-body {
+        border: 1px solid #DDDDDD;
+        border-radius: 3px;
+    }
 
-        span {
-            cursor: pointer;
+    table.table {
+        margin: 0;
+
+        tbody {
+            border-top: 1px solid #DDDDDD;
+        }
+
+        td, th {
+            padding: 10px 15px;
+        }
+
+        th {
+            border-bottom: 1px solid #DDDDDD !important;
+            font-size: 16px;
+            font-weight: bold;
+
+            span {
+                cursor: pointer;
+            }
         }
     }
 }
@@ -208,5 +222,7 @@ article {
 }
 
 @import "partials/login";
+@import "partials/footer";
 @import "partials/report";
+@import "partials/button";
 @import "partials/typography";

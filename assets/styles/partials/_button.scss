@@ -1,0 +1,24 @@
+.btn, button {
+    background-color: #CA453A;
+    border-radius: 0 !important;
+    color: #FFFFFF;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 15px;
+    outline: 0;
+    padding: 10px 15px;
+    text-decoration: none;
+
+    &:hover, &:active, &:focus {
+        background-color: #CA453A;
+        color: #FFFFFF;
+        outline: 0;
+    }
+
+    i {
+        top: 2px;
+        position: relative;
+        margin-left: 10px;
+    }
+}

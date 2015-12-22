@@ -31,17 +31,23 @@
                 }
             ]
         }, {
-            "title": "Campaigns",
-            "url": "/admin/campaigns",
-            "role": "campaigns"
-        }, {
-            "title": "Integrations",
-            "url": "/admin/integrations",
-            "role": "admin"
-        }, {
-            "title": "Account",
-            "url": "/admin/account",
-            "role": "admin"
+            "title": "Admin",
+            "url": "#",
+            "role": "campaigns",
+
+            "items": [{
+                "title": "Campaigns",
+                "url": "/admin/campaigns",
+                "role": "campaigns"
+            }, {
+                "title": "Integrations",
+                "url": "/admin/integrations",
+                "role": "admin"
+            }, {
+                "title": "Account",
+                "url": "/admin/account",
+                "role": "admin"
+            }]
         }, {
             "title": "Logout %username",
             "url": "/admin/logout",

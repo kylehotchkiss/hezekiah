@@ -3,10 +3,8 @@
 {% block content %}
     <div class="row page-report">
         <div class="col-sm-12">
-
             {% if subcampaigns %}
                 <div class="report-section">
-                    <h3>Subcampaign Totals</h3>
                     <ul class="subcampaigns">
                         {% for sub in subcampaigns %}
                             <li class="subcampaign">
@@ -19,7 +17,6 @@
             {% endif %}
 
             <div class="report-section">
-                <h3>Donations</h3>
                 <div id="react-results-table"></div>
             </div>
         </div>
