@@ -100,7 +100,11 @@ exports.monthly = function( req, res ) {
 };
 
 exports.annual = function( req, res ) {
-    database.Donation.findAll({ where: { createdAt: { gte: moment().startOf('year').toDate() } }, include: [ database.Donor ], order: '"createdAt" DESC' }).then(function( donationsObj ) {
+    var year = parseInt( req.param('year') || moment().format('yyyy') );
+    var start = moment( year + '-1-1', 'YYYY-MM-DD' ).toDate();
+    var end = moment( ( year + 1 ) + '-1-1', 'YYYY-MM-DD' ).toDate();
+
+    database.Donation.findAll({ where: { createdAt: { gte: start, lt: end } }, include: [ database.Donor ], order: '"createdAt" DESC' }).then(function( donationsObj ) {
         var donations = donationsObj.map(function( donation, i ) {
             return {
                 ID: donation.id,

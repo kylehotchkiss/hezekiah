@@ -157,7 +157,7 @@ module.exports = function( app ) {
 
     // Reporting
     app.get('/admin/reports/monthly(.csv)?', user.auth('reporting'), reporting.monthly);
-    app.get('/admin/reports/annual(.csv)?', user.auth('reporting'), reporting.annual);
+    app.get('/admin/reports/annual/:year?(.csv)?', user.auth('reporting'), reporting.annual);
     app.get('/admin/reports/donors(.csv)?', user.auth('reporting'), reporting.donors);
     app.get('/admin/reports/referrers(.csv)?', user.auth('reporting'), reporting.referrers);
     app.get('/admin/reports/campaigns',  user.auth('reporting'), reporting.campaigns);
