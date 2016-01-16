@@ -100,7 +100,7 @@ exports.monthly = function( req, res ) {
 };
 
 exports.annual = function( req, res ) {
-    var year = parseInt( req.param('year') || moment().format('yyyy') );
+    var year = parseInt( req.param('year') || moment().format('YYYY') );
     var start = moment( year + '-1-1', 'YYYY-MM-DD' ).toDate();
     var end = moment( ( year + 1 ) + '-1-1', 'YYYY-MM-DD' ).toDate();
 
