@@ -18,7 +18,7 @@ module.exports = {
                 } else {
                     var date = moment().format('MMMM YYYY');
 
-                    database.Donation.findAll({ where: { createdAt: { gte: moment().subtract(7, 'days').toDate() } }, order: '"createdAt" DESC' }).then(function( donations ) {
+                    database.Donation.findAll({ where: { createdAt: { gte: moment().startOf('month').toDate() } }, order: '"createdAt" DESC' }).then(function( donations ) {
                         var amount = 0;
                         var donors = [];
                         var campaigns = [];
@@ -87,7 +87,7 @@ module.exports = {
                     res.render("errors/404.html");
                 } else {
                     res.render("campaigns/edit.html", { campaign: campaign });
-                }                
+                }
             });
         }
     },
